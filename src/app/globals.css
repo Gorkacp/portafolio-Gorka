@@ -1,0 +1,135 @@
+@import "tailwindcss";
+
+/* =========================
+   Variables de colores
+========================= */
+:root {
+  --background: #1a1a1a;       /* gris oscuro base */
+  --foreground: #f8fafc;       /* texto principal */
+  --secondary: #e5e7eb;        /* texto secundario */
+  --accent-hover: #8b5cf6;     /* morado para hover */
+  --font-sans: 'Poppins', Arial, Helvetica, sans-serif;
+}
+
+/* =========================
+   Estilos globales
+========================= */
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  margin: 0;
+  padding: 0;
+}
+
+/* =========================
+   Fondo animado de gradiente
+========================= */
+@keyframes gradientBG {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.bg-animated {
+  background: linear-gradient(
+    270deg,
+    #ff6b6b,
+    #fcd34d,
+    #f472b6,
+    #fb7185
+  );
+  background-size: 400% 400%;
+  animation: gradientBG 20s ease infinite;
+}
+
+/* =========================
+   Tipografía
+========================= */
+.font-poppins {
+  font-family: var(--font-sans);
+}
+
+/* =========================
+   Links
+========================= */
+a {
+  color: var(--accent);
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: var(--accent-hover);
+}
+
+/* =========================
+   Animaciones HERO
+========================= */
+
+/* Flotación suave */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes float-slow {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-35px);
+  }
+}
+
+/* Fade in */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Slide up */
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================
+   Clases de animación
+========================= */
+.animate-float {
+  animation: float 8s ease-in-out infinite;
+}
+
+.animate-float-slow {
+  animation: float-slow 12s ease-in-out infinite;
+}
+
+.animate-fade-in {
+  animation: fade-in 1s ease forwards;
+}
+
+.animate-slide-up {
+  animation: slide-up 0.8s ease forwards;
+}
+
+.animate-slide-up.delay-150 {
+  animation-delay: 150ms;
+}
+
+.animate-slide-up.delay-300 {
+  animation-delay: 300ms;
+}
