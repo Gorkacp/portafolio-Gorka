@@ -1,7 +1,21 @@
 User-agent: *
 Allow: /
+Allow: /sitemap.xml
 Disallow: /api/
 Disallow: /admin/
-Disallow: /private/
+
+# Permitir IAs específicas
+User-agent: GPTBot
+Allow: /
+User-agent: ChatGPT-User
+Allow: /
+User-agent: Claude-Web
+Allow: /
+User-agent: Bingbot
+Allow: /
+User-agent: DuckDuckBot
+Allow: /
+User-agent: Brave-Search
+Allow: /
 
 Sitemap: https://portafolio-gorka.vercel.app/sitemap.xml
