@@ -139,7 +139,7 @@ export const metadata = {
         },
         "sameAs": [
           "https://github.com/Gorkacp",
-          "https://linkedin.com/in/gorka-carmona-pino"
+          "https://www.linkedin.com/in/gorka-carmona-pino-803902294/"
           // SOLO REDES REALES Y ACTIVAS
         ],
         "jobTitle": "Full Stack Developer",
@@ -240,7 +240,7 @@ export const metadata = {
     
     // REDES SOCIALES (SOLO REALES)
     "social:github": "https://github.com/Gorkacp",
-    "social:linkedin": "https://linkedin.com/in/gorka-carmona-pino",
+    "social:linkedin": "https://www.linkedin.com/in/gorka-carmona-pino-803902294/",
     "social:email": "gorkacarmonapino@gmail.com",
     
     // INFORMACIÓN GEOGRÁFICA BÁSICA
