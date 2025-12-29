@@ -15,6 +15,7 @@ export default function Header() {
 
   const menuItems = [
     { name: "Sobre mí", href: "#about" },
+    { name: "Capacidades", href: "#capabilities" }, // ← NUEVA SECCIÓN
     { name: "Proyectos", href: "#projects" },
     { name: "Certificaciones", href: "#certifications" },
     { name: "Contacto", href: "#contact" },

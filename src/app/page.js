@@ -1,6 +1,7 @@
 // src/app/page.js - SEO OPTIMIZADO Y SEGURO
 import Hero from "../components/Hero";
 import About from "../components/About";
+import Capabilities from "../components/Capabilities";
 import Projects from "../components/Projects";
 import Certifications from "../components/Certifications";
 import Contact from "../components/Contact";
@@ -255,6 +256,7 @@ export default function Home() {
     <main className="flex flex-col bg-black text-white">
       <Hero />
       <About />
+      <Capabilities />
       <Projects />
       <Certifications />
       <Contact />
