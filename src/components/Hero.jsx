@@ -1,98 +1,291 @@
 "use client";
 
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { Sparkles, ChevronRight, Eye, Rocket, Award, Clock, TrendingUp } from "lucide-react";
 import Particles from "react-tsparticles";
+import { loadSlim } from "tsparticles-slim";
 
 export default function Hero() {
+  const [particlesLoaded, setParticlesLoaded] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    setIsDesktop(window.innerWidth > 768);
+    const handleResize = () => setIsDesktop(window.innerWidth > 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const particlesInit = async (engine) => {
+    await loadSlim(engine);
+    setParticlesLoaded(true);
+  };
+
+  const particleOptions = {
+    fullScreen: { enable: false },
+    background: { color: "transparent" },
+    fpsLimit: 60,
+    interactivity: {
+      events: {
+        onHover: {
+          enable: isDesktop,
+          mode: "repulse",
+        },
+        onClick: {
+          enable: true,
+          mode: "push",
+        },
+      },
+      modes: {
+        repulse: {
+          distance: 40,
+          duration: 0.3,
+        },
+        push: {
+          quantity: 2,
+        },
+      },
+    },
+    particles: {
+      color: {
+        value: ["#3b82f6", "#8b5cf6", "#06b6d4"],
+      },
+      links: {
+        color: "#ffffff",
+        distance: 70,
+        enable: isDesktop,
+        opacity: 0.04,
+        width: 1,
+      },
+      collisions: {
+        enable: false,
+      },
+      move: {
+        direction: "none",
+        enable: true,
+        outModes: {
+          default: "bounce",
+        },
+        random: true,
+        speed: isDesktop ? 0.2 : 0.12,
+        straight: false,
+      },
+      number: {
+        density: {
+          enable: true,
+          area: isDesktop ? 500 : 350,
+        },
+        value: isDesktop ? 20 : 12,
+      },
+      opacity: {
+        value: {
+          min: 0.02,
+          max: 0.08,
+        },
+      },
+      shape: {
+        type: "circle",
+      },
+      size: {
+        value: {
+          min: 0.5,
+          max: 1.2,
+        },
+      },
+    },
+    detectRetina: true,
+  };
+
   return (
-    <section className="relative w-full min-h-screen flex flex-col items-center justify-start pt-32 overflow-hidden font-poppins bg-gradient-to-b from-black via-gray-900 to-black">
+    <section className="relative w-full min-h-screen flex items-start justify-center overflow-hidden font-poppins bg-gradient-to-b from-black via-gray-900 to-black pt-12 sm:pt-16 md:pt-10 lg:pt-8">
       
-      {/* Partículas animadas */}
+      {/* Partículas */}
       <Particles
         id="tsparticles"
-        options={{
-          fullScreen: { enable: false },
-          background: { color: "transparent" },
-          fpsLimit: 60,
-          interactivity: {
-            events: {
-              onHover: { enable: true, mode: "repulse" },
-              onClick: { enable: true, mode: "push" },
-            },
-            modes: {
-              repulse: { distance: 100, duration: 0.4 },
-              push: { quantity: 4 },
-            },
-          },
-          particles: {
-            color: { value: ["#3b82f6", "#8b5cf6", "#f472b6"] },
-            links: { enable: true, distance: 150, color: "#ffffff", opacity: 0.1, width: 1 },
-            collisions: { enable: false },
-            move: { direction: "none", enable: true, outModes: "bounce", random: true, speed: 1 },
-            number: { density: { enable: true, area: 800 }, value: 60 },
-            opacity: { value: 0.3 },
-            shape: { type: "circle" },
-            size: { value: { min: 1, max: 4 } },
-          },
-          detectRetina: true,
-        }}
+        init={particlesInit}
+        options={particleOptions}
         className="absolute inset-0 -z-10"
       />
 
-      {/* Figuras de fondo animadas */}
-      <div className="absolute inset-0 -z-20">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-purple-500/20 rounded-full blur-3xl animate-float-slow" />
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-float" />
-        <div className="absolute top-1/2 left-1/2 w-80 h-80 bg-cyan-400/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2 animate-pulse" />
+      {/* Gradientes de fondo */}
+      <div className="absolute inset-0 -z-20 overflow-hidden">
+        <div className="absolute top-1/4 -left-16 sm:-left-20 md:-left-24 w-[250px] h-[250px] sm:w-[350px] sm:h-[350px] md:w-[450px] md:h-[450px] bg-gradient-to-r from-purple-500/4 to-blue-500/2 rounded-full blur-xl sm:blur-2xl" />
+        <div className="absolute -bottom-1/4 -right-16 sm:-right-20 md:-right-24 w-[280px] h-[280px] sm:w-[380px] sm:h-[380px] md:w-[500px] md:h-[500px] bg-gradient-to-l from-blue-500/4 to-cyan-500/2 rounded-full blur-xl sm:blur-2xl" />
       </div>
 
-      {/* Contenido */}
-      <div className="relative z-10 flex flex-col items-center text-center gap-8 px-6 max-w-4xl">
-        <span className="text-sm tracking-widest uppercase text-gray-400 animate-fade-in">
-          Desarrollador Web Frontend
-        </span>
+      {/* Grid */}
+      <div className="absolute inset-0 -z-10 bg-[linear-gradient(rgba(255,255,255,0.008)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.008)_1px,transparent_1px)] bg-[size:30px_30px] sm:bg-[size:40px_40px]" />
 
-        <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-white leading-tight animate-slide-up">
-          Construyo experiencias web{" "}
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 animate-gradient-text">
-            modernas
-          </span>
-        </h1>
+      {/* Contenedor principal - Más arriba en móvil */}
+      <div className="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-16 md:pt-20 lg:pt-24 pb-8">
+        {/* Badge */}
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          className="mb-3 sm:mb-5 md:mb-6 flex justify-center"
+        >
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-full bg-gradient-to-r from-blue-500/10 via-purple-500/8 to-pink-500/8 border border-blue-500/15 backdrop-blur-sm">
+            <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-blue-400" />
+            <span className="text-xs sm:text-sm font-medium text-blue-300 tracking-wide whitespace-nowrap">
+              DESARROLLADOR FULL STACK
+            </span>
+          </div>
+        </motion.div>
 
-        <p className="text-gray-300 text-lg sm:text-xl max-w-2xl leading-relaxed animate-slide-up delay-150">
-          Diseño y desarrollo interfaces rápidas, accesibles y escalables,
-          centradas en el usuario y en el detalle visual.
-        </p>
+        {/* Título */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="mb-3 sm:mb-5 md:mb-6"
+        >
+          <h1 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-snug sm:leading-tight md:leading-tight text-center">
+            Desarrollo{" "}
+            <span className="relative inline-block">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500">
+                soluciones web
+              </span>
+              <span className="absolute -bottom-1 left-0 w-full h-0.5 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full"></span>
+            </span>{" "}
+            <br className="hidden sm:block" />
+            que{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">
+              impulsan resultados
+            </span>
+          </h1>
+        </motion.div>
 
-        {/* Botones profesionales */}
-        <div className="flex flex-col sm:flex-row gap-4 mt-4 animate-slide-up delay-300">
-          <a
-            href="#projects"
-            className="
-              px-8 py-4 rounded-full
-              bg-gray-800/70 border border-gradient-to-r from-blue-400 via-purple-500 to-pink-500
-              text-white font-medium
-              shadow-md
-              transition-all duration-300
-              hover:scale-105 hover:shadow-xl hover:bg-gray-700/80
-            "
-          >
-            Ver proyectos
-          </a>
+        {/* Subtítulo */}
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="mb-4 sm:mb-6 md:mb-7 max-w-2xl md:max-w-3xl mx-auto"
+        >
+          <p className="text-gray-300 text-sm sm:text-base md:text-lg leading-relaxed text-center px-3">
+            Especializado en crear aplicaciones <span className="text-white font-semibold">optimizadas para SEO</span>, 
+            rápidas y centradas en el usuario para maximizar conversiones y visibilidad online.
+          </p>
+        </motion.div>
 
-          <a
-            href="#contact"
-            className="
-              px-8 py-4 rounded-full
-              bg-gray-800/70 border border-gradient-to-r from-blue-400 via-purple-500 to-pink-500
-              text-white font-medium
-              shadow-md
-              transition-all duration-300
-              hover:scale-105 hover:shadow-xl hover:bg-gray-700/80
-            "
-          >
-            Contactar
-          </a>
-        </div>
+        {/* Estadísticas actualizadas */}
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+          className="mb-4 sm:mb-6 md:mb-7"
+        >
+          <div className="grid grid-cols-3 gap-2.5 sm:gap-3 md:gap-4 max-w-sm sm:max-w-md md:max-w-lg mx-auto">
+            {[
+              { 
+                label: "Experiencia", 
+                value: "2+ años", 
+                icon: <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-400" />,
+              },
+              { 
+                label: "Certificados", 
+                value: "15+", 
+                icon: <Award className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-purple-400" />,
+              },
+              { 
+                label: "Resultados", 
+                value: "100%", 
+                icon: <TrendingUp className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-400" />,
+              },
+            ].map((stat, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.3, delay: 0.4 + index * 0.1 }}
+                className="p-3 sm:p-3.5 md:p-4 rounded-lg bg-gradient-to-b from-white/5 to-transparent border border-white/8 backdrop-blur-sm hover:border-blue-500/15 transition-all duration-250"
+              >
+                <div className="flex flex-col items-center gap-1.5 sm:gap-2 mb-1.5">
+                  {stat.icon}
+                  <div className="text-lg sm:text-xl md:text-2xl font-bold text-white">
+                    {stat.value}
+                  </div>
+                </div>
+                <div className="text-xs sm:text-sm font-medium text-gray-300 text-center leading-tight">
+                  {stat.label}
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Botones */}
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.5 }}
+          className="mb-4 sm:mb-6 md:mb-7"
+        >
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-stretch sm:items-center max-w-xs sm:max-w-sm md:max-w-md mx-auto">
+            {/* Botón primario */}
+            <motion.a
+              href="#projects"
+              className="
+                group/btn relative w-full px-5 py-3 sm:px-5 sm:py-3.5 md:px-6 md:py-4 rounded-lg
+                bg-gradient-to-r from-purple-600 to-blue-600
+                border border-purple-500/40
+                text-white font-semibold text-sm sm:text-base
+                hover:shadow-[0_0_15px_rgba(139,92,246,0.3)]
+                hover:brightness-110
+                transition-all duration-250
+                flex items-center justify-center gap-2 sm:gap-2.5
+                overflow-hidden
+              "
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/8 to-white/0 translate-x-[-100%] group-hover/btn:translate-x-[100%] transition-transform duration-600" />
+              <Eye className="w-4 h-4 sm:w-4.5 sm:h-4.5 flex-shrink-0" />
+              <span className="whitespace-nowrap">VER PROYECTOS</span>
+              <ChevronRight className="w-3 h-3 sm:w-3.5 sm:h-3.5 flex-shrink-0 group-hover/btn:translate-x-0.5 transition-transform duration-250" />
+            </motion.a>
+
+            {/* Botón secundario */}
+            <motion.a
+              href="#contact"
+              className="
+                group/contact relative w-full px-5 py-3 sm:px-5 sm:py-3.5 md:px-6 md:py-4 rounded-lg
+                bg-gradient-to-br from-white/8 to-white/4
+                border border-white/15
+                text-white font-semibold text-sm sm:text-base
+                hover:border-blue-500/40
+                hover:bg-white/8
+                hover:shadow-[0_0_10px_rgba(59,130,246,0.2)]
+                transition-all duration-250
+                flex items-center justify-center gap-2 sm:gap-2.5
+                backdrop-blur-sm
+              "
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <Rocket className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-blue-400 flex-shrink-0" />
+              <span className="whitespace-nowrap">CONTACTAR</span>
+              <ChevronRight className="w-3 h-3 sm:w-3.5 sm:h-3.5 flex-shrink-0 group-hover/contact:translate-x-0.5 transition-transform duration-250" />
+            </motion.a>
+          </div>
+        </motion.div>
+
+        {/* Texto final */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.4, delay: 0.7 }}
+          className="max-w-md sm:max-w-lg md:max-w-xl mx-auto px-3"
+        >
+          <p className="text-gray-400 text-xs sm:text-sm md:text-base text-center leading-relaxed">
+            Especialista en{" "}
+            <span className="text-white font-medium">rendimiento web</span>,{" "}
+            <span className="text-white font-medium">experiencia de usuario</span> y{" "}
+            <span className="text-white font-medium">optimización SEO</span> para maximizar el impacto online de tu negocio.
+          </p>
+        </motion.div>
       </div>
     </section>
   );
