@@ -37,28 +37,28 @@ export default function Contact() {
     <section
       id="contact"
       className="
-        relative w-full py-32 px-6 font-poppins
+        relative w-full py-12 md:py-32 px-4 md:px-6 font-poppins  {/* Reducido en móvil */}
         bg-gradient-to-b from-gray-900 via-black to-black
         text-white
       "
     >
-      {/* Separador superior */}
-      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-purple-500 to-transparent" />
+      {/* Separador superior - más sutil */}
+      <div className="absolute top-0 left-0 w-full h-[0.5px] bg-gradient-to-r from-transparent via-purple-500/30 to-transparent" />
 
-      <div className="max-w-[1200px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-start">
+      <div className="max-w-[1200px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-20 items-start"> {/* Reducido gap en móvil */}
 
         {/* Columna Izquierda - Información */}
-        <div className="flex flex-col gap-6">
-          <span className="uppercase tracking-widest text-sm text-purple-400">
+        <div className="flex flex-col gap-4 md:gap-6"> {/* Reducido gap en móvil */}
+          <span className="uppercase tracking-widest text-xs md:text-sm text-purple-400">
             Oportunidad de colaboración
           </span>
 
-          <h2 className="text-4xl sm:text-5xl font-bold leading-tight">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight">
             Conectemos{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500">
               visiones
             </span>{" "}
-            <span className="block text-3xl sm:text-4xl mt-4 font-normal">
+            <span className="block text-xl sm:text-3xl md:text-4xl mt-2 md:mt-4 font-normal">
               para crear{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">
                 soluciones extraordinarias
@@ -66,7 +66,7 @@ export default function Contact() {
             </span>
           </h2>
 
-          <p className="text-gray-300 text-lg leading-relaxed">
+          <p className="text-gray-300 text-sm md:text-lg leading-relaxed">
             Como <span className="text-white font-medium">Desarrollador Full Stack</span>,
             busco proyectos donde pueda fusionar{" "}
             <strong>innovación técnica</strong> con{" "}
@@ -74,48 +74,48 @@ export default function Contact() {
             que marquen la diferencia.
           </p>
 
-          <p className="text-gray-400 leading-relaxed">
+          <p className="text-gray-400 text-sm md:text-base leading-relaxed">
             Si tu empresa necesita un partner tecnológico que entienda tanto de
             <strong> código</strong> como de <strong>resultados de negocio</strong>,
             trabajemos juntos para transformar desafíos en éxitos medibles.
           </p>
 
           {/* LinkedIn Professional Card */}
-          <div className="mt-8">
+          <div className="mt-4 md:mt-8">
             <div className="
-              p-6 rounded-xl
+              p-4 md:p-6 rounded-xl
               bg-gradient-to-br from-blue-900/20 to-blue-950/10
               border border-blue-500/20
               hover:border-blue-400/30 transition-all duration-300
             ">
-              <div className="flex items-center gap-4 mb-4">
+              <div className="flex items-center gap-3 md:gap-4 mb-3 md:mb-4">
                 <div className="
-                  w-12 h-12 rounded-lg
+                  w-10 h-10 md:w-12 md:h-12 rounded-lg
                   bg-gradient-to-br from-blue-600 to-blue-800
-                  flex items-center justify-center
+                  flex items-center justify-center flex-shrink-0
                 ">
-                  <Linkedin className="w-6 h-6 text-white" />
+                  <Linkedin className="w-5 h-5 md:w-6 md:h-6 text-white" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-white">
+                  <h3 className="text-base md:text-lg font-semibold text-white">
                     Perfil Profesional
                   </h3>
-                  <p className="text-sm text-blue-300">
+                  <p className="text-xs md:text-sm text-blue-300">
                     Red profesional actualizada
                   </p>
                 </div>
               </div>
               
-              <div className="space-y-3">
+              <div className="space-y-2 md:space-y-3">
                 <div className="flex items-center gap-2">
-                  <Zap className="w-4 h-4 text-blue-400" />
-                  <span className="text-sm text-gray-300">
+                  <Zap className="w-3 h-3 md:w-4 md:h-4 text-blue-400 flex-shrink-0" />
+                  <span className="text-xs md:text-sm text-gray-300">
                     Experiencia Full Stack verificada
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Target className="w-4 h-4 text-purple-400" />
-                  <span className="text-sm text-gray-300">
+                  <Target className="w-3 h-3 md:w-4 md:h-4 text-purple-400 flex-shrink-0" />
+                  <span className="text-xs md:text-sm text-gray-300">
                     Proyectos completados exitosamente
                   </span>
                 </div>
@@ -126,9 +126,9 @@ export default function Contact() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="
-                  mt-6 inline-flex items-center gap-2 px-4 py-2.5
+                  mt-4 md:mt-6 inline-flex items-center gap-2 px-3 md:px-4 py-2 md:py-2.5
                   bg-gradient-to-r from-blue-600 to-blue-700
-                  text-white text-sm font-medium rounded-lg
+                  text-white text-xs md:text-sm font-medium rounded-lg
                   hover:from-blue-700 hover:to-blue-800
                   transition-all duration-300
                   group/linkedin
@@ -136,60 +136,63 @@ export default function Contact() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <Linkedin className="w-4 h-4" />
-                Conectar en LinkedIn
-                <ArrowRight className="w-3 h-3 group-hover/linkedin:translate-x-1 transition-transform" />
+                <Linkedin className="w-3 h-3 md:w-4 md:h-4 flex-shrink-0" />
+                <span>Conectar en LinkedIn</span>
+                <ArrowRight className="w-3 h-3 md:w-3 md:h-3 group-hover/linkedin:translate-x-1 transition-transform" />
               </motion.a>
             </div>
           </div>
         </div>
 
         {/* Columna Derecha - Formulario y Métricas */}
-        <div className="flex flex-col gap-10">
-          {/* Métricas Superiores */}
-          <div className="grid grid-cols-3 gap-4">
+        <div className="flex flex-col gap-6 md:gap-10"> {/* Reducido gap en móvil */}
+          {/* Métricas Superiores - Responsive */}
+          <div className="grid grid-cols-3 gap-2 md:gap-4">
             <div className="
-              p-5 rounded-xl
+              p-3 md:p-5 rounded-xl
               bg-gradient-to-br from-white/5 to-transparent
               border border-white/10
               text-center
               group hover:border-purple-500/30 hover:bg-white/10 transition-all duration-300
+              flex flex-col items-center justify-center
             ">
-              <div className="flex flex-col items-center gap-2">
-                <Clock className="w-5 h-5 text-cyan-400" />
-                <div className="text-2xl font-bold text-white">24h</div>
+              <div className="flex flex-col items-center gap-1 md:gap-2">
+                <Clock className="w-4 h-4 md:w-5 md:h-5 text-cyan-400" />
+                <div className="text-xl md:text-2xl font-bold text-white">24h</div>
               </div>
-              <div className="text-xs text-gray-300 mt-2 uppercase tracking-wider">
+              <div className="text-[10px] md:text-xs text-gray-300 mt-1 md:mt-2 uppercase tracking-wider leading-tight">
                 Respuesta
               </div>
             </div>
             <div className="
-              p-5 rounded-xl
+              p-3 md:p-5 rounded-xl
               bg-gradient-to-br from-white/5 to-transparent
               border border-white/10
               text-center
               group hover:border-blue-500/30 hover:bg-white/10 transition-all duration-300
+              flex flex-col items-center justify-center
             ">
-              <div className="flex flex-col items-center gap-2">
-                <Shield className="w-5 h-5 text-blue-400" />
-                <div className="text-2xl font-bold text-white">100%</div>
+              <div className="flex flex-col items-center gap-1 md:gap-2">
+                <Shield className="w-4 h-4 md:w-5 md:h-5 text-blue-400" />
+                <div className="text-xl md:text-2xl font-bold text-white">100%</div>
               </div>
-              <div className="text-xs text-gray-300 mt-2 uppercase tracking-wider">
+              <div className="text-[10px] md:text-xs text-gray-300 mt-1 md:mt-2 uppercase tracking-wider leading-tight">
                 Compromiso
               </div>
             </div>
             <div className="
-              p-5 rounded-xl
+              p-3 md:p-5 rounded-xl
               bg-gradient-to-br from-white/5 to-transparent
               border border-white/10
               text-center
               group hover:border-pink-500/30 hover:bg-white/10 transition-all duration-300
+              flex flex-col items-center justify-center
             ">
-              <div className="flex flex-col items-center gap-2">
-                <Calendar className="w-5 h-5 text-pink-400" />
-                <div className="text-2xl font-bold text-white">Flex.</div>
+              <div className="flex flex-col items-center gap-1 md:gap-2">
+                <Calendar className="w-4 h-4 md:w-5 md:h-5 text-pink-400" />
+                <div className="text-xl md:text-2xl font-bold text-white">Flex.</div>
               </div>
-              <div className="text-xs text-gray-300 mt-2 uppercase tracking-wider">
+              <div className="text-[10px] md:text-xs text-gray-300 mt-1 md:mt-2 uppercase tracking-wider leading-tight">
                 Disponibilidad
               </div>
             </div>
@@ -200,35 +203,36 @@ export default function Contact() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
+            className="w-full"
           >
             <div className="mb-4">
-              <div className="flex items-center gap-3 mb-6">
+              <div className="flex items-center gap-2 md:gap-3 mb-4 md:mb-6">
                 <div className="
-                  w-10 h-10 rounded-lg
+                  w-8 h-8 md:w-10 md:h-10 rounded-lg
                   bg-gradient-to-r from-purple-500/20 to-pink-500/20
                   border border-purple-500/30
-                  flex items-center justify-center
+                  flex items-center justify-center flex-shrink-0
                 ">
-                  <Send className="w-5 h-5 text-purple-400" />
+                  <Send className="w-4 h-4 md:w-5 md:h-5 text-purple-400" />
                 </div>
-                <div>
-                  <h3 className="text-xl font-semibold text-white">
+                <div className="min-w-0">
+                  <h3 className="text-lg md:text-xl font-semibold text-white">
                     Propuesta de colaboración
                   </h3>
-                  <p className="text-sm text-gray-400">
+                  <p className="text-xs md:text-sm text-gray-400 truncate">
                     Iniciemos una conversación estratégica
                   </p>
                 </div>
               </div>
 
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
                 {/* Nombre y Email */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
                   <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                    <label className="block text-xs md:text-sm font-medium text-gray-300 mb-1 md:mb-2">
                       <div className="flex items-center gap-2">
-                        <User className="w-4 h-4" />
-                        Nombre
+                        <User className="w-3 h-3 md:w-4 md:h-4" />
+                        <span>Nombre</span>
                       </div>
                     </label>
                     <input
@@ -239,7 +243,7 @@ export default function Contact() {
                       required
                       placeholder="Nombre completo"
                       className="
-                        w-full px-4 py-3 rounded-lg text-sm
+                        w-full px-3 md:px-4 py-2.5 md:py-3 rounded-lg text-xs md:text-sm
                         bg-white/5 border border-white/10
                         text-white placeholder-gray-400
                         focus:outline-none focus:border-purple-500 focus:bg-white/10
@@ -250,10 +254,10 @@ export default function Contact() {
                   </div>
 
                   <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                    <label className="block text-xs md:text-sm font-medium text-gray-300 mb-1 md:mb-2">
                       <div className="flex items-center gap-2">
-                        <Mail className="w-4 h-4" />
-                        Email profesional
+                        <Mail className="w-3 h-3 md:w-4 md:h-4" />
+                        <span>Email profesional</span>
                       </div>
                     </label>
                     <input
@@ -264,7 +268,7 @@ export default function Contact() {
                       required
                       placeholder="nombre@empresa.com"
                       className="
-                        w-full px-4 py-3 rounded-lg text-sm
+                        w-full px-3 md:px-4 py-2.5 md:py-3 rounded-lg text-xs md:text-sm
                         bg-white/5 border border-white/10
                         text-white placeholder-gray-400
                         focus:outline-none focus:border-blue-500 focus:bg-white/10
@@ -277,7 +281,7 @@ export default function Contact() {
 
                 {/* Asunto */}
                 <div className="space-y-2">
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="block text-xs md:text-sm font-medium text-gray-300 mb-1 md:mb-2">
                     Tipo de proyecto
                   </label>
                   <input
@@ -288,7 +292,7 @@ export default function Contact() {
                     required
                     placeholder="Desarrollo web, Consultoría, Colaboración técnica..."
                     className="
-                      w-full px-4 py-3 rounded-lg text-sm
+                      w-full px-3 md:px-4 py-2.5 md:py-3 rounded-lg text-xs md:text-sm
                       bg-white/5 border border-white/10
                       text-white placeholder-gray-400
                       focus:outline-none focus:border-purple-500 focus:bg-white/10
@@ -300,7 +304,7 @@ export default function Contact() {
 
                 {/* Mensaje */}
                 <div className="space-y-2">
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="block text-xs md:text-sm font-medium text-gray-300 mb-1 md:mb-2">
                     Visión del proyecto
                   </label>
                   <textarea
@@ -308,10 +312,9 @@ export default function Contact() {
                     value={formData.message}
                     onChange={handleChange}
                     required
-                    rows={6}
-                    placeholder="Describe los objetivos, desafíos y expectativas de tu proyecto..."
+                    rows={4}
                     className="
-                      w-full px-4 py-3 rounded-lg text-sm
+                      w-full px-3 md:px-4 py-2.5 md:py-3 rounded-lg text-xs md:text-sm
                       bg-white/5 border border-white/10
                       text-white placeholder-gray-400
                       focus:outline-none focus:border-blue-500 focus:bg-white/10
@@ -319,6 +322,7 @@ export default function Contact() {
                       hover:border-white/20
                       resize-none
                     "
+                    placeholder="Describe los objetivos, desafíos y expectativas de tu proyecto..."
                   />
                 </div>
 
@@ -327,15 +331,15 @@ export default function Contact() {
                   type="submit"
                   disabled={isSubmitting}
                   className="
-                    w-full px-6 py-4 rounded-lg text-sm font-semibold
+                    w-full px-4 md:px-6 py-3 md:py-4 rounded-lg text-xs md:text-sm font-semibold
                     bg-gradient-to-r from-purple-600/90 to-blue-600/90
                     border border-purple-500/30
                     text-white
                     hover:from-purple-600 hover:to-blue-600
                     hover:border-purple-500/50
-                    hover:shadow-[0_0_30px_rgba(139,92,246,0.3)]
+                    hover:shadow-[0_0_20px_rgba(139,92,246,0.3)]
                     transition-all duration-300
-                    flex items-center justify-center gap-3
+                    flex items-center justify-center gap-2 md:gap-3
                     group/btn
                     cursor-pointer
                     disabled:opacity-50 disabled:cursor-not-allowed
@@ -345,23 +349,23 @@ export default function Contact() {
                 >
                   {isSubmitting ? (
                     <>
-                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                      PROCESANDO PROPUESTA...
+                      <div className="w-4 h-4 md:w-5 md:h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      <span>PROCESANDO PROPUESTA...</span>
                     </>
                   ) : (
                     <>
-                      INICIAR COLABORACIÓN
-                      <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-2 transition-transform duration-300" />
+                      <span>INICIAR COLABORACIÓN</span>
+                      <ArrowRight className="w-3 h-3 md:w-4 md:h-4 group-hover/btn:translate-x-2 transition-transform duration-300" />
                     </>
                   )}
                 </motion.button>
 
                 {/* Nota */}
-                <div className="text-center pt-4 border-t border-white/10">
+                <div className="text-center pt-3 md:pt-4 border-t border-white/10">
                   <p className="text-xs text-gray-400">
                     Su información es tratada con total confidencialidad y profesionalismo.
                     <br />
-                    <span className="text-gray-500">
+                    <span className="text-gray-500 text-[10px] md:text-xs">
                       Respeto absoluto por su privacidad y datos corporativos.
                     </span>
                   </p>
@@ -372,8 +376,8 @@ export default function Contact() {
         </div>
       </div>
 
-      {/* Separador inferior */}
-      <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-blue-500 to-transparent" />
+      {/* Separador inferior - más sutil */}
+      <div className="absolute bottom-0 left-0 w-full h-[0.5px] bg-gradient-to-r from-transparent via-blue-500/30 to-transparent" />
     </section>
   );
 }
