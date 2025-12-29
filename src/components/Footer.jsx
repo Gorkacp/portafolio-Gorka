@@ -241,7 +241,7 @@ export default function Footer() {
               </motion.a>
 
               <motion.a
-                href="https://linkedin.com/in/gorka-carmona-pino"
+                href="https://www.linkedin.com/in/gorka-carmona-pino-803902294/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className={`
