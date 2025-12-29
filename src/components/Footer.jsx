@@ -352,7 +352,7 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Back to top button - Más pequeño en móvil */}
+      {/* Back to top button - CON ESTILO HOVER PERMANENTE */}
       <AnimatePresence>
         {showScrollTop && (
           <motion.button
@@ -363,15 +363,16 @@ export default function Footer() {
             className="
               fixed bottom-4 md:bottom-6 right-4 md:right-6 p-2 md:p-3
               rounded-lg
-              bg-gradient-to-br from-white/5 to-white/[0.02]
-              border border-white/10
+              bg-gradient-to-r from-purple-600/30 to-blue-600/30
+              border border-purple-500/50
               text-white
-              hover:border-purple-500/50
-              hover:from-purple-600/30 hover:to-blue-600/30
-              hover:shadow-[0_0_15px_rgba(139,92,246,0.2)]
+              shadow-[0_0_15px_rgba(139,92,246,0.2)]
               transition-all duration-300
               z-50
               group/scroll-top
+              hover:shadow-[0_0_25px_rgba(139,92,246,0.4)]
+              hover:from-purple-600/40 hover:to-blue-600/40
+              hover:border-purple-500/70
             "
             aria-label="Volver arriba"
             whileHover={{ scale: 1.05 }}

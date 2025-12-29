@@ -97,6 +97,18 @@ export default function Hero() {
     detectRetina: true,
   };
 
+  // Función de scroll suave (igual que en Header)
+  const handleSmoothScroll = (e, href) => {
+    e.preventDefault();
+    const target = document.querySelector(href);
+    if (target) {
+      window.scrollTo({
+        top: target.offsetTop - 80, // ajustar altura del header
+        behavior: "smooth",
+      });
+    }
+  };
+
   return (
     <section className="relative w-full min-h-screen flex items-start justify-center overflow-hidden font-poppins bg-gradient-to-b from-black via-gray-900 to-black pt-12 sm:pt-16 md:pt-10 lg:pt-8">
       
@@ -216,7 +228,7 @@ export default function Hero() {
           </div>
         </motion.div>
 
-        {/* Botones */}
+        {/* Botones con scroll suave */}
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
@@ -224,9 +236,9 @@ export default function Hero() {
           className="mb-4 sm:mb-6 md:mb-7"
         >
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-stretch sm:items-center max-w-xs sm:max-w-sm md:max-w-md mx-auto">
-            {/* Botón primario */}
-            <motion.a
-              href="#projects"
+            {/* Botón primario - VER PROYECTOS */}
+            <motion.button
+              onClick={(e) => handleSmoothScroll(e, "#projects")}
               className="
                 group/btn relative w-full px-5 py-3 sm:px-5 sm:py-3.5 md:px-6 md:py-4 rounded-lg
                 bg-gradient-to-r from-purple-600 to-blue-600
@@ -237,6 +249,7 @@ export default function Hero() {
                 transition-all duration-250
                 flex items-center justify-center gap-2 sm:gap-2.5
                 overflow-hidden
+                cursor-pointer
               "
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
@@ -245,11 +258,11 @@ export default function Hero() {
               <Eye className="w-4 h-4 sm:w-4.5 sm:h-4.5 flex-shrink-0" />
               <span className="whitespace-nowrap">VER PROYECTOS</span>
               <ChevronRight className="w-3 h-3 sm:w-3.5 sm:h-3.5 flex-shrink-0 group-hover/btn:translate-x-0.5 transition-transform duration-250" />
-            </motion.a>
+            </motion.button>
 
-            {/* Botón secundario */}
-            <motion.a
-              href="#contact"
+            {/* Botón secundario - CONTACTAR */}
+            <motion.button
+              onClick={(e) => handleSmoothScroll(e, "#contact")}
               className="
                 group/contact relative w-full px-5 py-3 sm:px-5 sm:py-3.5 md:px-6 md:py-4 rounded-lg
                 bg-gradient-to-br from-white/8 to-white/4
@@ -261,6 +274,7 @@ export default function Hero() {
                 transition-all duration-250
                 flex items-center justify-center gap-2 sm:gap-2.5
                 backdrop-blur-sm
+                cursor-pointer
               "
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
@@ -268,7 +282,7 @@ export default function Hero() {
               <Rocket className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-blue-400 flex-shrink-0" />
               <span className="whitespace-nowrap">CONTACTAR</span>
               <ChevronRight className="w-3 h-3 sm:w-3.5 sm:h-3.5 flex-shrink-0 group-hover/contact:translate-x-0.5 transition-transform duration-250" />
-            </motion.a>
+            </motion.button>
           </div>
         </motion.div>
 
