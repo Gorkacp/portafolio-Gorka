@@ -1,10 +1,12 @@
 "use client";
 
-import { ExternalLink, Github, Zap, ChevronRight, Code } from "lucide-react";
+import { ExternalLink, Github, Zap, ChevronRight, Code, Eye } from "lucide-react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { getTranslation } from "@/utils/translations";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function ProjectCard({ project }) {
   const [isHovered, setIsHovered] = useState(false);
@@ -12,6 +14,7 @@ export default function ProjectCard({ project }) {
   const [techsToShow, setTechsToShow] = useState(6);
   const [language, setLanguage] = useState("es");
   const [isMounted, setIsMounted] = useState(false);
+  const router = useRouter();
 
   // Escuchar cambios de idioma
   useEffect(() => {
@@ -52,10 +55,26 @@ export default function ProjectCard({ project }) {
     full_stack_badge: getTranslation(language, "ProjectCard.full_stack_badge"),
     demo_button: getTranslation(language, "ProjectCard.demo_button"),
     code_button: getTranslation(language, "ProjectCard.code_button"),
+    view_more_button: getTranslation(language, "ProjectCard.view_more_button"),
     impact_label: getTranslation(language, "ProjectCard.impact_label"),
   };
 
   if (!project || !isMounted) return null;
+
+  // Función para navegar a la página de detalles
+  const handleViewMore = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    // Generar slug del proyecto
+    const slug = project.title
+      .toLowerCase()
+      .replace(/[^\w\s]/gi, '')
+      .replace(/\s+/g, '-');
+    
+    // Navegar a la página de detalles
+    router.push(`/proyectos/${slug}`);
+  };
 
   return (
     <motion.article
@@ -179,14 +198,15 @@ export default function ProjectCard({ project }) {
           </div>
         </div>
 
-        {/* Acciones */}
+        {/* Acciones - TRES BOTONES */}
         <div className="flex gap-2 md:gap-3 pt-2 md:pt-3">
+          {/* Botón Demo */}
           <motion.a
             href={project.demoUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="
-              flex-1 inline-flex items-center justify-center gap-1.5 md:gap-2
+              inline-flex items-center justify-center gap-1.5 md:gap-2
               px-3 md:px-4 py-2 md:py-2.5 rounded-xl
               bg-gradient-to-r from-blue-600 to-purple-600
               text-white text-xs md:text-sm font-semibold
@@ -195,6 +215,7 @@ export default function ProjectCard({ project }) {
               transition-all duration-300
               group/btn
               whitespace-nowrap
+              flex-1
             "
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -204,18 +225,20 @@ export default function ProjectCard({ project }) {
             <ChevronRight className="w-2.5 h-2.5 md:w-3 md:h-3 group-hover/btn:translate-x-1 transition-transform" />
           </motion.a>
 
+          {/* Botón Código */}
           <motion.a
             href={project.codeUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="
-              flex-1 inline-flex items-center justify-center gap-1.5 md:gap-2
+              inline-flex items-center justify-center gap-1.5 md:gap-2
               px-3 md:px-4 py-2 md:py-2.5 rounded-xl
               bg-white/5 border border-white/20
               text-white text-xs md:text-sm font-semibold
               hover:bg-white/10 hover:border-white/30
               transition-all duration-300
               whitespace-nowrap
+              flex-1
             "
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -223,6 +246,31 @@ export default function ProjectCard({ project }) {
             <Github size={14} className="md:size-[16px]" />
             <span className="truncate">{translations.code_button}</span>
           </motion.a>
+
+          {/* NUEVO Botón Ver Más */}
+          <motion.button
+            onClick={handleViewMore}
+            className="
+              inline-flex items-center justify-center gap-1.5 md:gap-2
+              px-3 md:px-4 py-2 md:py-2.5 rounded-xl
+              bg-gradient-to-r from-purple-500/20 to-pink-500/20
+              border border-purple-500/30
+              text-white text-xs md:text-sm font-semibold
+              hover:from-purple-500/30 hover:to-pink-500/30
+              hover:border-purple-500/50
+              hover:shadow-[0_0_15px_rgba(168,85,247,0.2)]
+              transition-all duration-300
+              group/viewmore
+              whitespace-nowrap
+              flex-1
+            "
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <Eye size={14} className="md:size-[16px]" />
+            <span className="truncate">{translations.view_more_button || "Ver más"}</span>
+            <ChevronRight className="w-2.5 h-2.5 md:w-3 md:h-3 group-hover/viewmore:translate-x-1 transition-transform" />
+          </motion.button>
         </div>
       </div>
     </motion.article>
