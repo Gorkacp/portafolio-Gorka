@@ -4,22 +4,37 @@ import ProjectCard from "./ProjectCard";
 import { motion } from "framer-motion";
 import { Rocket, Terminal, Server, Database, Globe } from "lucide-react";
 import { useState, useEffect } from "react";
+import { getTranslation } from "@/utils/translations";
 
 export default function Projects() {
   const [isMobile, setIsMobile] = useState(false);
+  const [language, setLanguage] = useState("es");
+  const [isMounted, setIsMounted] = useState(false);
   
-  const projects = [
-    {
-      id: 1,
-      title: "GoLive Platform",
-      description: "Plataforma Full Stack para gestión y venta de entradas de eventos musicales con sistema de pagos real, validación QR y dashboard administrativo.",
-      technologies: ["Nuxt 3", "Vue 3", "TypeScript", "Spring Boot", "Java 17", "MongoDB", "JWT", "Docker"],
-      demoUrl: "https://golive-hu5d.onrender.com",
-      codeUrl: "https://github.com/Gorkacp/GoLive",
-      imageUrl: "/img/GoLive.png",
-      impact: "Proyecto de fin de grado demostrando dominio completo del desarrollo Full Stack con arquitectura escalable."
-    }
-  ];
+  // Escuchar cambios de idioma
+  useEffect(() => {
+    setIsMounted(true);
+    
+    // Función para manejar cambios de idioma
+    const handleLanguageChange = () => {
+      const savedLang = localStorage.getItem("language") || "es";
+      setLanguage(savedLang);
+    };
+
+    // Establecer idioma inicial
+    handleLanguageChange();
+    
+    // Escuchar cambios de idioma desde el Header
+    window.addEventListener("languageChange", handleLanguageChange);
+    
+    // También verificar periódicamente
+    const interval = setInterval(handleLanguageChange, 1000);
+    
+    return () => {
+      window.removeEventListener("languageChange", handleLanguageChange);
+      clearInterval(interval);
+    };
+  }, []);
 
   // Detectar si es móvil
   useEffect(() => {
@@ -32,6 +47,66 @@ export default function Projects() {
     
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
+
+  // Función para renderizar texto con HTML
+  const renderTextWithHTML = (text) => {
+    return { __html: text };
+  };
+
+  // Obtener traducciones
+  const translations = {
+    section_title: getTranslation(language, "Projects.section_title"),
+    main_title: getTranslation(language, "Projects.main_title"),
+    main_title_highlight: getTranslation(language, "Projects.main_title_highlight"),
+    subtitle: getTranslation(language, "Projects.subtitle"),
+    subtitle_highlight: getTranslation(language, "Projects.subtitle_highlight"),
+    description: getTranslation(language, "Projects.description"),
+    architecture_title: getTranslation(language, "Projects.architecture_title"),
+    frontend_title: getTranslation(language, "Projects.frontend_title"),
+    frontend_description: getTranslation(language, "Projects.frontend_description"),
+    backend_title: getTranslation(language, "Projects.backend_title"),
+    backend_description: getTranslation(language, "Projects.backend_description"),
+    database_title: getTranslation(language, "Projects.database_title"),
+    database_description: getTranslation(language, "Projects.database_description"),
+    deployment_title: getTranslation(language, "Projects.deployment_title"),
+    deployment_description: getTranslation(language, "Projects.deployment_description"),
+    cta_title: getTranslation(language, "Projects.cta_title"),
+    cta_description: getTranslation(language, "Projects.cta_description"),
+    cta_button: getTranslation(language, "Projects.cta_button"),
+    project: getTranslation(language, "Projects.project"),
+  };
+
+  // Cargar proyecto desde traducciones
+  const projectData = {
+    id: 1,
+    title: translations.project?.title || "GoLive Platform",
+    description: translations.project?.description || "",
+    technologies: Array.isArray(translations.project?.technologies) 
+      ? translations.project.technologies 
+      : JSON.parse(translations.project?.technologies || '[]'),
+    demoUrl: "https://golive-hu5d.onrender.com",
+    codeUrl: "https://github.com/Gorkacp/GoLive",
+    imageUrl: "/img/GoLive.png",
+    impact: translations.project?.impact || ""
+  };
+
+  const projects = [projectData];
+
+  // Loading (evita SSR issues)
+  if (!isMounted) {
+    return (
+      <section
+        id="projects"
+        className="
+          relative w-full py-20 md:py-32 px-4 md:px-6 font-poppins
+          bg-gradient-to-b from-black via-gray-950 to-gray-900
+          text-white overflow-hidden
+        "
+      >
+        <div className="h-96"></div>
+      </section>
+    );
+  }
 
   return (
     <section
@@ -56,27 +131,26 @@ export default function Projects() {
             text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400
             font-medium block mb-2
           ">
-            Proyecto Destacado
+            {translations.section_title}
           </span>
 
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight">
-            Desarrollo{" "}
+            {translations.main_title}{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500">
-              Full Stack
+              {translations.main_title_highlight}
             </span>{" "}
             <span className="block text-xl sm:text-2xl md:text-3xl mt-3 md:mt-4 font-normal">
-              con tecnologías{" "}
+              {translations.subtitle}{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">
-                modernas
+                {translations.subtitle_highlight}
               </span>
             </span>
           </h2>
 
-          <p className="text-gray-300 text-base md:text-lg mt-4 md:mt-6 leading-relaxed">
-            Una <strong className="text-white">solución completa</strong> que integra frontend, backend, 
-            base de datos y despliegue. Demostración práctica de habilidades técnicas aplicadas a 
-            un <strong className="text-white">proyecto real</strong> con arquitectura escalable.
-          </p>
+          <p 
+            className="text-gray-300 text-base md:text-lg mt-4 md:mt-6 leading-relaxed"
+            dangerouslySetInnerHTML={renderTextWithHTML(translations.description)}
+          />
         </div>
 
         {/* En móviles: Proyecto primero */}
@@ -98,7 +172,7 @@ export default function Projects() {
           <div className={`${isMobile ? 'col-span-full' : 'lg:col-span-2'} space-y-8`}>
             <div className="space-y-6">
               <h3 className="text-xl md:text-2xl font-bold text-white px-2">
-                Arquitectura Técnica
+                {translations.architecture_title}
               </h3>
               
               {/* GRID 2x2 EN MÓVILES - CORREGIDO */}
@@ -128,13 +202,14 @@ export default function Projects() {
                     </div>
                     <div className="min-w-0 flex-1">
                       <h4 className="text-sm sm:text-base md:text-lg font-semibold text-white truncate">
-                        Frontend
+                        {translations.frontend_title}
                       </h4>
                     </div>
                   </div>
-                  <p className="text-gray-300 text-xs sm:text-sm leading-relaxed flex-1">
-                    <strong className="text-white">Nuxt 3 + Vue 3 + TypeScript</strong> con SSR, PWA y Tailwind CSS.
-                  </p>
+                  <p 
+                    className="text-gray-300 text-xs sm:text-sm leading-relaxed flex-1"
+                    dangerouslySetInnerHTML={renderTextWithHTML(translations.frontend_description)}
+                  />
                 </motion.div>
 
                 {/* Backend - COLUMNA DERECHA */}
@@ -162,13 +237,14 @@ export default function Projects() {
                     </div>
                     <div className="min-w-0 flex-1">
                       <h4 className="text-sm sm:text-base md:text-lg font-semibold text-white truncate">
-                        Backend
+                        {translations.backend_title}
                       </h4>
                     </div>
                   </div>
-                  <p className="text-gray-300 text-xs sm:text-sm leading-relaxed flex-1">
-                    <strong className="text-white">Spring Boot + Java 17</strong> con REST API, JWT y optimización.
-                  </p>
+                  <p 
+                    className="text-gray-300 text-xs sm:text-sm leading-relaxed flex-1"
+                    dangerouslySetInnerHTML={renderTextWithHTML(translations.backend_description)}
+                  />
                 </motion.div>
 
                 {/* Base de Datos - COLUMNA IZQUIERDA (fila 2) */}
@@ -196,13 +272,14 @@ export default function Projects() {
                     </div>
                     <div className="min-w-0 flex-1">
                       <h4 className="text-sm sm:text-base md:text-lg font-semibold text-white truncate">
-                        Base de Datos
+                        {translations.database_title}
                       </h4>
                     </div>
                   </div>
-                  <p className="text-gray-300 text-xs sm:text-sm leading-relaxed flex-1">
-                    <strong className="text-white">MongoDB</strong> NoSQL con modelo flexible y consultas optimizadas.
-                  </p>
+                  <p 
+                    className="text-gray-300 text-xs sm:text-sm leading-relaxed flex-1"
+                    dangerouslySetInnerHTML={renderTextWithHTML(translations.database_description)}
+                  />
                 </motion.div>
 
                 {/* Despliegue - COLUMNA DERECHA (fila 2) */}
@@ -230,13 +307,14 @@ export default function Projects() {
                     </div>
                     <div className="min-w-0 flex-1">
                       <h4 className="text-sm sm:text-base md:text-lg font-semibold text-white truncate">
-                        Despliegue
+                        {translations.deployment_title}
                       </h4>
                     </div>
                   </div>
-                  <p className="text-gray-300 text-xs sm:text-sm leading-relaxed flex-1">
-                    <strong className="text-white">Docker + Render</strong> con configuración de producción lista.
-                  </p>
+                  <p 
+                    className="text-gray-300 text-xs sm:text-sm leading-relaxed flex-1"
+                    dangerouslySetInnerHTML={renderTextWithHTML(translations.deployment_description)}
+                  />
                 </motion.div>
               </div>
             </div>
@@ -254,11 +332,10 @@ export default function Projects() {
               transition={{ duration: 0.5, delay: 0.5 }}
             >
               <h3 className="text-lg md:text-xl font-bold text-white mb-3">
-                ¿Necesitas una solución similar?
+                {translations.cta_title}
               </h3>
               <p className="text-gray-300 text-sm md:text-base mb-6">
-                Puedo desarrollar aplicaciones completas adaptadas a tus necesidades,
-                con las mejores prácticas y tecnologías modernas.
+                {translations.cta_description}
               </p>
               <a
                 href="#contact"
@@ -273,7 +350,7 @@ export default function Projects() {
                 "
               >
                 <Rocket className="w-4 h-4 md:w-5 md:h-5" />
-                Hablar sobre tu proyecto
+                {translations.cta_button}
               </a>
             </motion.div>
           </div>

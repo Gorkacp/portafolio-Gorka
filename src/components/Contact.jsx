@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Send, Mail, User, MessageSquare, ArrowRight, Clock, Shield, Calendar, Linkedin, Zap, Target } from "lucide-react";
+import { getTranslation } from "@/utils/translations";
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -13,6 +14,48 @@ export default function Contact() {
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [language, setLanguage] = useState("es");
+  const [isMounted, setIsMounted] = useState(false);
+
+  // Escuchar cambios de idioma
+  useEffect(() => {
+    setIsMounted(true);
+    
+    const handleLanguageChange = () => {
+      const savedLang = localStorage.getItem("language") || "es";
+      setLanguage(savedLang);
+    };
+
+    handleLanguageChange();
+    
+    window.addEventListener("languageChange", handleLanguageChange);
+    
+    const interval = setInterval(handleLanguageChange, 1000);
+    
+    return () => {
+      window.removeEventListener("languageChange", handleLanguageChange);
+      clearInterval(interval);
+    };
+  }, []);
+
+  // Función para renderizar texto con HTML
+  const renderTextWithHTML = (text) => {
+    return { __html: text };
+  };
+
+  // Obtener traducciones
+  const translations = {
+    section_title: getTranslation(language, "Contact.section_title"),
+    main_title: getTranslation(language, "Contact.main_title"),
+    main_title_highlight: getTranslation(language, "Contact.main_title_highlight"),
+    subtitle: getTranslation(language, "Contact.subtitle"),
+    subtitle_highlight: getTranslation(language, "Contact.subtitle_highlight"),
+    description: getTranslation(language, "Contact.description"),
+    description2: getTranslation(language, "Contact.description2"),
+    linkedin_card: getTranslation(language, "Contact.linkedin_card"),
+    metrics: getTranslation(language, "Contact.metrics"),
+    form: getTranslation(language, "Contact.form"),
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -26,18 +69,44 @@ export default function Contact() {
     e.preventDefault();
     setIsSubmitting(true);
     console.log("Form data:", formData);
+    
+    // Aquí iría la lógica real de envío del formulario
     setTimeout(() => {
       setIsSubmitting(false);
-      alert("¡Mensaje enviado con éxito! Te contactaré pronto.");
+      
+      // Mensaje de éxito traducido
+      const successMessages = {
+        es: "¡Mensaje enviado con éxito! Te contactaré pronto.",
+        en: "Message sent successfully! I'll contact you soon.",
+        de: "Nachricht erfolgreich gesendet! Ich werde mich bald bei Ihnen melden."
+      };
+      
+      alert(successMessages[language] || successMessages.es);
       setFormData({ name: "", email: "", subject: "", message: "" });
     }, 1500);
   };
+
+  // Loading (evita SSR issues)
+  if (!isMounted) {
+    return (
+      <section
+        id="contact"
+        className="
+          relative w-full py-12 md:py-32 px-4 md:px-6 font-poppins
+          bg-gradient-to-b from-gray-900 via-black to-black
+          text-white
+        "
+      >
+        <div className="h-96"></div>
+      </section>
+    );
+  }
 
   return (
     <section
       id="contact"
       className="
-        relative w-full py-12 md:py-32 px-4 md:px-6 font-poppins  {/* Reducido en móvil */}
+        relative w-full py-12 md:py-32 px-4 md:px-6 font-poppins
         bg-gradient-to-b from-gray-900 via-black to-black
         text-white
       "
@@ -45,40 +114,36 @@ export default function Contact() {
       {/* Separador superior - más sutil */}
       <div className="absolute top-0 left-0 w-full h-[0.5px] bg-gradient-to-r from-transparent via-purple-500/30 to-transparent" />
 
-      <div className="max-w-[1200px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-20 items-start"> {/* Reducido gap en móvil */}
+      <div className="max-w-[1200px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-20 items-start">
 
         {/* Columna Izquierda - Información */}
-        <div className="flex flex-col gap-4 md:gap-6"> {/* Reducido gap en móvil */}
+        <div className="flex flex-col gap-4 md:gap-6">
           <span className="uppercase tracking-widest text-xs md:text-sm text-purple-400">
-            Oportunidad de colaboración
+            {translations.section_title}
           </span>
 
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight">
-            Conectemos{" "}
+            {translations.main_title}{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500">
-              visiones
+              {translations.main_title_highlight}
             </span>{" "}
             <span className="block text-xl sm:text-3xl md:text-4xl mt-2 md:mt-4 font-normal">
-              para crear{" "}
+              {translations.subtitle}{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">
-                soluciones extraordinarias
+                {translations.subtitle_highlight}
               </span>
             </span>
           </h2>
 
-          <p className="text-gray-300 text-sm md:text-lg leading-relaxed">
-            Como <span className="text-white font-medium">Desarrollador Full Stack</span>,
-            busco proyectos donde pueda fusionar{" "}
-            <strong>innovación técnica</strong> con{" "}
-            <strong>estrategia empresarial</strong> para construir productos digitales
-            que marquen la diferencia.
-          </p>
+          <p 
+            className="text-gray-300 text-sm md:text-lg leading-relaxed"
+            dangerouslySetInnerHTML={renderTextWithHTML(translations.description)}
+          />
 
-          <p className="text-gray-400 text-sm md:text-base leading-relaxed">
-            Si tu empresa necesita un partner tecnológico que entienda tanto de
-            <strong> código</strong> como de <strong>resultados de negocio</strong>,
-            trabajemos juntos para transformar desafíos en éxitos medibles.
-          </p>
+          <p 
+            className="text-gray-400 text-sm md:text-base leading-relaxed"
+            dangerouslySetInnerHTML={renderTextWithHTML(translations.description2)}
+          />
 
           {/* LinkedIn Professional Card */}
           <div className="mt-4 md:mt-8">
@@ -98,10 +163,10 @@ export default function Contact() {
                 </div>
                 <div>
                   <h3 className="text-base md:text-lg font-semibold text-white">
-                    Perfil Profesional
+                    {translations.linkedin_card?.title || "Perfil Profesional"}
                   </h3>
                   <p className="text-xs md:text-sm text-blue-300">
-                    Red profesional actualizada
+                    {translations.linkedin_card?.subtitle || "Red profesional actualizada"}
                   </p>
                 </div>
               </div>
@@ -110,13 +175,13 @@ export default function Contact() {
                 <div className="flex items-center gap-2">
                   <Zap className="w-3 h-3 md:w-4 md:h-4 text-blue-400 flex-shrink-0" />
                   <span className="text-xs md:text-sm text-gray-300">
-                    Experiencia Full Stack verificada
+                    {translations.linkedin_card?.feature1 || "Experiencia Full Stack verificada"}
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Target className="w-3 h-3 md:w-4 md:h-4 text-purple-400 flex-shrink-0" />
                   <span className="text-xs md:text-sm text-gray-300">
-                    Proyectos completados exitosamente
+                    {translations.linkedin_card?.feature2 || "Proyectos completados exitosamente"}
                   </span>
                 </div>
               </div>
@@ -137,7 +202,7 @@ export default function Contact() {
                 whileTap={{ scale: 0.95 }}
               >
                 <Linkedin className="w-3 h-3 md:w-4 md:h-4 flex-shrink-0" />
-                <span>Conectar en LinkedIn</span>
+                <span>{translations.linkedin_card?.connect_button || "Conectar en LinkedIn"}</span>
                 <ArrowRight className="w-3 h-3 md:w-3 md:h-3 group-hover/linkedin:translate-x-1 transition-transform" />
               </motion.a>
             </div>
@@ -145,7 +210,7 @@ export default function Contact() {
         </div>
 
         {/* Columna Derecha - Formulario y Métricas */}
-        <div className="flex flex-col gap-6 md:gap-10"> {/* Reducido gap en móvil */}
+        <div className="flex flex-col gap-6 md:gap-10">
           {/* Métricas Superiores - Responsive */}
           <div className="grid grid-cols-3 gap-2 md:gap-4">
             <div className="
@@ -161,7 +226,7 @@ export default function Contact() {
                 <div className="text-xl md:text-2xl font-bold text-white">24h</div>
               </div>
               <div className="text-[10px] md:text-xs text-gray-300 mt-1 md:mt-2 uppercase tracking-wider leading-tight">
-                Respuesta
+                {translations.metrics?.response || "Respuesta"}
               </div>
             </div>
             <div className="
@@ -177,7 +242,7 @@ export default function Contact() {
                 <div className="text-xl md:text-2xl font-bold text-white">100%</div>
               </div>
               <div className="text-[10px] md:text-xs text-gray-300 mt-1 md:mt-2 uppercase tracking-wider leading-tight">
-                Compromiso
+                {translations.metrics?.commitment || "Compromiso"}
               </div>
             </div>
             <div className="
@@ -193,7 +258,7 @@ export default function Contact() {
                 <div className="text-xl md:text-2xl font-bold text-white">Flex.</div>
               </div>
               <div className="text-[10px] md:text-xs text-gray-300 mt-1 md:mt-2 uppercase tracking-wider leading-tight">
-                Disponibilidad
+                {translations.metrics?.availability || "Disponibilidad"}
               </div>
             </div>
           </div>
@@ -217,10 +282,10 @@ export default function Contact() {
                 </div>
                 <div className="min-w-0">
                   <h3 className="text-lg md:text-xl font-semibold text-white">
-                    Propuesta de colaboración
+                    {translations.form?.title || "Propuesta de colaboración"}
                   </h3>
                   <p className="text-xs md:text-sm text-gray-400 truncate">
-                    Iniciemos una conversación estratégica
+                    {translations.form?.subtitle || "Iniciemos una conversación estratégica"}
                   </p>
                 </div>
               </div>
@@ -232,7 +297,7 @@ export default function Contact() {
                     <label className="block text-xs md:text-sm font-medium text-gray-300 mb-1 md:mb-2">
                       <div className="flex items-center gap-2">
                         <User className="w-3 h-3 md:w-4 md:h-4" />
-                        <span>Nombre</span>
+                        <span>{translations.form?.labels?.name || "Nombre"}</span>
                       </div>
                     </label>
                     <input
@@ -241,7 +306,7 @@ export default function Contact() {
                       value={formData.name}
                       onChange={handleChange}
                       required
-                      placeholder="Nombre completo"
+                      placeholder={translations.form?.placeholders?.name || "Nombre completo"}
                       className="
                         w-full px-3 md:px-4 py-2.5 md:py-3 rounded-lg text-xs md:text-sm
                         bg-white/5 border border-white/10
@@ -257,7 +322,7 @@ export default function Contact() {
                     <label className="block text-xs md:text-sm font-medium text-gray-300 mb-1 md:mb-2">
                       <div className="flex items-center gap-2">
                         <Mail className="w-3 h-3 md:w-4 md:h-4" />
-                        <span>Email profesional</span>
+                        <span>{translations.form?.labels?.email || "Email profesional"}</span>
                       </div>
                     </label>
                     <input
@@ -266,7 +331,7 @@ export default function Contact() {
                       value={formData.email}
                       onChange={handleChange}
                       required
-                      placeholder="nombre@empresa.com"
+                      placeholder={translations.form?.placeholders?.email || "nombre@empresa.com"}
                       className="
                         w-full px-3 md:px-4 py-2.5 md:py-3 rounded-lg text-xs md:text-sm
                         bg-white/5 border border-white/10
@@ -282,7 +347,7 @@ export default function Contact() {
                 {/* Asunto */}
                 <div className="space-y-2">
                   <label className="block text-xs md:text-sm font-medium text-gray-300 mb-1 md:mb-2">
-                    Tipo de proyecto
+                    {translations.form?.labels?.project_type || "Tipo de proyecto"}
                   </label>
                   <input
                     type="text"
@@ -290,7 +355,7 @@ export default function Contact() {
                     value={formData.subject}
                     onChange={handleChange}
                     required
-                    placeholder="Desarrollo web, Consultoría, Colaboración técnica..."
+                    placeholder={translations.form?.placeholders?.project_type || "Desarrollo web, Consultoría, Colaboración técnica..."}
                     className="
                       w-full px-3 md:px-4 py-2.5 md:py-3 rounded-lg text-xs md:text-sm
                       bg-white/5 border border-white/10
@@ -305,7 +370,7 @@ export default function Contact() {
                 {/* Mensaje */}
                 <div className="space-y-2">
                   <label className="block text-xs md:text-sm font-medium text-gray-300 mb-1 md:mb-2">
-                    Visión del proyecto
+                    {translations.form?.labels?.project_vision || "Visión del proyecto"}
                   </label>
                   <textarea
                     name="message"
@@ -322,7 +387,7 @@ export default function Contact() {
                       hover:border-white/20
                       resize-none
                     "
-                    placeholder="Describe los objetivos, desafíos y expectativas de tu proyecto..."
+                    placeholder={translations.form?.placeholders?.project_vision || "Describe los objetivos, desafíos y expectativas de tu proyecto..."}
                   />
                 </div>
 
@@ -350,11 +415,11 @@ export default function Contact() {
                   {isSubmitting ? (
                     <>
                       <div className="w-4 h-4 md:w-5 md:h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                      <span>PROCESANDO PROPUESTA...</span>
+                      <span>{translations.form?.submitting || "PROCESANDO PROPUESTA..."}</span>
                     </>
                   ) : (
                     <>
-                      <span>INICIAR COLABORACIÓN</span>
+                      <span>{translations.form?.submit_button || "INICIAR COLABORACIÓN"}</span>
                       <ArrowRight className="w-3 h-3 md:w-4 md:h-4 group-hover/btn:translate-x-2 transition-transform duration-300" />
                     </>
                   )}
@@ -363,10 +428,10 @@ export default function Contact() {
                 {/* Nota */}
                 <div className="text-center pt-3 md:pt-4 border-t border-white/10">
                   <p className="text-xs text-gray-400">
-                    Su información es tratada con total confidencialidad y profesionalismo.
+                    {translations.form?.privacy_note || "Su información es tratada con total confidencialidad y profesionalismo."}
                     <br />
                     <span className="text-gray-500 text-[10px] md:text-xs">
-                      Respeto absoluto por su privacidad y datos corporativos.
+                      {translations.form?.privacy_subnote || "Respeto absoluto por su privacidad y datos corporativos."}
                     </span>
                   </p>
                 </div>

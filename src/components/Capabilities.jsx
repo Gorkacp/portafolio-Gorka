@@ -7,138 +7,38 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
-
-const capabilitiesData = [
-  {
-    icon: Search,
-    title: "SEO Avanzado",
-    shortTitle: "SEO",
-    description: "Optimización técnica para máxima visibilidad",
-    shortDesc: "Visibilidad en buscadores",
-    features: [
-      "Core Web Vitals",
-      "Metadatos dinámicos",
-      "Schema markup",
-      "SEO On/Off-page"
-    ],
-    gradient: "from-cyan-500 to-blue-600",
-    iconColor: "text-cyan-400"
-  },
-  {
-    icon: Shield,
-    title: "Seguridad Integral",
-    shortTitle: "Seguridad",
-    description: "Protección avanzada y cumplimiento de estándares",
-    shortDesc: "Protección de datos",
-    features: [
-      "JWT/OAuth2",
-      "OWASP compliance",
-      "Cifrado de datos",
-      "Backups automáticos"
-    ],
-    gradient: "from-emerald-500 to-green-600",
-    iconColor: "text-emerald-400"
-  },
-  {
-    icon: Zap,
-    title: "Alto Rendimiento",
-    shortTitle: "Rendimiento",
-    description: "Aplicaciones rápidas con carga mínima",
-    shortDesc: "Carga ultrarrápida",
-    features: [
-      "Optimización imágenes",
-      "Lazy loading",
-      "Code splitting",
-      "CDN & caching"
-    ],
-    gradient: "from-amber-500 to-orange-600",
-    iconColor: "text-amber-400"
-  },
-  {
-    icon: Users,
-    title: "Experiencia de Usuario",
-    shortTitle: "UX/UI",
-    description: "Diseño centrado en usuario y accesibilidad",
-    shortDesc: "Diseño accesible",
-    features: [
-      "WCAG 2.1 compliant",
-      "Responsive-first",
-      "UX testing",
-      "Micro-interacciones"
-    ],
-    gradient: "from-purple-500 to-pink-600",
-    iconColor: "text-purple-400"
-  },
-  {
-    icon: BarChart,
-    title: "Escalabilidad",
-    shortTitle: "Escalabilidad",
-    description: "Arquitecturas para crecimiento exponencial",
-    shortDesc: "Crecimiento garantizado",
-    features: [
-      "Microservicios",
-      "DB distribuidas",
-      "Load balancing",
-      "Monitoreo real-time"
-    ],
-    gradient: "from-indigo-500 to-blue-700",
-    iconColor: "text-indigo-400"
-  },
-  {
-    icon: Globe,
-    title: "Despliegue Global",
-    shortTitle: "Despliegue",
-    description: "Infraestructura para audiencia mundial",
-    shortDesc: "Infraestructura global",
-    features: [
-      "Multi-región",
-      "SSL automático",
-      "Disaster recovery",
-      "CI/CD"
-    ],
-    gradient: "from-teal-500 to-cyan-600",
-    iconColor: "text-teal-400"
-  }
-];
-
-const statsData = [
-  { 
-    value: "99.9%", 
-    label: "Uptime", 
-    shortLabel: "Uptime",
-    icon: Shield, 
-    color: "text-emerald-400",
-    size: "text-lg md:text-2xl lg:text-3xl"
-  },
-  { 
-    value: "<1s", 
-    label: "Carga inicial", 
-    shortLabel: "Velocidad",
-    icon: Zap, 
-    color: "text-amber-400",
-    size: "text-lg md:text-2xl lg:text-3xl"
-  },
-  { 
-    value: "100%", 
-    label: "Accesibilidad", 
-    shortLabel: "Accesible",
-    icon: Users, 
-    color: "text-purple-400",
-    size: "text-lg md:text-2xl lg:text-3xl"
-  },
-  { 
-    value: "A+", 
-    label: "Security Score", 
-    shortLabel: "Seguridad",
-    icon: Lock, 
-    color: "text-cyan-400",
-    size: "text-lg md:text-2xl lg:text-3xl"
-  },
-];
+import { getTranslation } from "@/utils/translations";
 
 export default function Capabilities() {
   const [expandedCard, setExpandedCard] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [language, setLanguage] = useState("es");
+  const [isMounted, setIsMounted] = useState(false);
+
+  // Escuchar cambios de idioma
+  useEffect(() => {
+    setIsMounted(true);
+    
+    // Función para manejar cambios de idioma
+    const handleLanguageChange = () => {
+      const savedLang = localStorage.getItem("language") || "es";
+      setLanguage(savedLang);
+    };
+
+    // Establecer idioma inicial
+    handleLanguageChange();
+    
+    // Escuchar cambios de idioma desde el Header
+    window.addEventListener("languageChange", handleLanguageChange);
+    
+    // También verificar periódicamente
+    const interval = setInterval(handleLanguageChange, 1000);
+    
+    return () => {
+      window.removeEventListener("languageChange", handleLanguageChange);
+      clearInterval(interval);
+    };
+  }, []);
 
   useEffect(() => {
     const handleResize = () => {
@@ -155,9 +55,136 @@ export default function Capabilities() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // Función para renderizar texto con HTML
+  const renderTextWithHTML = (text) => {
+    return { __html: text };
+  };
+
   const toggleCard = (index) => {
     setExpandedCard(expandedCard === index ? null : index);
   };
+
+  // Obtener traducciones
+  const translations = {
+    section_title: getTranslation(language, "Capabilities.section_title"),
+    main_title: getTranslation(language, "Capabilities.main_title"),
+    main_title_highlight: getTranslation(language, "Capabilities.main_title_highlight"),
+    subtitle: getTranslation(language, "Capabilities.subtitle"),
+    stats_uptime: getTranslation(language, "Capabilities.stats_uptime"),
+    stats_uptime_short: getTranslation(language, "Capabilities.stats_uptime_short"),
+    stats_speed: getTranslation(language, "Capabilities.stats_speed"),
+    stats_speed_short: getTranslation(language, "Capabilities.stats_speed_short"),
+    stats_accessibility: getTranslation(language, "Capabilities.stats_accessibility"),
+    stats_accessibility_short: getTranslation(language, "Capabilities.stats_accessibility_short"),
+    stats_security: getTranslation(language, "Capabilities.stats_security"),
+    stats_security_short: getTranslation(language, "Capabilities.stats_security_short"),
+    specialized_badge: getTranslation(language, "Capabilities.specialized_badge"),
+    capabilities: getTranslation(language, "Capabilities.capabilities"),
+  };
+
+  // Datos de iconos y gradientes (estos no cambian con el idioma)
+  const capabilitiesConfig = [
+    {
+      icon: Search,
+      gradient: "from-cyan-500 to-blue-600",
+      iconColor: "text-cyan-400"
+    },
+    {
+      icon: Shield,
+      gradient: "from-emerald-500 to-green-600",
+      iconColor: "text-emerald-400"
+    },
+    {
+      icon: Zap,
+      gradient: "from-amber-500 to-orange-600",
+      iconColor: "text-amber-400"
+    },
+    {
+      icon: Users,
+      gradient: "from-purple-500 to-pink-600",
+      iconColor: "text-purple-400"
+    },
+    {
+      icon: BarChart,
+      gradient: "from-indigo-500 to-blue-700",
+      iconColor: "text-indigo-400"
+    },
+    {
+      icon: Globe,
+      gradient: "from-teal-500 to-cyan-600",
+      iconColor: "text-teal-400"
+    }
+  ];
+
+  // Datos de estadísticas
+  const statsData = [
+    { 
+      value: "99.9%", 
+      label: translations.stats_uptime, 
+      shortLabel: translations.stats_uptime_short,
+      icon: Shield, 
+      color: "text-emerald-400",
+      size: "text-lg md:text-2xl lg:text-3xl"
+    },
+    { 
+      value: "<1s", 
+      label: translations.stats_speed, 
+      shortLabel: translations.stats_speed_short,
+      icon: Zap, 
+      color: "text-amber-400",
+      size: "text-lg md:text-2xl lg:text-3xl"
+    },
+    { 
+      value: "100%", 
+      label: translations.stats_accessibility, 
+      shortLabel: translations.stats_accessibility_short,
+      icon: Users, 
+      color: "text-purple-400",
+      size: "text-lg md:text-2xl lg:text-3xl"
+    },
+    { 
+      value: "A+", 
+      label: translations.stats_security, 
+      shortLabel: translations.stats_security_short,
+      icon: Lock, 
+      color: "text-cyan-400",
+      size: "text-lg md:text-2xl lg:text-3xl"
+    },
+  ];
+
+  // Cargar capacidades desde traducciones
+  let capabilitiesData = [];
+  try {
+    // Asegurarse de que las capacidades sean un array
+    capabilitiesData = Array.isArray(translations.capabilities) 
+      ? translations.capabilities 
+      : JSON.parse(translations.capabilities || '[]');
+    
+    // Combinar con configuraciones estáticas (iconos, gradientes, colores)
+    capabilitiesData = capabilitiesData.map((capability, index) => ({
+      ...capability,
+      ...capabilitiesConfig[index % capabilitiesConfig.length]
+    }));
+  } catch (error) {
+    console.error("Error loading capabilities:", error);
+    capabilitiesData = [];
+  }
+
+  // Loading (evita SSR issues)
+  if (!isMounted) {
+    return (
+      <section
+        id="capabilities"
+        className="
+          relative w-full py-12 md:py-20 lg:py-32 px-4 sm:px-6 font-poppins
+          bg-gradient-to-b from-gray-900 via-black to-black
+          text-white overflow-hidden
+        "
+      >
+        <div className="h-96"></div>
+      </section>
+    );
+  }
 
   return (
     <section
@@ -188,7 +215,7 @@ export default function Capabilities() {
               text-purple-400 font-medium mb-2 md:mb-3
             "
           >
-            Valor Añadido
+            {translations.section_title}
           </motion.span>
 
           <motion.h2
@@ -200,9 +227,9 @@ export default function Capabilities() {
               font-bold leading-tight mb-3 md:mb-4 px-2
             "
           >
-            Más allá del código:{" "}
+            {translations.main_title}{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500">
-              resultados
+              {translations.main_title_highlight}
             </span>
           </motion.h2>
 
@@ -215,14 +242,11 @@ export default function Capabilities() {
               text-xs sm:text-sm md:text-base
               leading-relaxed px-2
             "
-          >
-            Soluciones completas que ofrecen{" "}
-            <strong className="text-white">valor tangible</strong> y{" "}
-            <strong className="text-white">ventaja competitiva</strong>.
-          </motion.p>
+            dangerouslySetInnerHTML={renderTextWithHTML(translations.subtitle)}
+          />
         </div>
 
-        {/* Métricas principales - CORREGIDO: 2x2 en móvil, 4 en desktop */}
+        {/* Métricas principales */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -259,11 +283,11 @@ export default function Capabilities() {
           ))}
         </motion.div>
 
-        {/* Grid de capacidades - ACORDIÓN EN MÓVIL */}
+        {/* Grid de capacidades */}
         <div className="space-y-3 md:space-y-0 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-4 lg:gap-6">
           {capabilitiesData.map((capability, index) => (
             <motion.div
-              key={capability.title}
+              key={index}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: index * 0.1 }}
@@ -286,7 +310,7 @@ export default function Capabilities() {
                 blur-xl
               `} />
 
-              {/* Icono y título - COMPACTO EN MÓVIL */}
+              {/* Icono y título */}
               <div className="relative flex items-start gap-3 md:gap-4 mb-3 md:mb-4">
                 <div className={`
                   w-10 h-10 md:w-12 md:h-12 rounded-lg md:rounded-xl
@@ -324,7 +348,7 @@ export default function Capabilities() {
                 )}
               </div>
 
-              {/* Lista de características - OCULTO/EXPANDIBLE EN MÓVIL */}
+              {/* Lista de características */}
               <div className={`
                 overflow-hidden transition-all duration-300
                 ${isMobile 
@@ -333,7 +357,7 @@ export default function Capabilities() {
                 }
               `}>
                 <ul className="relative space-y-2 md:space-y-3">
-                  {capability.features.map((feature, idx) => (
+                  {capability.features && capability.features.map((feature, idx) => (
                     <li key={idx} className="flex items-start gap-2">
                       <CheckCircle className="w-3 h-3 md:w-4 md:h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
                       <span className="text-xs md:text-sm text-gray-300">{feature}</span>
@@ -352,7 +376,7 @@ export default function Capabilities() {
                 hidden md:block opacity-0 md:group-hover:opacity-100 
                 transition-opacity duration-300
               ">
-                Especializado
+                {translations.specialized_badge}
               </div>
             </motion.div>
           ))}

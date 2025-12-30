@@ -4,29 +4,58 @@ import { ExternalLink, Github, Zap, ChevronRight, Code } from "lucide-react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
+import { getTranslation } from "@/utils/translations";
 
 export default function ProjectCard({ project }) {
   const [isHovered, setIsHovered] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const [techsToShow, setTechsToShow] = useState(6); // Valor por defecto
+  const [techsToShow, setTechsToShow] = useState(6);
+  const [language, setLanguage] = useState("es");
+  const [isMounted, setIsMounted] = useState(false);
 
-  // Detectar tamaño de pantalla solo en el cliente
+  // Escuchar cambios de idioma
+  useEffect(() => {
+    setIsMounted(true);
+    
+    const handleLanguageChange = () => {
+      const savedLang = localStorage.getItem("language") || "es";
+      setLanguage(savedLang);
+    };
+
+    handleLanguageChange();
+    
+    window.addEventListener("languageChange", handleLanguageChange);
+    
+    const interval = setInterval(handleLanguageChange, 1000);
+    
+    return () => {
+      window.removeEventListener("languageChange", handleLanguageChange);
+      clearInterval(interval);
+    };
+  }, []);
+
+  // Detectar tamaño de pantalla
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
       setTechsToShow(window.innerWidth < 768 ? 4 : 6);
     };
     
-    // Verificar inmediatamente
     checkMobile();
-    
-    // Escuchar cambios de tamaño
     window.addEventListener('resize', checkMobile);
     
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  if (!project) return null;
+  // Obtener traducciones
+  const translations = {
+    full_stack_badge: getTranslation(language, "ProjectCard.full_stack_badge"),
+    demo_button: getTranslation(language, "ProjectCard.demo_button"),
+    code_button: getTranslation(language, "ProjectCard.code_button"),
+    impact_label: getTranslation(language, "ProjectCard.impact_label"),
+  };
+
+  if (!project || !isMounted) return null;
 
   return (
     <motion.article
@@ -81,7 +110,7 @@ export default function ProjectCard({ project }) {
           ">
             <Code className="w-3 h-3 text-blue-300" />
             <span className="text-xs md:text-sm font-semibold text-white">
-              Full Stack
+              {translations.full_stack_badge}
             </span>
           </div>
         </div>
@@ -115,6 +144,9 @@ export default function ProjectCard({ project }) {
           <div className="flex items-start gap-2">
             <Zap className="w-3 h-3 md:w-4 md:h-4 text-yellow-400 mt-0.5 flex-shrink-0" />
             <div>
+              <div className="text-[10px] md:text-xs font-semibold text-yellow-300 mb-0.5">
+                {translations.impact_label}
+              </div>
               <p className="text-gray-300 text-xs leading-relaxed line-clamp-2 md:line-clamp-none">
                 {project.impact}
               </p>
@@ -168,7 +200,7 @@ export default function ProjectCard({ project }) {
             whileTap={{ scale: 0.95 }}
           >
             <ExternalLink size={14} className="md:size-[16px]" />
-            <span className="truncate">Demo</span>
+            <span className="truncate">{translations.demo_button}</span>
             <ChevronRight className="w-2.5 h-2.5 md:w-3 md:h-3 group-hover/btn:translate-x-1 transition-transform" />
           </motion.a>
 
@@ -189,7 +221,7 @@ export default function ProjectCard({ project }) {
             whileTap={{ scale: 0.95 }}
           >
             <Github size={14} className="md:size-[16px]" />
-            <span className="truncate">Código</span>
+            <span className="truncate">{translations.code_button}</span>
           </motion.a>
         </div>
       </div>

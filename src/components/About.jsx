@@ -1,13 +1,95 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import {
   Code2,
   Layers,
   Database,
   Server,
 } from "lucide-react";
+import { getTranslation } from "@/utils/translations";
 
 export default function About() {
+  const [language, setLanguage] = useState("es");
+  const [isMounted, setIsMounted] = useState(false);
+
+  // Escuchar cambios de idioma
+  useEffect(() => {
+    setIsMounted(true);
+    
+    // Función para manejar cambios de idioma
+    const handleLanguageChange = () => {
+      const savedLang = localStorage.getItem("language") || "es";
+      setLanguage(savedLang);
+    };
+
+    // Establecer idioma inicial
+    handleLanguageChange();
+    
+    // Escuchar cambios de idioma desde el Header
+    window.addEventListener("languageChange", handleLanguageChange);
+    
+    // También verificar periódicamente
+    const interval = setInterval(handleLanguageChange, 1000);
+    
+    return () => {
+      window.removeEventListener("languageChange", handleLanguageChange);
+      clearInterval(interval);
+    };
+  }, []);
+
+  // Función para renderizar texto con HTML
+  const renderTextWithHTML = (text) => {
+    return { __html: text };
+  };
+
+  // Obtener traducciones
+  const translations = {
+    title: getTranslation(language, "About.title"),
+    subtitle: getTranslation(language, "About.subtitle"),
+    paragraph1: getTranslation(language, "About.paragraph1"),
+    paragraph2: getTranslation(language, "About.paragraph2"),
+    paragraph3: getTranslation(language, "About.paragraph3"),
+    frontend_title: getTranslation(language, "About.frontend_title"),
+    frontend_tech: getTranslation(language, "About.frontend_tech"),
+    backend_title: getTranslation(language, "About.backend_title"),
+    backend_tech: getTranslation(language, "About.backend_tech"),
+    databases_title: getTranslation(language, "About.databases_title"),
+    databases_tech: getTranslation(language, "About.databases_tech"),
+  };
+
+  // Loading (evita SSR issues)
+  if (!isMounted) {
+    return (
+      <section
+        id="about"
+        className="
+          relative w-full min-h-[auto] lg:min-h-screen py-20 sm:py-24 md:py-32 px-4 sm:px-6 font-poppins
+          bg-gradient-to-b from-gray-900 via-black to-black
+          text-white
+          flex items-center
+        "
+      >
+        <div className="w-full max-w-[1200px] mx-auto">
+          <div className="h-64"></div>
+        </div>
+      </section>
+    );
+  }
+
+  // Asegurar que las tecnologías sean arrays
+  const frontendTechs = Array.isArray(translations.frontend_tech) 
+    ? translations.frontend_tech 
+    : JSON.parse(translations.frontend_tech || '[]');
+  
+  const backendTechs = Array.isArray(translations.backend_tech)
+    ? translations.backend_tech
+    : JSON.parse(translations.backend_tech || '[]');
+  
+  const databasesTechs = Array.isArray(translations.databases_tech)
+    ? translations.databases_tech
+    : JSON.parse(translations.databases_tech || '[]');
+
   return (
     <section
       id="about"
@@ -26,40 +108,28 @@ export default function About() {
         {/* Texto */}
         <div className="flex flex-col gap-4 sm:gap-5 md:gap-6">
           <span className="uppercase tracking-widest text-xs sm:text-sm text-purple-400">
-            Sobre mí
+            {translations.title}
           </span>
 
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight">
-            Desarrollador{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500">
-              Full Stack
-            </span>{" "}
-            orientado a productos digitales
-          </h2>
+          <h2 
+            className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight"
+            dangerouslySetInnerHTML={renderTextWithHTML(translations.subtitle)}
+          />
 
-          <p className="text-gray-300 text-base sm:text-lg leading-relaxed">
-            Soy <span className="text-white font-medium">Gorka Carmona</span>,
-            desarrollador <strong>Full-Stack Web</strong> con una fuerte
-            especialización en <strong>Frontend</strong> y experiencia sólida en
-            <strong> Backend</strong>, enfocado en crear aplicaciones web modernas,
-            escalables y optimizadas para SEO y rendimiento.
-          </p>
+          <p 
+            className="text-gray-300 text-base sm:text-lg leading-relaxed"
+            dangerouslySetInnerHTML={renderTextWithHTML(translations.paragraph1)}
+          />
 
-          <p className="text-gray-400 text-sm sm:text-base leading-relaxed">
-            Trabajo principalmente con <strong>Vue.js y Nuxt 3</strong>,
-            aprovechando SSR, metadatos dinámicos y buenas prácticas para mejorar
-            la experiencia de usuario y la visibilidad en buscadores. También
-            tengo experiencia con <strong>React</strong>, <strong>Node.js</strong>,
-            <strong>PHP</strong> y <strong>Laravel</strong>, así como en el
-            desarrollo de <strong>APIs REST</strong>.
-          </p>
+          <p 
+            className="text-gray-400 text-sm sm:text-base leading-relaxed"
+            dangerouslySetInnerHTML={renderTextWithHTML(translations.paragraph2)}
+          />
 
-          <p className="text-gray-400 text-sm sm:text-base leading-relaxed">
-            He finalizado proyectos full-stack que combinan
-            <strong> Nuxt 3</strong>, <strong>Spring Boot</strong> y
-            <strong> MongoDB Atlas</strong>, integrando un frontend avanzado con
-            un backend robusto y bases de datos escalables.
-          </p>
+          <p 
+            className="text-gray-400 text-sm sm:text-base leading-relaxed"
+            dangerouslySetInnerHTML={renderTextWithHTML(translations.paragraph3)}
+          />
         </div>
 
         {/* Bloques técnicos */}
@@ -70,21 +140,12 @@ export default function About() {
             <div className="flex items-center gap-3 mb-3 sm:mb-4">
               <Code2 className="w-5 h-5 sm:w-6 sm:h-6 text-purple-400" />
               <h3 className="text-lg sm:text-xl font-semibold">
-                Frontend
+                {translations.frontend_title}
               </h3>
             </div>
 
             <div className="flex flex-wrap gap-2 sm:gap-3">
-              {[
-                "Vue.js",
-                "Nuxt 3",
-                "React",
-                "HTML5",
-                "CSS3",
-                "Tailwind CSS",
-                "Sass",
-                "SEO & Metadatos",
-              ].map((tech) => (
+              {frontendTechs.map((tech) => (
                 <span
                   key={tech}
                   className="
@@ -105,19 +166,12 @@ export default function About() {
             <div className="flex items-center gap-3 mb-3 sm:mb-4">
               <Server className="w-5 h-5 sm:w-6 sm:h-6 text-blue-400" />
               <h3 className="text-lg sm:text-xl font-semibold">
-                Backend
+                {translations.backend_title}
               </h3>
             </div>
 
             <div className="flex flex-wrap gap-2 sm:gap-3">
-              {[
-                "Node.js",
-                "Java",
-                "Spring Boot",
-                "PHP",
-                "Laravel",
-                "REST APIs",
-              ].map((tech) => (
+              {backendTechs.map((tech) => (
                 <span
                   key={tech}
                   className="
@@ -138,19 +192,12 @@ export default function About() {
             <div className="flex items-center gap-3 mb-3 sm:mb-4">
               <Database className="w-5 h-5 sm:w-6 sm:h-6 text-pink-400" />
               <h3 className="text-lg sm:text-xl font-semibold">
-                Bases de datos & herramientas
+                {translations.databases_title}
               </h3>
             </div>
 
             <div className="flex flex-wrap gap-2 sm:gap-3">
-              {[
-                "MySQL",
-                "Oracle",
-                "MongoDB",
-                "Docker",
-                "Git",
-                "GitHub",
-              ].map((tech) => (
+              {databasesTechs.map((tech) => (
                 <span
                   key={tech}
                   className="

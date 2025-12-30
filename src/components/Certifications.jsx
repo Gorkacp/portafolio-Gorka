@@ -26,12 +26,36 @@ import {
   Cpu
 } from "lucide-react";
 import Image from "next/image";
+import { getTranslation } from "@/utils/translations";
 
 export default function Certifications() {
   const [filter, setFilter] = useState("all");
   const [search, setSearch] = useState("");
   const [visibleCount, setVisibleCount] = useState(6);
   const [isMobile, setIsMobile] = useState(false);
+  const [language, setLanguage] = useState("es");
+  const [isMounted, setIsMounted] = useState(false);
+
+  // Escuchar cambios de idioma
+  useEffect(() => {
+    setIsMounted(true);
+    
+    const handleLanguageChange = () => {
+      const savedLang = localStorage.getItem("language") || "es";
+      setLanguage(savedLang);
+    };
+
+    handleLanguageChange();
+    
+    window.addEventListener("languageChange", handleLanguageChange);
+    
+    const interval = setInterval(handleLanguageChange, 1000);
+    
+    return () => {
+      window.removeEventListener("languageChange", handleLanguageChange);
+      clearInterval(interval);
+    };
+  }, []);
 
   // Detectar si es móvil
   useEffect(() => {
@@ -51,219 +75,104 @@ export default function Certifications() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  const certifications = useMemo(() => [
-    {
-      name: "Introducción a Docker",
-      organization: "OpenWebinars",
-      date: "jul. 2025",
-      logo: "/certifications/docker.png",
-      defaultLogo: "/img/logo1.png",
-      link: "https://openwebinars.net/cert/rwef",
-      category: "devops",
-      hours: 8,
-      level: "beginner",
-    },
-    {
-      name: "Certificación Python PCEP",
-      organization: "OpenWebinars",
-      date: "jun. 2025",
-      logo: "/certifications/python.png",
-      defaultLogo: "/img/logo1.png",
-      link: "https://openwebinars.net/cert/w9Ia",
-      category: "programming",
-      hours: 40,
-      level: "certified",
-    },
-    {
-      name: "Curso AWS para desarrolladores",
-      organization: "OpenWebinars",
-      date: "jun. 2025",
-      logo: "/certifications/aws.png",
-      defaultLogo: "/img/logo1.png",
-      link: "https://openwebinars.net/cert/kIvS",
-      category: "cloud",
-      hours: 25,
-      level: "intermediate",
-    },
-    {
-      name: "Curso Jenkins: Escalando con Workers",
-      organization: "OpenWebinars",
-      date: "jun. 2025",
-      logo: "/certifications/jenkins.png",
-      defaultLogo: "/img/logo1.png",
-      link: "https://openwebinars.net/cert/7PVe",
-      category: "devops",
-      hours: 12,
-      level: "intermediate",
-    },
-    {
-      name: "Curso de Maven",
-      organization: "OpenWebinars",
-      date: "jun. 2025",
-      logo: "/certifications/maven.png",
-      defaultLogo: "/img/logo1.png",
-      link: "https://openwebinars.net/cert/mU8t",
-      category: "tools",
-      hours: 6,
-      level: "beginner",
-    },
-    {
-      name: "Curso MongoDB: Creación y gestión de NoSQL",
-      organization: "OpenWebinars",
-      date: "jun. 2025",
-      logo: "/certifications/mongodb.png",
-      defaultLogo: "/img/logo1.png",
-      link: "https://openwebinars.net/cert/bTZY",
-      category: "database",
-      hours: 15,
-      level: "intermediate",
-    },
-    {
-      name: "Desarrollo Web con Spring Boot",
-      organization: "OpenWebinars",
-      date: "jun. 2025",
-      logo: "/certifications/springboot.png",
-      defaultLogo: "/img/logo1.png",
-      link: "https://openwebinars.net/cert/Hrzv",
-      category: "backend",
-      hours: 35,
-      level: "advanced",
-    },
-    {
-      name: "Fundamentos de Angular",
-      organization: "OpenWebinars",
-      date: "jun. 2025",
-      logo: "/certifications/angular.png",
-      defaultLogo: "/img/logo1.png",
-      link: "https://openwebinars.net/cert/mJsB",
-      category: "frontend",
-      hours: 30,
-      level: "intermediate",
-    },
-    {
-      name: "TypeScript",
-      organization: "OpenWebinars",
-      date: "jun. 2025",
-      logo: "/certifications/typescript.png",
-      defaultLogo: "/img/logo1.png",
-      link: "https://openwebinars.net/cert/OPiJ",
-      category: "programming",
-      hours: 20,
-      level: "intermediate",
-    },
-    {
-      name: "JavaScript: Web API, Componentes y Testing",
-      organization: "OpenWebinars",
-      date: "mar. 2025",
-      logo: "/certifications/javascript.png",
-      defaultLogo: "/img/logo1.png",
-      link: "https://openwebinars.net/cert/LdJF",
-      category: "frontend",
-      hours: 45,
-      level: "advanced",
-    },
-    {
-      name: "Curso de Sass",
-      organization: "OpenWebinars",
-      date: "feb. 2025",
-      logo: "/certifications/sass.png",
-      defaultLogo: "/img/logo1.png",
-      link: "https://openwebinars.net/cert/L641",
-      category: "frontend",
-      hours: 10,
-      level: "intermediate",
-    },
-    {
-      name: "Fundamentos de React",
-      organization: "OpenWebinars",
-      date: "feb. 2025",
-      logo: "/certifications/react.png",
-      defaultLogo: "/img/logo1.png",
-      link: "https://openwebinars.net/cert/yfTz",
-      category: "frontend",
-      hours: 6,
-      level: "intermediate",
-    },
-    {
-      name: "Desarrollo Web Moderno con Laravel",
-      organization: "OpenWebinars",
-      date: "ene. 2025",
-      logo: "/certifications/laravel.png",
-      defaultLogo: "/img/logo1.png",
-      link: "https://openwebinars.net/cert/hytb",
-      category: "backend",
-      hours: 50,
-      level: "advanced",
-    },
-    {
-      name: "Dominando ChatGPT con la API de OpenAI",
-      organization: "OpenWebinars",
-      date: "oct. 2024",
-      logo: "/certifications/openai.png",
-      defaultLogo: "/img/logo1.png",
-      link: "https://openwebinars.net/cert/xUjK",
-      category: "ai",
-      hours: 5,
-      level: "intermediate",
-    },
-    {
-      name: "Fundamentos de JavaScript",
-      organization: "OpenWebinars",
-      date: "oct. 2024",
-      logo: "/certifications/javascript.png",
-      defaultLogo: "/img/logo1.png",
-      link: "https://openwebinars.net/cert/qvuq",
-      category: "programming",
-      hours: 8,
-      level: "beginner",
-    },
-  ], []);
+  // Función para renderizar texto con HTML
+  const renderTextWithHTML = (text) => {
+    return { __html: text };
+  };
 
-  // CATEGORÍAS CONSOLIDADAS CORREGIDAS (sin solapamientos)
+  // Obtener traducciones
+  const translations = {
+    section_title: getTranslation(language, "Certifications.section_title"),
+    main_title: getTranslation(language, "Certifications.main_title"),
+    main_title_highlight: getTranslation(language, "Certifications.main_title_highlight"),
+    subtitle: getTranslation(language, "Certifications.subtitle"),
+    subtitle_highlight: getTranslation(language, "Certifications.subtitle_highlight"),
+    description: getTranslation(language, "Certifications.description"),
+    stats_certificates: getTranslation(language, "Certifications.stats_certificates"),
+    stats_areas: getTranslation(language, "Certifications.stats_areas"),
+    stats_hours: getTranslation(language, "Certifications.stats_hours"),
+    stats_updated: getTranslation(language, "Certifications.stats_updated"),
+    filter_title: getTranslation(language, "Certifications.filter_title"),
+    search_placeholder: getTranslation(language, "Certifications.search_placeholder"),
+    clear_filters: getTranslation(language, "Certifications.clear_filters"),
+    results_found: getTranslation(language, "Certifications.results_found"),
+    showing: getTranslation(language, "Certifications.showing"),
+    of: getTranslation(language, "Certifications.of"),
+    categories: getTranslation(language, "Certifications.categories"),
+    category_labels: getTranslation(language, "Certifications.category_labels"),
+    levels: getTranslation(language, "Certifications.levels"),
+    badges: getTranslation(language, "Certifications.badges"),
+    controls: getTranslation(language, "Certifications.controls"),
+    empty_state: getTranslation(language, "Certifications.empty_state"),
+    footer: getTranslation(language, "Certifications.footer"),
+    certifications: getTranslation(language, "Certifications.certifications"),
+  };
+
+  // Cargar certificaciones desde traducciones
+  const certifications = useMemo(() => {
+    try {
+      const certs = Array.isArray(translations.certifications) 
+        ? translations.certifications 
+        : JSON.parse(translations.certifications || '[]');
+      
+      // Añadir URLs de logos y default logo
+      return certs.map(cert => ({
+        ...cert,
+        logo: `/certifications/${cert.name.toLowerCase().split(' ')[0]}.png`,
+        defaultLogo: "/img/logo1.png",
+        link: "https://openwebinars.net/cert/sample", // URL genérica
+      }));
+    } catch (error) {
+      console.error("Error loading certifications:", error);
+      return [];
+    }
+  }, [translations.certifications]);
+
+  // CATEGORÍAS CONSOLIDADAS
   const categories = useMemo(() => [
     { 
       id: "all", 
-      label: "Todas", 
+      label: translations.categories?.all || "Todas", 
       icon: <Award className="w-4 h-4" />, 
       color: "text-gray-300",
-      count: 15
+      count: certifications.length
     },
     { 
       id: "fullstack", 
-      label: "Full Stack", 
+      label: translations.categories?.fullstack || "Full Stack", 
       icon: <FileCode className="w-4 h-4" />, 
       color: "text-purple-400",
       count: certifications.filter(cert => ["frontend", "backend", "programming"].includes(cert.category)).length
     },
     { 
       id: "devops", 
-      label: "DevOps", 
+      label: translations.categories?.devops || "DevOps", 
       icon: <Terminal className="w-4 h-4" />, 
       color: "text-blue-400",
       count: certifications.filter(cert => cert.category === "devops").length
     },
     { 
       id: "cloud", 
-      label: "Cloud", 
+      label: translations.categories?.cloud || "Cloud", 
       icon: <Cloud className="w-4 h-4" />, 
       color: "text-orange-400",
       count: certifications.filter(cert => cert.category === "cloud").length
     },
     { 
       id: "database", 
-      label: "DB", 
+      label: translations.categories?.database || "DB", 
       icon: <Database className="w-4 h-4" />, 
       color: "text-green-400",
       count: certifications.filter(cert => cert.category === "database").length
     },
     { 
       id: "ai", 
-      label: "AI", 
+      label: translations.categories?.ai || "AI", 
       icon: <Cpu className="w-4 h-4" />, 
       color: "text-pink-400",
       count: certifications.filter(cert => cert.category === "ai").length
     }
-  ], [certifications]);
+  ], [certifications, translations.categories]);
 
   // Filtrar certificaciones
   const filteredCerts = useMemo(() => 
@@ -301,15 +210,49 @@ export default function Certifications() {
   };
 
   const getCategoryBadge = (category) => {
+    const categoryLabels = translations.category_labels || {};
+    
     const categoryMap = {
-      "frontend": { color: "bg-purple-500/10 text-purple-400 border-purple-500/20", icon: <Code2 className="w-3 h-3" />, label: "Frontend" },
-      "backend": { color: "bg-blue-500/10 text-blue-400 border-blue-500/20", icon: <Server className="w-3 h-3" />, label: "Backend" },
-      "devops": { color: "bg-green-500/10 text-green-400 border-green-500/20", icon: <Terminal className="w-3 h-3" />, label: "DevOps" },
-      "cloud": { color: "bg-orange-500/10 text-orange-400 border-orange-500/20", icon: <Cloud className="w-3 h-3" />, label: "Cloud" },
-      "programming": { color: "bg-pink-500/10 text-pink-400 border-pink-500/20", icon: <Cpu className="w-3 h-3" />, label: "Programación" },
-      "database": { color: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20", icon: <Database className="w-3 h-3" />, label: "Database" },
-      "ai": { color: "bg-indigo-500/10 text-indigo-400 border-indigo-500/20", icon: <Cpu className="w-3 h-3" />, label: "AI" },
-      "tools": { color: "bg-cyan-500/10 text-cyan-400 border-cyan-500/20", icon: <Box className="w-3 h-3" />, label: "Tools" },
+      "frontend": { 
+        color: "bg-purple-500/10 text-purple-400 border-purple-500/20", 
+        icon: <Code2 className="w-3 h-3" />, 
+        label: categoryLabels.frontend || "Frontend" 
+      },
+      "backend": { 
+        color: "bg-blue-500/10 text-blue-400 border-blue-500/20", 
+        icon: <Server className="w-3 h-3" />, 
+        label: categoryLabels.backend || "Backend" 
+      },
+      "devops": { 
+        color: "bg-green-500/10 text-green-400 border-green-500/20", 
+        icon: <Terminal className="w-3 h-3" />, 
+        label: categoryLabels.devops || "DevOps" 
+      },
+      "cloud": { 
+        color: "bg-orange-500/10 text-orange-400 border-orange-500/20", 
+        icon: <Cloud className="w-3 h-3" />, 
+        label: categoryLabels.cloud || "Cloud" 
+      },
+      "programming": { 
+        color: "bg-pink-500/10 text-pink-400 border-pink-500/20", 
+        icon: <Cpu className="w-3 h-3" />, 
+        label: categoryLabels.programming || "Programación" 
+      },
+      "database": { 
+        color: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20", 
+        icon: <Database className="w-3 h-3" />, 
+        label: categoryLabels.database || "Database" 
+      },
+      "ai": { 
+        color: "bg-indigo-500/10 text-indigo-400 border-indigo-500/20", 
+        icon: <Cpu className="w-3 h-3" />, 
+        label: categoryLabels.ai || "AI" 
+      },
+      "tools": { 
+        color: "bg-cyan-500/10 text-cyan-400 border-cyan-500/20", 
+        icon: <Box className="w-3 h-3" />, 
+        label: categoryLabels.tools || "Tools" 
+      },
     };
     
     return categoryMap[category] || { 
@@ -320,15 +263,17 @@ export default function Certifications() {
   };
 
   const getLevelBadge = (level) => {
+    const levels = translations.levels || {};
+    
     switch(level) {
       case "beginner":
-        return { label: "Principiante", color: "bg-green-500/10 text-green-400" };
+        return { label: levels.beginner || "Principiante", color: "bg-green-500/10 text-green-400" };
       case "intermediate":
-        return { label: "Intermedio", color: "bg-blue-500/10 text-blue-400" };
+        return { label: levels.intermediate || "Intermedio", color: "bg-blue-500/10 text-blue-400" };
       case "advanced":
-        return { label: "Avanzado", color: "bg-purple-500/10 text-purple-400" };
+        return { label: levels.advanced || "Avanzado", color: "bg-purple-500/10 text-purple-400" };
       case "certified":
-        return { label: "Certificado", color: "bg-yellow-500/10 text-yellow-400" };
+        return { label: levels.certified || "Certificado", color: "bg-yellow-500/10 text-yellow-400" };
       default:
         return { label: level, color: "bg-gray-500/10 text-gray-400" };
     }
@@ -350,6 +295,22 @@ export default function Certifications() {
       </div>
     );
   };
+
+  // Loading (evita SSR issues)
+  if (!isMounted) {
+    return (
+      <section
+        id="certifications"
+        className="
+          relative w-full py-20 md:py-32 px-4 md:px-6 font-poppins
+          bg-gradient-to-b from-gray-900 via-black to-black
+          text-white overflow-hidden
+        "
+      >
+        <div className="h-96"></div>
+      </section>
+    );
+  }
 
   return (
     <section
@@ -380,37 +341,37 @@ export default function Certifications() {
             text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400
             font-medium block mb-3
           ">
-            Validación Técnica
+            {translations.section_title}
           </span>
 
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight">
-            Certificaciones{" "}
+            {translations.main_title}{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500">
-              profesionales
+              {translations.main_title_highlight}
             </span>{" "}
             <span className="block text-xl sm:text-2xl md:text-3xl mt-3 md:mt-4 font-normal">
-              que respaldan mi{" "}
+              {translations.subtitle}{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">
-                expertise técnico
+                {translations.subtitle_highlight}
               </span>
             </span>
           </h2>
 
-          <p className="text-gray-300 text-base md:text-lg mt-4 md:mt-6 leading-relaxed">
-            <span className="text-white font-medium">15 certificaciones</span> que validan conocimientos en 
-            <span className="text-white font-medium"> tecnologías modernas</span>, desde desarrollo Full Stack 
-            y backend hasta DevOps e inteligencia artificial. Cada certificación demuestra 
-            <span className="text-white font-medium"> compromiso con el aprendizaje continuo</span>.
-          </p>
+          <p 
+            className="text-gray-300 text-base md:text-lg mt-4 md:mt-6 leading-relaxed"
+            dangerouslySetInnerHTML={renderTextWithHTML(translations.description)}
+          />
 
-          {/* Stats rápidas - Más pequeño solo en móvil */}
+          {/* Stats rápidas */}
           <div className={`grid grid-cols-2 sm:grid-cols-4 gap-3 md:gap-4 mt-6 md:mt-8 ${isMobile ? 'scale-95' : ''}`}>
             <div className={`p-3 rounded-xl bg-white/5 border border-white/10 backdrop-blur-sm ${isMobile ? 'p-2' : 'md:p-4'}`}>
               <div className="flex items-center gap-2 md:gap-3">
                 <Layers className={`${isMobile ? 'w-3 h-3' : 'w-4 h-4 md:w-5 md:h-5'} text-blue-400`} />
                 <div>
-                  <div className={`${isMobile ? 'text-lg' : 'text-xl md:text-2xl'} font-bold text-white`}>15</div>
-                  <div className={`${isMobile ? 'text-[10px]' : 'text-xs'} text-gray-400 uppercase tracking-wider`}>Certificados</div>
+                  <div className={`${isMobile ? 'text-lg' : 'text-xl md:text-2xl'} font-bold text-white`}>{certifications.length}</div>
+                  <div className={`${isMobile ? 'text-[10px]' : 'text-xs'} text-gray-400 uppercase tracking-wider`}>
+                    {translations.stats_certificates}
+                  </div>
                 </div>
               </div>
             </div>
@@ -419,7 +380,9 @@ export default function Certifications() {
                 <Zap className={`${isMobile ? 'w-3 h-3' : 'w-4 h-4 md:w-5 md:h-5'} text-yellow-400`} />
                 <div>
                   <div className={`${isMobile ? 'text-lg' : 'text-xl md:text-2xl'} font-bold text-white`}>5</div>
-                  <div className={`${isMobile ? 'text-[10px]' : 'text-xs'} text-gray-400 uppercase tracking-wider`}>Áreas</div>
+                  <div className={`${isMobile ? 'text-[10px]' : 'text-xs'} text-gray-400 uppercase tracking-wider`}>
+                    {translations.stats_areas}
+                  </div>
                 </div>
               </div>
             </div>
@@ -428,7 +391,9 @@ export default function Certifications() {
                 <Check className={`${isMobile ? 'w-3 h-3' : 'w-4 h-4 md:w-5 md:h-5'} text-green-400`} />
                 <div>
                   <div className={`${isMobile ? 'text-lg' : 'text-xl md:text-2xl'} font-bold text-white`}>316h</div>
-                  <div className={`${isMobile ? 'text-[10px]' : 'text-xs'} text-gray-400 uppercase tracking-wider`}>Horas totales</div>
+                  <div className={`${isMobile ? 'text-[10px]' : 'text-xs'} text-gray-400 uppercase tracking-wider`}>
+                    {translations.stats_hours}
+                  </div>
                 </div>
               </div>
             </div>
@@ -437,7 +402,9 @@ export default function Certifications() {
                 <Rocket className={`${isMobile ? 'w-3 h-3' : 'w-4 h-4 md:w-5 md:h-5'} text-purple-400`} />
                 <div>
                   <div className={`${isMobile ? 'text-lg' : 'text-xl md:text-2xl'} font-bold text-white`}>2025</div>
-                  <div className={`${isMobile ? 'text-[10px]' : 'text-xs'} text-gray-400 uppercase tracking-wider`}>Actualizado</div>
+                  <div className={`${isMobile ? 'text-[10px]' : 'text-xs'} text-gray-400 uppercase tracking-wider`}>
+                    {translations.stats_updated}
+                  </div>
                 </div>
               </div>
             </div>
@@ -457,7 +424,7 @@ export default function Certifications() {
               <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
               <input
                 type="text"
-                placeholder="Buscar certificación..."
+                placeholder={translations.search_placeholder}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="
@@ -498,16 +465,16 @@ export default function Certifications() {
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
-                Limpiar filtros
+                {translations.clear_filters}
               </button>
             )}
           </div>
 
-          {/* FILTROS PROFESIONALES - Diseño horizontal en móvil */}
+          {/* FILTROS PROFESIONALES */}
           <div className="mb-4">
             <div className="flex items-center gap-2 mb-3">
               <Filter className="w-4 h-4 text-gray-400" />
-              <span className="text-sm text-gray-300">Filtrar por área:</span>
+              <span className="text-sm text-gray-300">{translations.filter_title}</span>
             </div>
             
             {/* Grid de filtros responsive */}
@@ -528,7 +495,6 @@ export default function Certifications() {
                     }
                   `}
                 >
-                  {/* Diseño horizontal para móvil */}
                   {isMobile ? (
                     <>
                       <div className="flex items-center gap-2 flex-1">
@@ -579,7 +545,7 @@ export default function Certifications() {
                   <div className="w-2 h-2 rounded-full bg-gradient-to-r from-purple-500 to-blue-500" />
                   <div className="flex flex-col sm:flex-row sm:items-center gap-2">
                     <span className="text-sm text-gray-300">
-                      <span className="text-white font-medium">{filteredCerts.length}</span> certificaciones encontradas
+                      <span className="text-white font-medium">{filteredCerts.length}</span> {translations.results_found}
                     </span>
                     {(filter !== "all" || search) && (
                       <div className="flex items-center gap-2 text-xs text-gray-500">
@@ -600,7 +566,7 @@ export default function Certifications() {
                 </div>
                 
                 <div className="text-xs text-gray-400 sm:text-right">
-                  Mostrando {Math.min(visibleCount, filteredCerts.length)} de {filteredCerts.length}
+                  {translations.showing} {Math.min(visibleCount, filteredCerts.length)} {translations.of} {filteredCerts.length}
                 </div>
               </div>
             </motion.div>
@@ -649,7 +615,7 @@ export default function Certifications() {
                         <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
-                        <span>{cert.hours}h</span>
+                        <span>{cert.hours}{translations.badges?.hours || "h"}</span>
                       </div>
                     </div>
                   </div>
@@ -679,7 +645,7 @@ export default function Certifications() {
                   {/* Fecha */}
                   <div className="flex items-center gap-2 text-gray-400 mb-4">
                     <Calendar className="w-3 h-3 md:w-4 md:h-4" />
-                    <span className="text-sm">Obtenida: {cert.date}</span>
+                    <span className="text-sm">{translations.badges?.obtained || "Obtenida"}: {cert.date}</span>
                   </div>
 
                   {/* Botón con enlace */}
@@ -702,7 +668,7 @@ export default function Certifications() {
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >
-                    Ver Credencial
+                    {translations.badges?.view_credential || "Ver Credencial"}
                     <ExternalLink className="w-3 h-3 md:w-4 md:h-4 group-hover/btn:translate-x-1 transition-transform" />
                   </motion.a>
                 </div>
@@ -734,7 +700,7 @@ export default function Certifications() {
                 "
               >
                 <Eye className="w-4 h-4" />
-                Ver más certificaciones
+                {translations.controls?.view_more || "Ver más certificaciones"}
                 <ChevronDown className="w-4 h-4 group-hover:translate-y-1 transition-transform" />
               </button>
             ) : (
@@ -750,13 +716,13 @@ export default function Certifications() {
                 "
               >
                 <EyeOff className="w-4 h-4" />
-                Ver menos
+                {translations.controls?.view_less || "Ver menos"}
                 <ChevronDown className="w-4 h-4 rotate-180 group-hover:translate-y-1 transition-transform" />
               </button>
             )}
             
             <p className="text-gray-500 text-xs md:text-sm mt-2">
-              Mostrando {Math.min(visibleCount, filteredCerts.length)} de {filteredCerts.length} certificaciones
+              {translations.showing} {Math.min(visibleCount, filteredCerts.length)} {translations.of} {filteredCerts.length} {translations.results_found}
             </p>
           </motion.div>
         )}
@@ -777,12 +743,12 @@ export default function Certifications() {
               <Search className="w-8 h-8 md:w-10 md:h-10 text-gray-500" />
             </div>
             <h3 className="text-lg md:text-xl font-semibold text-white mb-3">
-              No se encontraron certificaciones
+              {translations.empty_state?.title || "No se encontraron certificaciones"}
             </h3>
             <p className="text-gray-400 mb-6 max-w-md mx-auto px-4 text-sm md:text-base">
               {search 
-                ? `No hay resultados para "${search}". Prueba con otros términos o elimina los filtros.`
-                : `No hay certificaciones en el área seleccionada. Prueba con otra categoría.`
+                ? (translations.empty_state?.search_message || `No hay resultados para "${search}". Prueba con otros términos o elimina los filtros.`).replace("{search}", search)
+                : translations.empty_state?.filter_message || `No hay certificaciones en el área seleccionada. Prueba con otra categoría.`
               }
             </p>
             <button
@@ -798,29 +764,28 @@ export default function Certifications() {
               "
             >
               <Award className="w-4 h-4" />
-              Mostrar todas las certificaciones
+              {translations.controls?.show_all || "Mostrar todas las certificaciones"}
             </button>
           </motion.div>
         )}
 
-        {/* Footer mejorado para móvil */}
+        {/* Footer */}
         <div className="mt-12 pt-6 md:pt-8 border-t border-white/10">
           <div className="flex flex-col gap-4">
-            {/* Primera línea - Totales */}
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
               <div className="text-sm flex flex-wrap items-center gap-1">
-                <span className="text-gray-400">Total de certificaciones:</span>
-                <span className="text-white font-medium">15</span>
+                <span className="text-gray-400">{translations.footer?.total_certifications || "Total de certificaciones"}:</span>
+                <span className="text-white font-medium">{certifications.length}</span>
                 <span className="text-gray-500 hidden sm:inline">•</span>
-                <span className="text-gray-400 sm:ml-2">Horas totales:</span>
+                <span className="text-gray-400 sm:ml-2">{translations.footer?.total_hours || "Horas totales"}:</span>
                 <span className="text-white font-medium">316h</span>
               </div>
               
               <div className="text-sm text-gray-500 flex flex-wrap items-center gap-1">
-                <span className="text-gray-400">Plataforma:</span>
+                <span className="text-gray-400">{translations.footer?.platform || "Plataforma"}:</span>
                 <span className="text-gray-300">OpenWebinars</span>
                 <span className="text-gray-500 hidden sm:inline">•</span>
-                <span className="text-gray-400 sm:ml-2">Actualizado:</span>
+                <span className="text-gray-400 sm:ml-2">{translations.footer?.updated || "Actualizado"}:</span>
                 <span className="text-gray-300">julio 2025</span>
               </div>
             </div>

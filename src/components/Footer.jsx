@@ -4,20 +4,86 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Github, Linkedin, Mail, ArrowUp, ExternalLink, Sparkles, Code2, Database, Send, FileCode, User, FolderKanban } from "lucide-react";
 import { useState, useEffect } from "react";
+import { getTranslation } from "@/utils/translations";
 
 export default function Footer() {
   const year = new Date().getFullYear();
   const [scrollProgress, setScrollProgress] = useState(0);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [language, setLanguage] = useState("es");
+  const [isMounted, setIsMounted] = useState(false);
 
-  const quickLinks = [
-    { name: "Inicio", href: "#home", icon: <ArrowUp className="w-4 h-4 rotate-45" /> },
-    { name: "Sobre mí", href: "#about", icon: <User className="w-4 h-4" /> },
-    { name: "Proyectos", href: "#projects", icon: <FolderKanban className="w-4 h-4" /> },
-    { name: "Certificaciones", href: "#certifications", icon: <FileCode className="w-4 h-4" /> },
-    { name: "Contacto", href: "#contact", icon: <Send className="w-4 h-4" /> },
-  ];
+  // Escuchar cambios de idioma
+  useEffect(() => {
+    setIsMounted(true);
+    
+    const handleLanguageChange = () => {
+      const savedLang = localStorage.getItem("language") || "es";
+      setLanguage(savedLang);
+    };
+
+    handleLanguageChange();
+    
+    window.addEventListener("languageChange", handleLanguageChange);
+    
+    const interval = setInterval(handleLanguageChange, 1000);
+    
+    return () => {
+      window.removeEventListener("languageChange", handleLanguageChange);
+      clearInterval(interval);
+    };
+  }, []);
+
+  // Obtener traducciones
+  const translations = {
+    title: getTranslation(language, "Footer.title"),
+    contact_title: getTranslation(language, "Footer.contact_title"),
+    contact_title_highlight: getTranslation(language, "Footer.contact_title_highlight"),
+    navigation_title: getTranslation(language, "Footer.navigation_title"),
+    navigation_title_highlight: getTranslation(language, "Footer.navigation_title_highlight"),
+    connect_title: getTranslation(language, "Footer.connect_title"),
+    connect_title_highlight: getTranslation(language, "Footer.connect_title_highlight"),
+    quick_links: getTranslation(language, "Footer.quick_links"),
+    social: getTranslation(language, "Footer.social"),
+    copyright: getTranslation(language, "Footer.copyright"),
+    built_with: getTranslation(language, "Footer.built_with"),
+    and: getTranslation(language, "Footer.and"),
+    links: getTranslation(language, "Footer.links"),
+    version: getTranslation(language, "Footer.version"),
+    back_to_top: getTranslation(language, "Footer.back_to_top"),
+  };
+
+  // Cargar quick links desde traducciones
+  const quickLinks = () => {
+    try {
+      const links = Array.isArray(translations.quick_links) 
+        ? translations.quick_links 
+        : JSON.parse(translations.quick_links || '[]');
+      
+      const icons = [
+        <ArrowUp className="w-4 h-4 rotate-45" />,
+        <User className="w-4 h-4" />,
+        <FolderKanban className="w-4 h-4" />,
+        <FileCode className="w-4 h-4" />,
+        <Send className="w-4 h-4" />
+      ];
+      
+      return links.map((link, index) => ({
+        ...link,
+        icon: icons[index] || <ArrowUp className="w-4 h-4 rotate-45" />
+      }));
+    } catch (error) {
+      console.error("Error loading quick links:", error);
+      return [
+        { name: "Inicio", href: "#home", icon: <ArrowUp className="w-4 h-4 rotate-45" /> },
+        { name: "Sobre mí", href: "#about", icon: <User className="w-4 h-4" /> },
+        { name: "Proyectos", href: "#projects", icon: <FolderKanban className="w-4 h-4" /> },
+        { name: "Certificaciones", href: "#certifications", icon: <FileCode className="w-4 h-4" /> },
+        { name: "Contacto", href: "#contact", icon: <Send className="w-4 h-4" /> },
+      ];
+    }
+  };
 
   // Detectar si es móvil
   useEffect(() => {
@@ -57,6 +123,20 @@ export default function Footer() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  // Loading (evita SSR issues)
+  if (!isMounted) {
+    return (
+      <footer className="
+        relative w-full py-8 md:py-16 px-4 md:px-6 font-poppins
+        bg-gradient-to-b from-gray-900 via-black to-black
+        text-white overflow-hidden
+        border-t border-white/10
+      ">
+        <div className="h-32"></div>
+      </footer>
+    );
+  }
+
   return (
     <footer className="
       relative w-full py-8 md:py-16 px-4 md:px-6 font-poppins
@@ -95,7 +175,7 @@ export default function Footer() {
                 </span>
               </h3>
               <p className="text-gray-300 text-xs md:text-base mt-1 md:mt-2">
-                <span className="text-white font-medium">Desarrollador Full Stack</span> 
+                <span className="text-white font-medium">{translations.title || "Desarrollador Full Stack"}</span> 
               </p>
             </div>
 
@@ -103,14 +183,14 @@ export default function Footer() {
             <div className="pt-1 md:pt-2">
               <div className="mb-2 md:mb-4">
                 <h4 className="text-lg md:text-2xl font-bold text-white">
-                  Contacto{" "}
+                  {translations.contact_title || "Contacto"}{" "}
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500">
-                    Directo
+                    {translations.contact_title_highlight || "Directo"}
                   </span>
                 </h4>
               </div>
               <a 
-                href="mailto:gorkacarmonapino@gmail.com"
+                href={`mailto:${translations.social?.email || 'gorkacarmonapino@gmail.com'}`}
                 className="
                   text-white font-medium text-xs md:text-base
                   hover:text-transparent hover:bg-gradient-to-r hover:from-purple-400 hover:to-blue-400 hover:bg-clip-text
@@ -120,7 +200,7 @@ export default function Footer() {
                 "
               >
                 <Mail className="w-3 h-3 md:w-4 md:h-4 text-purple-400 mr-1 md:mr-2 flex-shrink-0" />
-                <span className="truncate">gorkacarmonapino@gmail.com</span>
+                <span className="truncate">{translations.social?.email || "gorkacarmonapino@gmail.com"}</span>
                 <ExternalLink className="
                   w-3 h-3 text-gray-500 ml-1 flex-shrink-0
                   group-hover/email:text-purple-400
@@ -135,15 +215,15 @@ export default function Footer() {
           <div className="space-y-3 md:space-y-4">
             <div className="mb-2 md:mb-4">
               <h4 className="text-lg md:text-2xl font-bold text-white">
-                Navegación{" "}
+                {translations.navigation_title || "Navegación"}{" "}
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">
-                  Rápida
+                  {translations.navigation_title_highlight || "Rápida"}
                 </span>
               </h4>
             </div>
             
             <div className="space-y-0.5 md:space-y-1">
-              {quickLinks.map((link, index) => (
+              {quickLinks().map((link) => (
                 <Link
                   key={link.name}
                   href={link.href}
@@ -188,9 +268,9 @@ export default function Footer() {
           <div className="space-y-3 md:space-y-4">
             <div className="mb-2 md:mb-4">
               <h4 className="text-lg md:text-2xl font-bold text-white">
-                Conecta{" "}
+                {translations.connect_title || "Conecta"}{" "}
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500">
-                  Conmigo
+                  {translations.connect_title_highlight || "Conmigo"}
                 </span>
               </h4>
             </div>
@@ -226,8 +306,10 @@ export default function Footer() {
                     <Github className="w-4 h-4 md:w-5 md:h-5 text-purple-400 group-hover/github:text-purple-300 transition-colors" />
                   </div>
                   <div className={`${isMobile ? 'text-center' : ''}`}>
-                    <div className="text-xs text-gray-500">GitHub</div>
-                    <div className="text-xs md:text-base font-medium text-white">Proyectos</div>
+                    <div className="text-xs text-gray-500">{translations.social?.github_label || "GitHub"}</div>
+                    <div className="text-xs md:text-base font-medium text-white">
+                      {translations.social?.github_subtitle || "Proyectos"}
+                    </div>
                   </div>
                 </div>
                 {!isMobile && (
@@ -270,8 +352,10 @@ export default function Footer() {
                     <Linkedin className="w-4 h-4 md:w-5 md:h-5 text-blue-400 group-hover/linkedin:text-blue-300 transition-colors" />
                   </div>
                   <div className={`${isMobile ? 'text-center' : ''}`}>
-                    <div className="text-xs text-gray-500">LinkedIn</div>
-                    <div className="text-xs md:text-base font-medium text-white">Conectar</div>
+                    <div className="text-xs text-gray-500">{translations.social?.linkedin_label || "LinkedIn"}</div>
+                    <div className="text-xs md:text-base font-medium text-white">
+                      {translations.social?.linkedin_subtitle || "Conectar"}
+                    </div>
                   </div>
                 </div>
                 {!isMobile && (
@@ -299,10 +383,10 @@ export default function Footer() {
           <div className="space-y-1">
             <p className="text-gray-400 text-xs md:text-base">
               &copy; {year} Gorka Carmona.
-              <span className="text-white font-medium"> Todos los derechos reservados.</span>
+              <span className="text-white font-medium"> {translations.copyright || "Todos los derechos reservados."}</span>
             </p>
             <p className="text-xs text-gray-500">
-              Desarrollado con{" "}
+              {translations.built_with || "Desarrollado con"}{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">
                 Next.js 14
               </span>
@@ -310,7 +394,7 @@ export default function Footer() {
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">
                 Tailwind CSS
               </span>
-              {" "}y{" "}
+              {" "}{translations.and || "y"}{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">
                 Framer Motion
               </span>
@@ -327,7 +411,7 @@ export default function Footer() {
                 hover:bg-white/5
               "
             >
-              Privacidad
+              {translations.links?.privacy || "Privacidad"}
             </a>
             <a 
               href="/terms" 
@@ -338,7 +422,7 @@ export default function Footer() {
                 hover:bg-white/5
               "
             >
-              Términos
+              {translations.links?.terms || "Términos"}
             </a>
             <div className="
               text-xs px-2 py-1 rounded-lg
@@ -346,13 +430,13 @@ export default function Footer() {
               border border-purple-500/30
               text-gray-300
             ">
-              v2.0
+              {translations.version || "v2.0"}
             </div>
           </div>
         </div>
       </div>
 
-      {/* Back to top button - CON ESTILO HOVER PERMANENTE */}
+      {/* Back to top button - MODIFICADO PARA MÓVIL */}
       <AnimatePresence>
         {showScrollTop && (
           <motion.button
@@ -360,8 +444,8 @@ export default function Footer() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.8, y: 20 }}
             onClick={scrollToTop}
-            className="
-              fixed bottom-4 md:bottom-6 right-4 md:right-6 p-2 md:p-3
+            className={`
+              fixed ${isMobile ? 'bottom-6 right-6 p-4' : 'bottom-6 right-6 p-3'}
               rounded-lg
               bg-gradient-to-r from-purple-600/30 to-blue-600/30
               border border-purple-500/50
@@ -373,12 +457,16 @@ export default function Footer() {
               hover:shadow-[0_0_25px_rgba(139,92,246,0.4)]
               hover:from-purple-600/40 hover:to-blue-600/40
               hover:border-purple-500/70
-            "
-            aria-label="Volver arriba"
+              ${isMobile ? 'active:scale-95' : ''}
+            `}
+            aria-label={translations.back_to_top || "Volver arriba"}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <ArrowUp className="w-3 h-3 md:w-4 md:h-4 group-hover/scroll-top:-translate-y-0.5 transition-transform duration-300" />
+            <ArrowUp className={`
+              ${isMobile ? 'w-5 h-5' : 'w-4 h-4'} 
+              group-hover/scroll-top:-translate-y-0.5 transition-transform duration-300
+            `} />
           </motion.button>
         )}
       </AnimatePresence>

@@ -1,0 +1,394 @@
+{
+  "Header": {
+    "home": "Start",
+    "about": "Über mich",
+    "capabilities": "Fähigkeiten",
+    "projects": "Projekte",
+    "certifications": "Zertifizierungen",
+    "contact": "Kontakt"
+  },
+  "Hero": {
+    "badge": "FULL STACK ENTWICKLER",
+    "title_part1": "Entwicklung von",
+    "title_highlight1": "Web-Lösungen",
+    "title_part2": "die",
+    "title_highlight2": "Ergebnisse erzielen",
+    "subtitle": "Spezialisiert auf die Erstellung von <strong>SEO-optimierten</strong>, schnellen und benutzerorientierten Anwendungen zur Maximierung von Konversionen und Online-Sichtbarkeit.",
+    "stats_experience": "Erfahrung",
+    "stats_experience_value": "2+ Jahre",
+    "stats_certificates": "Zertifikate",
+    "stats_certificates_value": "15+",
+    "stats_results": "Ergebnisse",
+    "stats_results_value": "100%",
+    "primary_button": "PROJEKTE ANSEHEN",
+    "secondary_button": "KONTAKT",
+    "footer_text": "Spezialist für <strong>Web-Performance</strong>, <strong>Benutzererfahrung</strong> y <strong>SEO-Optimierung</strong>, um die Online-Präsenz Ihres Unternehmens zu maximieren."
+  },
+  "About": {
+    "title": "Über mich",
+    "subtitle": "Full Stack Developer mit Fokus auf digitale Produkte",
+    "paragraph1": "Ich bin <strong>Gorka Carmona</strong>, ein <strong>Full-Stack Web Developer</strong> mit starker Spezialisierung im <strong>Frontend</strong> und soliden Kenntnissen im <strong>Backend</strong>, fokussiert auf die Erstellung moderner, skalierbarer Webanwendungen, die für SEO und Performance optimiert sind.",
+    "paragraph2": "Ich arbeite hauptsächlich mit <strong>Vue.js und Nuxt 3</strong>, nutze SSR, dynamische Metadaten und Best Practices, um die Benutzererfahrung und die Sichtbarkeit in Suchmaschinen zu verbessern. Ich habe auch Erfahrung mit <strong>React</strong>, <strong>Node.js</strong>, <strong>PHP</strong> und <strong>Laravel</strong> sowie in der Entwicklung von <strong>REST APIs</strong>.",
+    "paragraph3": "Ich habe Full-Stack-Projekte abgeschlossen, die <strong>Nuxt 3</strong>, <strong>Spring Boot</strong> und <strong>MongoDB Atlas</strong> kombinieren und eine fortschrittliche Frontend- mit einer robusten Backend-Architektur und skalierbaren Datenbanken integrieren.",
+    "frontend_title": "Frontend",
+    "frontend_tech": ["Vue.js", "Nuxt 3", "React", "HTML5", "CSS3", "Tailwind CSS", "Sass", "SEO & Metadaten"],
+    "backend_title": "Backend",
+    "backend_tech": ["Node.js", "Java", "Spring Boot", "PHP", "Laravel", "REST APIs"],
+    "databases_title": "Datenbanken & Tools",
+    "databases_tech": ["MySQL", "Oracle", "MongoDB", "Docker", "Git", "GitHub"]
+  },
+  "Capabilities": {
+    "section_title": "Mehrwert",
+    "main_title": "Über Code hinaus:",
+    "main_title_highlight": "Ergebnisse",
+    "subtitle": "Komplette Lösungen, die <strong>greifbaren Wert</strong> und <strong>Wettbewerbsvorteil</strong> bieten.",
+    "stats_uptime_value": "99,9%",
+    "stats_uptime": "Verfügbarkeit",
+    "stats_uptime_short": "Verfügbar",
+    "stats_speed_value": "<1s",
+    "stats_speed": "Initiale Ladezeit",
+    "stats_speed_short": "Geschwindigkeit",
+    "stats_accessibility_value": "100%",
+    "stats_accessibility": "Barrierefreiheit",
+    "stats_accessibility_short": "Barrierefrei",
+    "stats_security_value": "A+",
+    "stats_security": "Sicherheitsbewertung",
+    "stats_security_short": "Sicherheit",
+    "specialized_badge": "Spezialisiert",
+    "capabilities": [
+      {
+        "title": "Erweiterte SEO",
+        "shortTitle": "SEO",
+        "description": "Technische Optimierung für maximale Sichtbarkeit",
+        "shortDesc": "Suchmaschinensichtbarkeit",
+        "features": ["Core Web Vitals", "Dynamische Metadaten", "Schema-Markup", "SEO On/Off-page"]
+      },
+      {
+        "title": "Komplette Sicherheit",
+        "shortTitle": "Sicherheit",
+        "description": "Erweiterter Schutz und Einhaltung von Standards",
+        "shortDesc": "Datenschutz",
+        "features": ["JWT/OAuth2", "OWASP-Konformität", "Datenverschlüsselung", "Automatische Backups"]
+      },
+      {
+        "title": "Hohe Leistung",
+        "shortTitle": "Leistung",
+        "description": "Schnelle Anwendungen mit minimaler Ladezeit",
+        "shortDesc": "Ultra-schnelle Ladezeiten",
+        "features": ["Bildoptimierung", "Lazy Loading", "Code-Splitting", "CDN & Caching"]
+      },
+      {
+        "title": "Benutzererfahrung",
+        "shortTitle": "UX/UI",
+        "description": "Benutzerzentriertes Design und Barrierefreiheit",
+        "shortDesc": "Barrierefreies Design",
+        "features": ["WCAG 2.1 konform", "Responsive-first", "UX-Testing", "Mikrointeraktionen"]
+      },
+      {
+        "title": "Skalierbarkeit",
+        "shortTitle": "Skalierbarkeit",
+        "description": "Architekturen für exponentielles Wachstum",
+        "shortDesc": "Garantiertes Wachstum",
+        "features": ["Microservices", "Verteilte DB", "Load Balancing", "Echtzeit-Monitoring"]
+      },
+      {
+        "title": "Globales Deployment",
+        "shortTitle": "Deployment",
+        "description": "Infrastruktur für weltweites Publikum",
+        "shortDesc": "Globale Infrastruktur",
+        "features": ["Multi-Region", "Auto-SSL", "Disaster Recovery", "CI/CD"]
+      }
+    ]
+  },
+  "Projects": {
+    "section_title": "Hervorgehobenes Projekt",
+    "main_title": "Full Stack",
+    "main_title_highlight": "Entwicklung",
+    "subtitle": "mit modernen",
+    "subtitle_highlight": "Technologien",
+    "description": "Eine <strong>komplette Lösung</strong>, die Frontend, Backend, Datenbank und Deployment integriert. Praktische Demonstration technischer Fähigkeiten, angewendet auf ein <strong>reales Projekt</strong> mit skalierbarer Architektur.",
+    "architecture_title": "Technische Architektur",
+    "frontend_title": "Frontend",
+    "frontend_description": "<strong>Nuxt 3 + Vue 3 + TypeScript</strong> mit SSR, PWA und Tailwind CSS.",
+    "backend_title": "Backend",
+    "backend_description": "<strong>Spring Boot + Java 17</strong> mit REST API, JWT und Optimierung.",
+    "database_title": "Datenbank",
+    "database_description": "<strong>MongoDB</strong> NoSQL mit flexiblem Modell und optimierten Abfragen.",
+    "deployment_title": "Deployment",
+    "deployment_description": "<strong>Docker + Render</strong> mit produktionsreifer Konfiguration.",
+    "cta_title": "Benötigen Sie eine ähnliche Lösung?",
+    "cta_description": "Ich kann vollständige Anwendungen entwickeln, die auf Ihre Bedürfnisse zugeschnitten sind, mit Best Practices und modernen Technologien.",
+    "cta_button": "Über Ihr Projekt sprechen",
+    "project": {
+      "title": "GoLive Plattform",
+      "description": "Full-Stack-Plattform für die Verwaltung und den Verkauf von Musikevent-Tickets mit echtem Zahlungssystem, QR-Validierung und administrativem Dashboard.",
+      "technologies": ["Nuxt 3", "Vue 3", "TypeScript", "Spring Boot", "Java 17", "MongoDB", "JWT", "Docker"],
+      "impact": "Abschlussprojekt, das die vollständige Beherrschung der Full-Stack-Entwicklung mit skalierbarer Architektur demonstriert."
+    }
+  },
+  "ProjectCard": {
+    "full_stack_badge": "Full Stack",
+    "demo_button": "Demo",
+    "code_button": "Code",
+    "impact_label": "Wirkung"
+  },
+  "Certifications": {
+    "section_title": "Technische Validierung",
+    "main_title": "Professionelle",
+    "main_title_highlight": "Zertifizierungen",
+    "subtitle": "die meine",
+    "subtitle_highlight": "technische Expertise unterstützen",
+    "description": "<strong>15 Zertifizierungen</strong>, die Kenntnisse in <strong>modernen Technologien</strong> validieren, von Full-Stack-Entwicklung und Backend bis hin zu DevOps und künstlicher Intelligenz. Jede Zertifizierung zeigt <strong>Engagement für kontinuierliches Lernen</strong>.",
+    "stats_certificates": "Zertifikate",
+    "stats_areas": "Bereiche",
+    "stats_hours": "Gesamtstunden",
+    "stats_updated": "Aktualisiert",
+    "filter_title": "Nach Bereich filtern:",
+    "search_placeholder": "Zertifizierung suchen...",
+    "clear_filters": "Filter löschen",
+    "results_found": "Zertifizierungen gefunden",
+    "showing": "Zeige",
+    "of": "von",
+    "categories": {
+      "all": "Alle",
+      "fullstack": "Full Stack",
+      "devops": "DevOps",
+      "cloud": "Cloud",
+      "database": "DB",
+      "ai": "KI"
+    },
+    "category_labels": {
+      "frontend": "Frontend",
+      "backend": "Backend",
+      "devops": "DevOps",
+      "cloud": "Cloud",
+      "programming": "Programmierung",
+      "database": "Datenbank",
+      "ai": "KI",
+      "tools": "Tools"
+    },
+    "levels": {
+      "beginner": "Anfänger",
+      "intermediate": "Mittelstufe",
+      "advanced": "Fortgeschritten",
+      "certified": "Zertifiziert"
+    },
+    "badges": {
+      "organization": "Organisation",
+      "obtained": "Erhalten",
+      "hours": "h",
+      "view_credential": "Credential anzeigen"
+    },
+    "controls": {
+      "view_more": "Mehr Zertifizierungen anzeigen",
+      "view_less": "Weniger anzeigen",
+      "show_all": "Alle Zertifizierungen anzeigen"
+    },
+    "empty_state": {
+      "title": "Keine Zertifizierungen gefunden",
+      "search_message": "Keine Ergebnisse für \"{search}\". Versuchen Sie andere Begriffe oder entfernen Sie die Filter.",
+      "filter_message": "Keine Zertifizierungen im ausgewählten Bereich. Versuchen Sie eine andere Kategorie."
+    },
+    "footer": {
+      "total_certifications": "Gesamtzertifizierungen",
+      "total_hours": "Gesamtstunden",
+      "platform": "Plattform",
+      "updated": "Aktualisiert"
+    },
+    "certifications": [
+      {
+        "name": "Einführung in Docker",
+        "organization": "OpenWebinars",
+        "date": "Jul 2025",
+        "category": "devops",
+        "hours": 8,
+        "level": "beginner"
+      },
+      {
+        "name": "Python PCEP Zertifizierung",
+        "organization": "OpenWebinars",
+        "date": "Jun 2025",
+        "category": "programming",
+        "hours": 40,
+        "level": "certified"
+      },
+      {
+        "name": "AWS-Kurs für Entwickler",
+        "organization": "OpenWebinars",
+        "date": "Jun 2025",
+        "category": "cloud",
+        "hours": 25,
+        "level": "intermediate"
+      },
+      {
+        "name": "Jenkins-Kurs: Skalierung mit Workern",
+        "organization": "OpenWebinars",
+        "date": "Jun 2025",
+        "category": "devops",
+        "hours": 12,
+        "level": "intermediate"
+      },
+      {
+        "name": "Maven-Kurs",
+        "organization": "OpenWebinars",
+        "date": "Jun 2025",
+        "category": "tools",
+        "hours": 6,
+        "level": "beginner"
+      },
+      {
+        "name": "MongoDB-Kurs: Erstellung und Verwaltung von NoSQL",
+        "organization": "OpenWebinars",
+        "date": "Jun 2025",
+        "category": "database",
+        "hours": 15,
+        "level": "intermediate"
+      },
+      {
+        "name": "Webentwicklung mit Spring Boot",
+        "organization": "OpenWebinars",
+        "date": "Jun 2025",
+        "category": "backend",
+        "hours": 35,
+        "level": "advanced"
+      },
+      {
+        "name": "Angular Grundlagen",
+        "organization": "OpenWebinars",
+        "date": "Jun 2025",
+        "category": "frontend",
+        "hours": 30,
+        "level": "intermediate"
+      },
+      {
+        "name": "TypeScript",
+        "organization": "OpenWebinars",
+        "date": "Jun 2025",
+        "category": "programming",
+        "hours": 20,
+        "level": "intermediate"
+      },
+      {
+        "name": "JavaScript: Web API, Komponenten und Testing",
+        "organization": "OpenWebinars",
+        "date": "Mär 2025",
+        "category": "frontend",
+        "hours": 45,
+        "level": "advanced"
+      },
+      {
+        "name": "Sass-Kurs",
+        "organization": "OpenWebinars",
+        "date": "Feb 2025",
+        "category": "frontend",
+        "hours": 10,
+        "level": "intermediate"
+      },
+      {
+        "name": "React Grundlagen",
+        "organization": "OpenWebinars",
+        "date": "Feb 2025",
+        "category": "frontend",
+        "hours": 6,
+        "level": "intermediate"
+      },
+      {
+        "name": "Moderne Webentwicklung mit Laravel",
+        "organization": "OpenWebinars",
+        "date": "Jan 2025",
+        "category": "backend",
+        "hours": 50,
+        "level": "advanced"
+      },
+      {
+        "name": "ChatGPT mit OpenAI API meistern",
+        "organization": "OpenWebinars",
+        "date": "Okt 2024",
+        "category": "ai",
+        "hours": 5,
+        "level": "intermediate"
+      },
+      {
+        "name": "JavaScript Grundlagen",
+        "organization": "OpenWebinars",
+        "date": "Okt 2024",
+        "category": "programming",
+        "hours": 8,
+        "level": "beginner"
+      }
+    ]
+  },
+  "Contact": {
+    "section_title": "Zusammenarbeitspotenzial",
+    "main_title": "Lassen Sie uns",
+    "main_title_highlight": "Visionen verbinden",
+    "subtitle": "um",
+    "subtitle_highlight": "außergewöhnliche Lösungen zu schaffen",
+    "description": "Als <strong>Full Stack Developer</strong> suche ich Projekte, in denen ich <strong>technische Innovation</strong> mit <strong>Geschäftsstrategie</strong> verbinden kann, um digitale Produkte zu bauen, die einen Unterschied machen.",
+    "description2": "Wenn Ihr Unternehmen einen Technologiepartner benötigt, der sowohl <strong>Code</strong> als auch <strong>Geschäftsergebnisse</strong> versteht, lassen Sie uns zusammenarbeiten, um Herausforderungen in messbare Erfolge zu verwandeln.",
+    "linkedin_card": {
+      "title": "Berufliches Profil",
+      "subtitle": "Aktualisiertes professionelles Netzwerk",
+      "feature1": "Verifizierte Full Stack-Erfahrung",
+      "feature2": "Erfolgreich abgeschlossene Projekte",
+      "connect_button": "Auf LinkedIn verbinden"
+    },
+    "metrics": {
+      "response": "Antwort",
+      "commitment": "Engagement",
+      "availability": "Verfügbarkeit"
+    },
+    "form": {
+      "title": "Kooperationsvorschlag",
+      "subtitle": "Starten Sie ein strategisches Gespräch",
+      "labels": {
+        "name": "Name",
+        "email": "Professionelle E-Mail",
+        "project_type": "Projekttyp",
+        "project_vision": "Projektvision"
+      },
+      "placeholders": {
+        "name": "Vollständiger Name",
+        "email": "name@unternehmen.com",
+        "project_type": "Webentwicklung, Beratung, Technische Zusammenarbeit...",
+        "project_vision": "Beschreiben Sie die Ziele, Herausforderungen und Erwartungen Ihres Projekts..."
+      },
+      "submit_button": "ZUSAMMENARBEIT STARTEN",
+      "submitting": "VORSCHLAG WIRD VERARBEITET...",
+      "privacy_note": "Ihre Informationen werden mit voller Vertraulichkeit und Professionalität behandelt.",
+      "privacy_subnote": "Absoluter Respekt für Ihre Privatsphäre und Unternehmensdaten."
+    }
+  },
+  "Footer": {
+    "title": "Full Stack Entwickler",
+    "contact_title": "Direkter",
+    "contact_title_highlight": "Kontakt",
+    "navigation_title": "Schnelle",
+    "navigation_title_highlight": "Navigation",
+    "connect_title": "Verbinde dich",
+    "connect_title_highlight": "mit mir",
+    "quick_links": [
+      { "name": "Start", "href": "#home" },
+      { "name": "Über mich", "href": "#about" },
+      { "name": "Projekte", "href": "#projects" },
+      { "name": "Zertifizierungen", "href": "#certifications" },
+      { "name": "Kontakt", "href": "#contact" }
+    ],
+    "social": {
+      "github_label": "GitHub",
+      "github_subtitle": "Projekte",
+      "linkedin_label": "LinkedIn",
+      "linkedin_subtitle": "Verbinden",
+      "email": "gorkacarmonapino@gmail.com"
+    },
+    "copyright": "Alle Rechte vorbehalten.",
+    "built_with": "Entwickelt mit",
+    "and": "und",
+    "links": {
+      "privacy": "Datenschutz",
+      "terms": "Nutzungsbedingungen"
+    },
+    "version": "v2.0",
+    "back_to_top": "Nach oben"
+  }
+}
