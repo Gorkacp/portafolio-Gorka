@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { HiMenu, HiX, HiChevronDown } from "react-icons/hi";
 import { getTranslation } from "@/utils/translations";
 
@@ -14,6 +14,8 @@ export default function Header() {
   const [isMounted, setIsMounted] = useState(false);
   const desktopRef = useRef(null);
   const mobileRef = useRef(null);
+  const pathname = usePathname();
+  const router = useRouter();
 
   const toggleMenu = () => setIsOpen((prev) => !prev);
 
@@ -58,15 +60,46 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  /* Scroll suave */
+  /* Scroll suave - solo en página principal */
   const handleSmoothScroll = (e, href) => {
     e.preventDefault();
-    const target = document.querySelector(href);
-    if (target) {
-      window.scrollTo({
-        top: target.offsetTop - 80,
-        behavior: "smooth",
-      });
+    
+    // Si estamos en otra página, ir a la principal primero
+    if (pathname !== "/") {
+      router.push("/");
+      setTimeout(() => {
+        const target = document.querySelector(href);
+        if (target) {
+          window.scrollTo({
+            top: target.offsetTop - 80,
+            behavior: "smooth",
+          });
+        }
+      }, 100);
+    } else {
+      // Ya estamos en la página principal
+      const target = document.querySelector(href);
+      if (target) {
+        window.scrollTo({
+          top: target.offsetTop - 80,
+          behavior: "smooth",
+        });
+      }
+    }
+    setIsOpen(false);
+  };
+
+  /* Función para volver al inicio */
+  const handleLogoClick = (e) => {
+    if (pathname === "/") {
+      // Si ya estamos en home, hacer scroll al inicio
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      // Si estamos en otra página, navegar al home
+      e.preventDefault();
+      router.push("/");
+      window.scrollTo(0, 0);
     }
     setIsOpen(false);
   };
@@ -97,67 +130,83 @@ export default function Header() {
   return (
     <header
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
-        scrolled ? "bg-black/90 backdrop-blur-md shadow-lg" : "bg-black"
+        scrolled 
+          ? "bg-black/95 backdrop-blur-lg shadow-lg border-b border-white/5" 
+          : "bg-black"
       }`}
     >
-      <div className="flex items-center justify-between py-5 pr-8">
-        {/* Logo */}
-        <Link
-          href="#home"
-          onClick={(e) => handleSmoothScroll(e, "#home")}
-          className="pl-6"
+      <div className="flex items-center justify-between py-5 px-6 md:px-8">
+        {/* Logo - Esquina izquierda */}
+        <button
+          onClick={handleLogoClick}
+          className="group relative focus:outline-none"
         >
-          <span className="flex flex-col leading-none">
-            <span className="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500">
+          <div className="flex flex-col leading-none transition-all duration-300">
+            <span className="text-2xl sm:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500">
               Gorka
             </span>
-            <span className="text-xl sm:text-2xl font-medium text-white">
+            <span className="text-lg sm:text-xl font-medium text-white">
               Carmona Pino
             </span>
-          </span>
-        </Link>
+          </div>
+          <div className="absolute -bottom-1 left-0 w-0 group-hover:w-full h-0.5 bg-gradient-to-r from-blue-500 to-pink-500 transition-all duration-300"></div>
+        </button>
 
         {/* Desktop */}
-        <div className="hidden md:flex items-center gap-8">
-          <nav className="flex gap-8">
-            {menuItems.map((item) => (
-              <a
-                key={item.href}
-                href={item.href}
-                onClick={(e) => handleSmoothScroll(e, item.href)}
-                className="text-white font-medium hover:text-blue-400 transition"
-              >
-                {item.name}
-              </a>
-            ))}
+        <div className="hidden md:flex items-center gap-12">
+          <nav className="flex items-center gap-8">
+            {menuItems.map((item, index) => {
+              // No mostrar "Inicio" si ya estamos en home
+              if (item.href === "#home" && pathname === "/") return null;
+              
+              return (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  onClick={(e) => handleSmoothScroll(e, item.href)}
+                  className="relative group"
+                >
+                  <span className="text-base font-medium tracking-wide text-white/90 hover:text-white transition-colors duration-300">
+                    {item.name}
+                  </span>
+                  <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-gradient-to-r from-blue-500 to-purple-500 group-hover:w-full transition-all duration-300"></span>
+                </a>
+              );
+            })}
           </nav>
 
           {/* Selector de idioma desktop */}
           <div className="relative" ref={desktopRef}>
             <button
               onClick={() => setDesktopDropdownOpen((prev) => !prev)}
-              className="flex items-center gap-2 px-4 py-2 bg-gray-800 rounded-full hover:bg-gray-700 transition"
+              className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-white/5 hover:bg-white/10 transition-all duration-300 border border-white/10"
             >
-              {/* Bandera + texto */}
-              <span className="text-xl">{currentLanguage.flag}</span>
-              <span className="text-white font-medium">{currentLanguage.label}</span>
+              <span className="text-xl">
+                {currentLanguage.flag}
+              </span>
+              <span className="text-white font-medium text-sm">
+                {currentLanguage.label}
+              </span>
               <HiChevronDown
-                className={`text-white transition ${desktopDropdownOpen ? "rotate-180" : ""}`}
+                className={`text-white/60 transition-transform duration-300 ${desktopDropdownOpen ? "rotate-180" : ""}`}
+                size={18}
               />
             </button>
 
             {desktopDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-44 bg-gray-800 rounded-lg overflow-hidden shadow-lg">
+              <div className="absolute right-0 mt-2 w-44 bg-gray-900/95 backdrop-blur-lg rounded-lg overflow-hidden shadow-xl border border-white/10">
                 {languages
                   .filter((l) => l.code !== language)
                   .map((lang) => (
                     <button
                       key={lang.code}
                       onClick={() => handleLanguageChange(lang.code)}
-                      className="flex items-center gap-2 px-4 py-2 w-full text-white hover:bg-gray-700 transition"
+                      className="flex items-center gap-3 px-4 py-3 w-full text-white hover:bg-white/10 transition-all duration-200"
                     >
-                      <span className="text-xl">{lang.flag}</span>
-                      <span>{lang.label}</span>
+                      <span className="text-xl">
+                        {lang.flag}
+                      </span>
+                      <span className="font-medium text-sm">{lang.label}</span>
                     </button>
                   ))}
               </div>
@@ -166,58 +215,73 @@ export default function Header() {
         </div>
 
         {/* Mobile */}
-        <div className="md:hidden flex items-center gap-4">
+        <div className="md:hidden flex items-center gap-3">
           {/* Selector de idioma móvil */}
           <div className="relative" ref={mobileRef}>
             <button
               onClick={() => setMobileDropdownOpen((prev) => !prev)}
-              className="flex items-center gap-2 px-3 py-2 bg-gray-800 rounded-full hover:bg-gray-700 transition"
+              className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10"
             >
-              <span className="text-xl">{currentLanguage.flag}</span>
+              <span className="text-lg">{currentLanguage.flag}</span>
               <HiChevronDown
                 className={`text-white transition ${mobileDropdownOpen ? "rotate-180" : ""}`}
+                size={16}
               />
             </button>
 
             {mobileDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-32 bg-gray-800 rounded-lg overflow-hidden shadow-lg z-50">
+              <div className="absolute right-0 mt-2 w-32 bg-gray-900/95 backdrop-blur-lg rounded-lg overflow-hidden shadow-xl border border-white/10 z-50">
                 {languages
                   .filter((l) => l.code !== language)
                   .map((lang) => (
                     <button
                       key={lang.code}
                       onClick={() => handleLanguageChange(lang.code)}
-                      className="flex items-center gap-2 px-4 py-2 w-full text-white hover:bg-gray-700 transition"
+                      className="flex items-center gap-2 px-3 py-2.5 w-full text-white hover:bg-white/10 transition"
                     >
-                      <span className="text-xl">{lang.flag}</span>
-                      <span>{lang.label}</span>
+                      <span className="text-lg">{lang.flag}</span>
+                      <span className="text-sm">{lang.label}</span>
                     </button>
                   ))}
               </div>
             )}
           </div>
 
-          {/* Botón menú */}
-          <button onClick={toggleMenu} className="text-white">
-            {isOpen ? <HiX size={32} /> : <HiMenu size={32} />}
+          {/* Botón menú móvil */}
+          <button 
+            onClick={toggleMenu}
+            className="p-2.5 rounded-lg bg-white/5 hover:bg-white/10 transition-all border border-white/10"
+          >
+            {isOpen ? (
+              <HiX size={22} className="text-white" />
+            ) : (
+              <HiMenu size={22} className="text-white" />
+            )}
           </button>
         </div>
       </div>
 
       {/* Menú móvil */}
       {isOpen && (
-        <nav className="md:hidden bg-black px-8 py-10 flex flex-col gap-6">
-          {menuItems.map((item) => (
-            <a
-              key={item.href}
-              href={item.href}
-              onClick={(e) => handleSmoothScroll(e, item.href)}
-              className="text-2xl text-white"
-            >
-              {item.name}
-            </a>
-          ))}
-        </nav>
+        <div className="md:hidden bg-black/95 backdrop-blur-lg border-t border-white/10">
+          <nav className="flex flex-col py-6">
+            {menuItems.map((item) => {
+              // No mostrar "Inicio" si ya estamos en home
+              if (item.href === "#home" && pathname === "/") return null;
+              
+              return (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  onClick={(e) => handleSmoothScroll(e, item.href)}
+                  className="px-8 py-4 text-lg text-white hover:text-blue-300 transition-colors duration-300 border-b border-white/5 last:border-b-0"
+                >
+                  {item.name}
+                </a>
+              );
+            })}
+          </nav>
+        </div>
       )}
     </header>
   );
