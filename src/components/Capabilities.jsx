@@ -223,7 +223,7 @@ export default function Capabilities() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
             className="
-              text-xl sm:text-2xl md:text-3xl lg:text-4xl 
+              text-3xl sm:text-4xl md:text-5xl 
               font-bold leading-tight mb-3 md:mb-4 px-2
             "
           >
@@ -239,7 +239,7 @@ export default function Capabilities() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="
               max-w-3xl mx-auto text-gray-300 
-              text-xs sm:text-sm md:text-base
+              text-base sm:text-lg
               leading-relaxed px-2
             "
             dangerouslySetInnerHTML={renderTextWithHTML(translations.subtitle)}

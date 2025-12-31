@@ -8,6 +8,7 @@ import {
   Server,
 } from "lucide-react";
 import { getTranslation } from "@/utils/translations";
+import { motion } from "framer-motion";
 
 export default function About() {
   const [language, setLanguage] = useState("es");
@@ -43,6 +44,36 @@ export default function About() {
     return { __html: text };
   };
 
+  // Función para extraer la parte resaltada del subtítulo (ahora busca <strong>)
+  const extractHighlightedText = (html) => {
+    // Manejar caso cuando no hay HTML
+    if (!html) return { before: '', highlight: '', after: '' };
+    
+    // Buscar contenido dentro de <strong>
+    const strongMatch = html.match(/<strong>(.*?)<\/strong>/);
+    
+    if (strongMatch) {
+      const highlight = strongMatch[1];
+      const before = html.substring(0, html.indexOf('<strong>'));
+      const after = html.substring(html.indexOf('</strong>') + 9); // 9 es la longitud de </strong>
+      
+      return { before, highlight, after };
+    }
+    
+    // Si no hay <strong>, buscar <span> como alternativa
+    const spanMatch = html.match(/<span>(.*?)<\/span>/);
+    if (spanMatch) {
+      const highlight = spanMatch[1];
+      const before = html.substring(0, html.indexOf('<span>'));
+      const after = html.substring(html.indexOf('</span>') + 7);
+      
+      return { before, highlight, after };
+    }
+    
+    // Si no hay ninguna etiqueta, devolver todo como texto normal
+    return { before: html, highlight: '', after: '' };
+  };
+
   // Obtener traducciones
   const translations = {
     title: getTranslation(language, "About.title"),
@@ -57,6 +88,9 @@ export default function About() {
     databases_title: getTranslation(language, "About.databases_title"),
     databases_tech: getTranslation(language, "About.databases_tech"),
   };
+
+  // Extraer partes del subtítulo para el degradado
+  const subtitleParts = extractHighlightedText(translations.subtitle);
 
   // Loading (evita SSR issues)
   if (!isMounted) {
@@ -107,26 +141,50 @@ export default function About() {
 
         {/* Texto */}
         <div className="flex flex-col gap-4 sm:gap-5 md:gap-6">
-          <span className="uppercase tracking-widest text-xs sm:text-sm text-purple-400">
+          <motion.span
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="uppercase tracking-widest text-xs sm:text-sm text-purple-400"
+          >
             {translations.title}
-          </span>
+          </motion.span>
 
-          <h2 
+          <motion.h2 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
             className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight"
-            dangerouslySetInnerHTML={renderTextWithHTML(translations.subtitle)}
-          />
+          >
+            {subtitleParts.before}
+            {subtitleParts.highlight && (
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500">
+                {subtitleParts.highlight}
+              </span>
+            )}
+            {subtitleParts.after}
+          </motion.h2>
 
-          <p 
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
             className="text-gray-300 text-base sm:text-lg leading-relaxed"
             dangerouslySetInnerHTML={renderTextWithHTML(translations.paragraph1)}
           />
 
-          <p 
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
             className="text-gray-400 text-sm sm:text-base leading-relaxed"
             dangerouslySetInnerHTML={renderTextWithHTML(translations.paragraph2)}
           />
 
-          <p 
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
             className="text-gray-400 text-sm sm:text-base leading-relaxed"
             dangerouslySetInnerHTML={renderTextWithHTML(translations.paragraph3)}
           />
@@ -136,7 +194,12 @@ export default function About() {
         <div className="flex flex-col gap-6 sm:gap-8 md:gap-10">
 
           {/* Frontend */}
-          <div className="group">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="group"
+          >
             <div className="flex items-center gap-3 mb-3 sm:mb-4">
               <Code2 className="w-5 h-5 sm:w-6 sm:h-6 text-purple-400" />
               <h3 className="text-lg sm:text-xl font-semibold">
@@ -145,9 +208,13 @@ export default function About() {
             </div>
 
             <div className="flex flex-wrap gap-2 sm:gap-3">
-              {frontendTechs.map((tech) => (
-                <span
+              {frontendTechs.map((tech, index) => (
+                <motion.span
                   key={tech}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.3, delay: index * 0.05 }}
+                  whileHover={{ scale: 1.05 }}
                   className="
                     px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm
                     bg-white/5 border border-white/10
@@ -156,13 +223,18 @@ export default function About() {
                   "
                 >
                   {tech}
-                </span>
+                </motion.span>
               ))}
             </div>
-          </div>
+          </motion.div>
 
           {/* Backend */}
-          <div className="group">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="group"
+          >
             <div className="flex items-center gap-3 mb-3 sm:mb-4">
               <Server className="w-5 h-5 sm:w-6 sm:h-6 text-blue-400" />
               <h3 className="text-lg sm:text-xl font-semibold">
@@ -171,9 +243,13 @@ export default function About() {
             </div>
 
             <div className="flex flex-wrap gap-2 sm:gap-3">
-              {backendTechs.map((tech) => (
-                <span
+              {backendTechs.map((tech, index) => (
+                <motion.span
                   key={tech}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.3, delay: 0.1 + (index * 0.05) }}
+                  whileHover={{ scale: 1.05 }}
                   className="
                     px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm
                     bg-white/5 border border-white/10
@@ -182,13 +258,18 @@ export default function About() {
                   "
                 >
                   {tech}
-                </span>
+                </motion.span>
               ))}
             </div>
-          </div>
+          </motion.div>
 
           {/* Databases & Tools */}
-          <div className="group">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="group"
+          >
             <div className="flex items-center gap-3 mb-3 sm:mb-4">
               <Database className="w-5 h-5 sm:w-6 sm:h-6 text-pink-400" />
               <h3 className="text-lg sm:text-xl font-semibold">
@@ -197,9 +278,13 @@ export default function About() {
             </div>
 
             <div className="flex flex-wrap gap-2 sm:gap-3">
-              {databasesTechs.map((tech) => (
-                <span
+              {databasesTechs.map((tech, index) => (
+                <motion.span
                   key={tech}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.3, delay: 0.2 + (index * 0.05) }}
+                  whileHover={{ scale: 1.05 }}
                   className="
                     px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm
                     bg-white/5 border border-white/10
@@ -208,10 +293,10 @@ export default function About() {
                   "
                 >
                   {tech}
-                </span>
+                </motion.span>
               ))}
             </div>
-          </div>
+          </motion.div>
 
         </div>
       </div>
