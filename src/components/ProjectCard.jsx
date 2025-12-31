@@ -3,10 +3,10 @@
 import { ExternalLink, Github, Zap, ChevronRight, Code, Eye } from "lucide-react";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { getTranslation } from "@/utils/translations";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
+import { showGlobalLoader, hideGlobalLoader } from "./GlobalLoader";
 
 export default function ProjectCard({ project }) {
   const [isHovered, setIsHovered] = useState(false);
@@ -14,6 +14,7 @@ export default function ProjectCard({ project }) {
   const [techsToShow, setTechsToShow] = useState(6);
   const [language, setLanguage] = useState("es");
   const [isMounted, setIsMounted] = useState(false);
+  const [isNavigating, setIsNavigating] = useState(false);
   const router = useRouter();
 
   // Escuchar cambios de idioma
@@ -29,15 +30,12 @@ export default function ProjectCard({ project }) {
     
     window.addEventListener("languageChange", handleLanguageChange);
     
-    const interval = setInterval(handleLanguageChange, 1000);
-    
     return () => {
       window.removeEventListener("languageChange", handleLanguageChange);
-      clearInterval(interval);
     };
   }, []);
 
-  // Detectar tamaño de pantalla con más puntos de quiebre
+  // Detectar tamaño de pantalla
   useEffect(() => {
     const checkMobile = () => {
       const width = window.innerWidth;
@@ -67,39 +65,94 @@ export default function ProjectCard({ project }) {
     impact_label: getTranslation(language, "ProjectCard.impact_label"),
   };
 
-  if (!project || !isMounted) return null;
-
-  // Función para navegar a la página de detalles CORREGIDA
-  const handleViewMore = (e) => {
+  // Función para navegar a la página de detalles - OPTIMIZADA CON SCROLL AL INICIO
+  const handleViewMore = useCallback((e) => {
     e.preventDefault();
     e.stopPropagation();
     
-    // Generar slug del proyecto
-    const slug = project.title
-      .toLowerCase()
-      .replace(/[^\w\s]/gi, '')
-      .replace(/\s+/g, '-');
+    // Prevenir múltiples clics
+    if (isNavigating) return;
     
-    // Resetear scroll al principio antes de navegar
-    // Esto evita que se mantenga la posición del scroll
-    if (typeof window !== 'undefined') {
-      // Opción 1: Reset instantáneo
-      window.scrollTo(0, 0);
-      
-      // Opción 2: Con comportamiento smooth
-      // window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    setIsNavigating(true);
+    
+    // PASO 1: FORZAR SCROLL AL INICIO INMEDIATAMENTE
+    // Método 1 - Scroll inmediato a la parte superior
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: 'instant' // 'instant' para que sea inmediato
+    });
+    
+    // Método 2 - Asegurar que tanto html como body estén en 0
+    if (document.documentElement) {
+      document.documentElement.scrollTop = 0;
+    }
+    if (document.body) {
+      document.body.scrollTop = 0;
     }
     
-    // Navegar a la página de detalles
-    router.push(`/proyectos/${slug}`, { scroll: true }); // scroll: true para reset de Next.js
+    // Método 3 - Forzar reflow para asegurar procesamiento
+    document.body.getBoundingClientRect();
     
-    // Reset adicional como backup
-    setTimeout(() => {
-      if (typeof window !== 'undefined') {
+    // PASO 2: Mostrar loader DESPUÉS de hacer scroll
+    // Usar requestAnimationFrame para sincronizar con el navegador
+    requestAnimationFrame(() => {
+      // Verificar que el scroll se realizó
+      if (window.scrollY > 0) {
+        // Si aún no está arriba, forzar de nuevo
         window.scrollTo(0, 0);
       }
-    }, 50);
-  };
+      
+      // Mostrar loader global
+      showGlobalLoader();
+      
+      // Generar slug del proyecto
+      const slug = project.title
+        .toLowerCase()
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^\w\s]/gi, '')
+        .replace(/\s+/g, '-');
+      
+      // Pequeño delay para asegurar que el loader se vea
+      setTimeout(() => {
+        // Navegar a la página de detalles
+        router.push(`/proyectos/${slug}`);
+        
+        // Timeout de seguridad para limpiar estados
+        const safetyTimeout = setTimeout(() => {
+          setIsNavigating(false);
+          hideGlobalLoader();
+        }, 5000);
+        
+        // Función de limpieza
+        const cleanup = () => {
+          clearTimeout(safetyTimeout);
+          setIsNavigating(false);
+          hideGlobalLoader();
+        };
+        
+        // Agregar event listeners para limpieza
+        window.addEventListener('beforeunload', cleanup);
+        
+        // Retornar función de limpieza
+        return () => {
+          clearTimeout(safetyTimeout);
+          window.removeEventListener('beforeunload', cleanup);
+        };
+      }, 10); // Delay mínimo de 10ms
+    });
+  }, [isNavigating, project.title, router]);
+
+  // Efecto para limpiar loader si el componente se desmonta
+  useEffect(() => {
+    return () => {
+      if (isNavigating) {
+        hideGlobalLoader();
+      }
+    };
+  }, [isNavigating]);
+
+  if (!project || !isMounted) return null;
 
   return (
     <motion.article
@@ -116,11 +169,27 @@ export default function ProjectCard({ project }) {
         hover:translate-y-[-4px]
         group/card
         mx-auto w-full max-w-sm md:max-w-none
+        relative
       "
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       whileHover={{ scale: 1.03 }}
     >
+      {/* Indicador de carga local */}
+      {isNavigating && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.1 }}
+          className="absolute inset-0 z-20 flex items-center justify-center bg-black/90 rounded-2xl"
+        >
+          <div className="flex flex-col items-center gap-2">
+            <div className="animate-spin rounded-full h-6 w-6 border-2 border-purple-500 border-t-transparent"></div>
+            <span className="text-white text-xs font-medium">Cargando...</span>
+          </div>
+        </motion.div>
+      )}
+
       {/* Imagen */}
       <div className="relative w-full h-40 sm:h-48 md:h-56 overflow-hidden">
         <Image
@@ -227,11 +296,9 @@ export default function ProjectCard({ project }) {
           </div>
         </div>
 
-        {/* Acciones - BOTONES RESPONSIVE */}
+        {/* Acciones */}
         <div className="flex flex-col xs:flex-row gap-2 sm:gap-3 pt-2 sm:pt-3">
-          {/* Primera fila para móviles: Demo y Código */}
           <div className="flex gap-2 sm:gap-3 xs:flex-1">
-            {/* Botón Demo */}
             <motion.a
               href={project.demoUrl}
               target="_blank"
@@ -251,6 +318,7 @@ export default function ProjectCard({ project }) {
               "
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
+              onClick={(e) => e.stopPropagation()}
             >
               <ExternalLink size={14} className="sm:size-[16px] flex-shrink-0" />
               <span className="truncate hidden xs:inline">{translations.demo_button}</span>
@@ -258,7 +326,6 @@ export default function ProjectCard({ project }) {
               <ChevronRight className="w-2.5 h-2.5 sm:w-3 sm:h-3 group-hover/btn:translate-x-1 transition-transform flex-shrink-0" />
             </motion.a>
 
-            {/* Botón Código */}
             <motion.a
               href={project.codeUrl}
               target="_blank"
@@ -276,6 +343,7 @@ export default function ProjectCard({ project }) {
               "
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
+              onClick={(e) => e.stopPropagation()}
             >
               <Github size={14} className="sm:size-[16px] flex-shrink-0" />
               <span className="truncate hidden xs:inline">{translations.code_button}</span>
@@ -283,9 +351,9 @@ export default function ProjectCard({ project }) {
             </motion.a>
           </div>
 
-          {/* Botón Ver Más - siempre ancho completo en móviles */}
           <motion.button
             onClick={handleViewMore}
+            disabled={isNavigating}
             className="
               inline-flex items-center justify-center gap-1.5 sm:gap-2
               px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl
@@ -300,13 +368,24 @@ export default function ProjectCard({ project }) {
               whitespace-nowrap
               w-full xs:w-auto xs:flex-1
               min-w-0
+              relative
+              disabled:opacity-70 disabled:cursor-not-allowed
             "
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            whileHover={!isNavigating ? { scale: 1.05 } : {}}
+            whileTap={!isNavigating ? { scale: 0.95 } : {}}
           >
-            <Eye size={14} className="sm:size-[16px] flex-shrink-0" />
-            <span className="truncate">{translations.view_more_button || "Ver más"}</span>
-            <ChevronRight className="w-2.5 h-2.5 sm:w-3 sm:h-3 group-hover/viewmore:translate-x-1 transition-transform flex-shrink-0" />
+            {isNavigating ? (
+              <>
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                <span className="truncate">Cargando...</span>
+              </>
+            ) : (
+              <>
+                <Eye size={14} className="sm:size-[16px] flex-shrink-0" />
+                <span className="truncate">{translations.view_more_button || "Ver más"}</span>
+                <ChevronRight className="w-2.5 h-2.5 sm:w-3 sm:h-3 group-hover/viewmore:translate-x-1 transition-transform flex-shrink-0" />
+              </>
+            )}
           </motion.button>
         </div>
       </div>

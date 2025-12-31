@@ -1,8 +1,8 @@
 import "./globals.css";
 import Header from "../components/Header"; 
+import GlobalLoader from "@/components/GlobalLoader";
 import { Poppins } from "next/font/google";
 
-// Configuramos Poppins con los pesos que vamos a usar
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
@@ -25,8 +25,9 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html className={poppins.className}>
+    <html className={poppins.className} lang="es">
       <body className="bg-black text-white font-sans">
+        <GlobalLoader />
         <Header />
         <main className="pt-20">{children}</main>
       </body>
