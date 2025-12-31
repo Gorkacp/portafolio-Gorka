@@ -38,7 +38,7 @@
     "databases_tech": ["MySQL", "Oracle", "MongoDB", "Docker", "Git", "GitHub"]
   },
   "Capabilities": {
-    "section_title": "Valor Añadido",
+    "section_title": "Capacidades",
     "main_title": "Más allá del código:",
     "main_title_highlight": "resultados",
     "subtitle": "Soluciones completas que ofrecen <strong>valor tangible</strong> y <strong>ventaja competitiva</strong>.",
@@ -101,7 +101,7 @@
     ]
   },
   "Projects": {
-    "section_title": "Proyecto Destacado",
+    "section_title": "Proyectos",
     "main_title": "Desarrollo",
     "main_title_highlight": "Full Stack",
     "subtitle": "con tecnologías",
@@ -134,7 +134,7 @@
     "impact_label": "Impacto"
   },
   "Certifications": {
-    "section_title": "Validación Técnica",
+    "section_title": "Certificaciones",
     "main_title": "Certificaciones",
     "main_title_highlight": "profesionales",
     "subtitle": "que respaldan mi",
@@ -320,7 +320,7 @@
     ]
   },
   "Contact": {
-    "section_title": "Oportunidad de colaboración",
+    "section_title": "Contacto",
     "main_title": "Conectemos",
     "main_title_highlight": "visiones",
     "subtitle": "para crear",
