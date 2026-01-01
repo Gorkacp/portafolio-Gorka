@@ -7,13 +7,6 @@
 ![Deployed on Vercel](https://img.shields.io/badge/Deployed_on-Vercel-000000.svg)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 
-![Next.js](https://img.shields.io/badge/Next.js-16.1.1-black.svg)
-![React](https://img.shields.io/badge/React-19.2.3-61DAFB.svg)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.0-06B6D4.svg)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6.svg)
-![Deployed on Vercel](https://img.shields.io/badge/Deployed_on-Vercel-000000.svg)
-![License](https://img.shields.io/badge/license-MIT-blue.svg)
-
 Un **portafolio web moderno, rápido y totalmente responsive**, desarrollado con **Next.js 16 (App Router)** y **React 19**. Este proyecto está pensado como una **tarjeta de presentación profesional** para mostrar proyectos, habilidades y experiencia como **Full Stack Developer**, cuidando especialmente el rendimiento, el diseño y el SEO.
 
 🔗 **Demo en vivo:** [https://portafolio-gorka.vercel.app](https://portafolio-gorka.vercel.app)
@@ -49,9 +42,25 @@ En resumen: no es solo un portafolio, es una **demostración práctica de habili
 
 ## 🖼️ Demo / Screenshots
 
-👉 **Demo en producción:** [https://portafolio-gorka.vercel.app](https://portafolio-gorka.vercel.app)
+### 🌐 Vista principal (Hero)
 
-*(Puedes añadir capturas de pantalla en esta sección si lo deseas)*
+<p align="center">
+  <img src="screenshots/hero.png" width="900" alt="Hero section preview">
+</p>
+
+### 📂 Proyectos
+
+<p align="center">
+  <img src="screenshots/proyect.png" width="900" alt="Projects section preview">
+</p>
+
+### ✉️ Contacto
+
+<p align="center">
+  <img src="screenshots/contact.png" width="700" alt="Contact form preview">
+</p>
+
+👉 **Demo en producción:** [https://portafolio-gorka.vercel.app](https://portafolio-gorka.vercel.app)
 
 ---
 
@@ -140,3 +149,4 @@ Este proyecto está bajo la **Licencia MIT**. Consulta el archivo `LICENSE` para
 ---
 
 ⭐ Si este proyecto te resulta útil o inspirador, ¡no dudes en darle una estrella y proponer mejoras!
+
