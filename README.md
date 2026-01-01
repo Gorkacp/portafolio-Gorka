@@ -45,19 +45,19 @@ En resumen: no es solo un portafolio, es una **demostración práctica de habili
 ### 🌐 Vista principal (Hero)
 
 <p align="center">
-  <img src="screenshots/hero.png" width="900" alt="Hero section preview">
+  <img src="public/screenshots/hero.png" width="900" alt="Hero section preview">
 </p>
 
 ### 📂 Proyectos
 
 <p align="center">
-  <img src="screenshots/proyect.png" width="900" alt="Projects section preview">
+  <img src="public/screenshots/proyect.png" width="900" alt="Projects section preview">
 </p>
 
 ### ✉️ Contacto
 
 <p align="center">
-  <img src="screenshots/contact.png" width="700" alt="Contact form preview">
+  <img src="public/screenshots/contact.png" width="700" alt="Contact form preview">
 </p>
 
 👉 **Demo en producción:** [https://portafolio-gorka.vercel.app](https://portafolio-gorka.vercel.app)
@@ -149,4 +149,3 @@ Este proyecto está bajo la **Licencia MIT**. Consulta el archivo `LICENSE` para
 ---
 
 ⭐ Si este proyecto te resulta útil o inspirador, ¡no dudes en darle una estrella y proponer mejoras!
-
