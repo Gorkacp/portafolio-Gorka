@@ -1,113 +1,142 @@
-🌟 Portafolio Gorka - Portfolio Profesional Full Stack Developer
-https://img.shields.io/badge/Next.js-16.1.1-black.svg
-https://img.shields.io/badge/React-19.2.3-61DAFB.svg
-https://img.shields.io/badge/Tailwind_CSS-4.0-%252306B6D4.svg
-https://img.shields.io/badge/TypeScript-5.x-3178C6.svg
-https://img.shields.io/badge/Deployed_on-Vercel-000000.svg
-https://img.shields.io/badge/license-MIT-blue.svg
+# 🌟 Portafolio Gorka — Full Stack Developer
 
-Un portafolio web moderno, de alto rendimiento y responsive, desarrollado con Next.js 16 (App Router) y React 19. Diseñado para presentar de forma impactante proyectos, habilidades y experiencia como Full Stack Developer.
+![Next.js](https://img.shields.io/badge/Next.js-16.1.1-black.svg)
+![React](https://img.shields.io/badge/React-19.2.3-61DAFB.svg)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.0-06B6D4.svg)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6.svg)
+![Deployed on Vercel](https://img.shields.io/badge/Deployed_on-Vercel-000000.svg)
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
 
-📋 TL;DR - Características Destacadas
-⚡ Rendimiento óptimo con Next.js 16 App Router y React Server Components
+![Next.js](https://img.shields.io/badge/Next.js-16.1.1-black.svg)
+![React](https://img.shields.io/badge/React-19.2.3-61DAFB.svg)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.0-06B6D4.svg)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6.svg)
+![Deployed on Vercel](https://img.shields.io/badge/Deployed_on-Vercel-000000.svg)
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
 
-🎨 Diseño moderno y animado con Tailwind CSS v4
+Un **portafolio web moderno, rápido y totalmente responsive**, desarrollado con **Next.js 16 (App Router)** y **React 19**. Este proyecto está pensado como una **tarjeta de presentación profesional** para mostrar proyectos, habilidades y experiencia como **Full Stack Developer**, cuidando especialmente el rendimiento, el diseño y el SEO.
 
-🌐 Internacionalización (i18n) integrada para múltiples idiomas
+🔗 **Demo en vivo:** [https://portafolio-gorka.vercel.app](https://portafolio-gorka.vercel.app)
 
-✉️ Formulario de contacto funcional (integrado con SendGrid)
+---
 
-📱 Diseño 100% responsive y adaptativo
+## ⚡ TL;DR — Características Destacadas
 
-🔍 SEO avanzado con metadatos dinámicos y optimizados
+* 🚀 **Alto rendimiento** con Next.js App Router y React Server Components
+* 🎨 **Diseño moderno y animado** con Tailwind CSS v4
+* 🌐 **Internacionalización (i18n)** para múltiples idiomas
+* ✉️ **Formulario de contacto funcional** (SendGrid)
+* 📱 **100% responsive**, adaptado a todos los dispositivos
+* 🔍 **SEO avanzado** con metadatos dinámicos
+* 🧹 **Código limpio y mantenible** con ESLint
+* ☁️ **Desplegado en Vercel** siguiendo buenas prácticas
 
-🚀 Desplegado en Vercel con las mejores prácticas de rendimiento
+---
 
-🛠️ Código mantenible con configuración de ESLint
+## 🎯 ¿Qué hace este proyecto?
 
-🎯 ¿Qué hace este proyecto?
-Este proyecto es la tarjeta de presentación digital de un Full Stack Developer. Su objetivo es:
+Este portafolio tiene como objetivo:
 
-Exhibir proyectos técnicos de manera visual y detallada.
+* Mostrar proyectos reales de forma clara, visual y profesional
+* Destacar el dominio de un **stack moderno** (Next.js, React, Tailwind, TypeScript)
+* Facilitar el **contacto profesional** mediante un formulario integrado
+* Demostrar buenas prácticas en **arquitectura, rendimiento y SEO**
+* Servir como **proyecto de referencia** para recruiters y clientes
 
-Destacar habilidades en el stack moderno (Next.js, React, etc.).
+En resumen: no es solo un portafolio, es una **demostración práctica de habilidades Full Stack**.
 
-Facilitar el contacto profesional a través de un formulario integrado.
+---
 
-Demostrar dominio de las mejores prácticas de desarrollo, rendimiento web y SEO.
+## 🖼️ Demo / Screenshots
 
-Servir como proyecto de referencia del manejo de un stack completo y actual.
+👉 **Demo en producción:** [https://portafolio-gorka.vercel.app](https://portafolio-gorka.vercel.app)
 
-🖼️ Demo / Screenshots
-Demo en vivo: https://portafolio-gorka.vercel.app
+*(Puedes añadir capturas de pantalla en esta sección si lo deseas)*
 
-🏗️ Arquitectura y Stack Tecnológico
-Stack Principal Detectado
-Tecnología	Propósito en el Proyecto
-Next.js 16.1.1	Framework principal con App Router para renderizado híbrido (SSR/SSG) y optimización integrada.
-React 19.2.3	Librería para construir la interfaz de usuario basada en componentes.
-Tailwind CSS v4	Framework de utilidades CSS para un diseño rápido, responsive y personalizado.
-ESLint	Herramienta para mantener la calidad y consistencia del código.
-Vercel	Plataforma de despliegue y hosting, optimizada para aplicaciones Next.js.
-Next/font (Geist)	Sistema de fuentes optimizado automáticamente para rendimiento.
-Arquitectura del Proyecto (Basada en estructura típica de Next.js App Router)
-text
+---
+
+## 🏗️ Stack Tecnológico
+
+### Stack Principal
+
+| Tecnología            | Propósito                                                             |
+| --------------------- | --------------------------------------------------------------------- |
+| **Next.js 16.1.1**    | Framework principal con App Router, SSR/SSG y optimización automática |
+| **React 19.2.3**      | Construcción de la interfaz basada en componentes                     |
+| **Tailwind CSS v4**   | Estilos rápidos, modernos y totalmente responsive                     |
+| **TypeScript**        | Tipado estático para mayor robustez y escalabilidad                   |
+| **ESLint**            | Calidad y consistencia del código                                     |
+| **Vercel**            | Hosting y despliegue optimizado para Next.js                          |
+| **next/font (Geist)** | Sistema de fuentes optimizado para rendimiento                        |
+
+---
+
+## 🧱 Arquitectura del Proyecto
+
+Estructura basada en **Next.js App Router**:
+
+```
 portafolio-gorka/
-├── src/app/                    # Raíz de la App Router de Next.js
-│   ├── layout.js              # Layout principal (provee HTML, metadatos comunes)
-│   ├── page.js                # Página de inicio/landing
-│   ├── globals.css            # Estilos globales de Tailwind CSS
-│   └── [Otras páginas/ rutas] # Posibles páginas como `/projects`, `/about`
-├── public/                    # Archivos estáticos (imágenes, íconos, fuentes)
-├── src/components/            # Componentes React reutilizables
-│   ├── Hero.js / .tsx
-│   ├── ProjectsGallery.js / .tsx
-│   ├── ContactForm.js / .tsx
+├── src/app/              # Raíz del App Router
+│   ├── layout.js         # Layout global y metadatos
+│   ├── page.js           # Landing page
+│   ├── globals.css       # Estilos globales (Tailwind)
+│   └── ...               # Otras rutas (/projects, /about, etc.)
+├── src/components/       # Componentes reutilizables
+│   ├── Hero.tsx
+│   ├── ProjectsGallery.tsx
+│   ├── ContactForm.tsx
 │   └── ...
-├── src/lib/                   # Utilidades y lógica reutilizable (clients de API, helpers)
-├── locales/ o messages/       # Archivos de traducción para i18n
-├── next.config.mjs            # Configuración de Next.js (plugins, i18n, rewrites/redirects)
-├── tailwind.config.js / .ts   # Configuración personalizada de Tailwind CSS v4
-├── postcss.config.mjs         # Configuración de PostCSS (usado por Tailwind)
-├── eslint.config.mjs          # Configuración de ESLint
-├── package.json               # Dependencias y scripts del proyecto
-└── README.md                  # Este archivo
-✨ Funcionalidades Principales (Basadas en la estructura)
-Página de Inicio (Landing Page): Página principal que presenta una introducción, proyectos destacados y un llamado a la acción (call-to-action).
+├── src/lib/              # Utilidades y lógica compartida
+├── locales/ | messages/  # Archivos de traducción (i18n)
+├── public/               # Imágenes y recursos estáticos
+├── next.config.mjs       # Configuración de Next.js
+├── tailwind.config.ts    # Configuración de Tailwind CSS
+├── postcss.config.mjs    # PostCSS
+├── eslint.config.mjs     # ESLint
+├── package.json          # Dependencias y scripts
+└── README.md             # Este archivo
+```
 
-Galería de Proyectos: Sección para mostrar trabajos anteriores con detalles como tecnologías usadas, enlaces al código (GitHub) y demos en vivo.
+---
 
-Formulario de Contacto: Formulario funcional que permite a visitantes enviar mensajes directamente.
+## ✨ Funcionalidades Principales
 
-SEO y Metadatos Dinámicos: Configuración avanzada de SEO en layout.js y page.js para mejorar la visibilidad en buscadores.
+* **Landing Page** con presentación clara y llamada a la acción
+* **Galería de Proyectos** con tecnologías, enlaces a GitHub y demos
+* **Formulario de Contacto** totalmente funcional
+* **SEO Dinámico** configurado por página
+* **Soporte multi‑idioma (i18n)**
 
-Internacionalización (i18n): Soporte para múltiples idiomas, gestionando traducciones de manera eficiente.
+---
 
-🤝 Cómo Contribuir
-Las contribuciones, sugerencias e informes de errores son bienvenidos. Siéntete libre de abrir un Issue o enviar un Pull Request.
+## 🤝 Contribuciones
 
-Haz un fork del proyecto.
+Las contribuciones son bienvenidas 💙
 
-Crea una rama para tu funcionalidad (git checkout -b feature/AmazingFeature).
+1. Haz un **fork** del proyecto
+2. Crea una rama (`git checkout -b feature/AmazingFeature`)
+3. Realiza tus cambios (`git commit -m 'Add AmazingFeature'`)
+4. Sube la rama (`git push origin feature/AmazingFeature`)
+5. Abre un **Pull Request**
 
-Realiza tus cambios y haz commit (git commit -m 'Add some AmazingFeature').
+---
 
-Sube los cambios a tu rama (git push origin feature/AmazingFeature).
+## 📧 Contacto
 
-Abre un Pull Request.
+**Gorka Carmona Pino**
 
-📧 Contacto
-Gorka Carmona Pino
+* 🌐 Portfolio: [https://portafolio-gorka.vercel.app](https://portafolio-gorka.vercel.app)
+* 💻 GitHub: [https://github.com/Gorkacp](https://github.com/Gorkacp)
+* 🔗 LinkedIn: [https://www.linkedin.com/in/gorka-carmona-pino-803902294](https://www.linkedin.com/in/gorka-carmona-pino-803902294)
+* ✉️ Email: [gorkacarmonapino@gmail.com](mailto:gorkacarmonapino@gmail.com)
 
-Portfolio: https://portafolio-gorka.vercel.app
+---
 
-GitHub: @Gorkacp
+## 📝 Licencia
 
-LinkedIn: gorka-carmona-pino-803902294
+Este proyecto está bajo la **Licencia MIT**. Consulta el archivo `LICENSE` para más información.
 
-Email: gorkacarmonapino@gmail.com
+---
 
-📝 Licencia
-Este proyecto está bajo la Licencia MIT. Consulta el archivo LICENSE para más detalles.
-
-⭐ Si este proyecto te resulta útil o inspirador, ¡considera darle una estrella en GitHub!
+⭐ Si este proyecto te resulta útil o inspirador, ¡no dudes en darle una estrella y proponer mejoras!
