@@ -1,42 +1,21 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import { Sparkles, ChevronRight, Eye, Rocket, Award, Clock, TrendingUp } from "lucide-react";
-import Particles from "react-tsparticles";
-import { loadSlim } from "tsparticles-slim";
 import { getTranslation } from "@/utils/translations";
+import { useLanguage } from "@/contexts/LanguageContext";
+
+const Particles = dynamic(() => import("react-tsparticles").then(mod => mod.default), {
+  ssr: false,
+  loading: () => null,
+});
 
 export default function Hero() {
   const [particlesLoaded, setParticlesLoaded] = useState(false);
-  const [isDesktop, setIsDesktop] = useState(false);
-  const [language, setLanguage] = useState("es");
-  const [isMounted, setIsMounted] = useState(false);
-
-  // Escuchar cambios de idioma
-  useEffect(() => {
-    setIsMounted(true);
-    
-    // Función para manejar cambios de idioma
-    const handleLanguageChange = () => {
-      const savedLang = localStorage.getItem("language") || "es";
-      setLanguage(savedLang);
-    };
-
-    // Establecer idioma inicial
-    handleLanguageChange();
-    
-    // Escuchar cambios de idioma desde el Header
-    window.addEventListener("languageChange", handleLanguageChange);
-    
-    // También verificar periódicamente (por si acaso)
-    const interval = setInterval(handleLanguageChange, 1000);
-    
-    return () => {
-      window.removeEventListener("languageChange", handleLanguageChange);
-      clearInterval(interval);
-    };
-  }, []);
+  const [isDesktop, setIsDesktop] = useState(true);
+  const { language } = useLanguage();
 
   useEffect(() => {
     setIsDesktop(window.innerWidth > 768);
@@ -46,6 +25,7 @@ export default function Hero() {
   }, []);
 
   const particlesInit = async (engine) => {
+    const { loadSlim } = await import("tsparticles-slim");
     await loadSlim(engine);
     setParticlesLoaded(true);
   };
@@ -160,18 +140,6 @@ export default function Hero() {
     secondary_button: getTranslation(language, "Hero.secondary_button"),
     footer_text: getTranslation(language, "Hero.footer_text"),
   };
-  // Loading (evita SSR issues)
-  if (!isMounted) {
-    return (
-      <section className="relative w-full min-h-screen flex items-start justify-center overflow-hidden font-poppins bg-gradient-to-b from-black via-gray-900 to-black pt-12 sm:pt-16 md:pt-10 lg:pt-8">
-        {/* Placeholder mientras carga */}
-        <div className="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-16 md:pt-20 lg:pt-24 pb-8">
-          <div className="h-24 bg-transparent"></div>
-        </div>
-      </section>
-    );
-  }
-
   return (
     <section className="relative w-full min-h-screen flex items-start justify-center overflow-hidden font-poppins bg-gradient-to-b from-black via-gray-900 to-black pt-12 sm:pt-16 md:pt-10 lg:pt-8">
       

@@ -2,38 +2,17 @@
 
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Github, Linkedin, Mail, ArrowUp, ExternalLink, Sparkles, Code2, Database, Send, FileCode, User, FolderKanban } from "lucide-react";
+import { Github, Linkedin, Mail, ArrowUp, ExternalLink, Code2, Send, FileCode, User, FolderKanban } from "lucide-react";
 import { useState, useEffect } from "react";
 import { getTranslation } from "@/utils/translations";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Footer() {
   const year = new Date().getFullYear();
   const [scrollProgress, setScrollProgress] = useState(0);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const [language, setLanguage] = useState("es");
-  const [isMounted, setIsMounted] = useState(false);
-
-  // Escuchar cambios de idioma
-  useEffect(() => {
-    setIsMounted(true);
-    
-    const handleLanguageChange = () => {
-      const savedLang = localStorage.getItem("language") || "es";
-      setLanguage(savedLang);
-    };
-
-    handleLanguageChange();
-    
-    window.addEventListener("languageChange", handleLanguageChange);
-    
-    const interval = setInterval(handleLanguageChange, 1000);
-    
-    return () => {
-      window.removeEventListener("languageChange", handleLanguageChange);
-      clearInterval(interval);
-    };
-  }, []);
+  const { language } = useLanguage();
 
   // Obtener traducciones
   const translations = {
@@ -62,11 +41,11 @@ export default function Footer() {
         : JSON.parse(translations.quick_links || '[]');
       
       const icons = [
-        <ArrowUp className="w-4 h-4 rotate-45" />,
-        <User className="w-4 h-4" />,
-        <FolderKanban className="w-4 h-4" />,
-        <FileCode className="w-4 h-4" />,
-        <Send className="w-4 h-4" />
+        <ArrowUp key="home" className="w-4 h-4 rotate-45" />,
+        <User key="about" className="w-4 h-4" />,
+        <FolderKanban key="projects" className="w-4 h-4" />,
+        <FileCode key="certifications" className="w-4 h-4" />,
+        <Send key="contact" className="w-4 h-4" />
       ];
       
       return links.map((link, index) => ({
@@ -124,19 +103,6 @@ export default function Footer() {
   };
 
   // Loading (evita SSR issues)
-  if (!isMounted) {
-    return (
-      <footer className="
-        relative w-full py-8 md:py-16 px-4 md:px-6 font-poppins
-        bg-gradient-to-b from-gray-900 via-black to-black
-        text-white overflow-hidden
-        border-t border-white/10
-      ">
-        <div className="h-32"></div>
-      </footer>
-    );
-  }
-
   return (
     <footer className="
       relative w-full py-8 md:py-16 px-4 md:px-6 font-poppins

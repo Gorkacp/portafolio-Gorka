@@ -3,42 +3,19 @@
 import { 
   Search, Shield, Zap, Users, BarChart, Smartphone, 
   Globe, Lock, Cpu, Eye, Palette, TrendingUp,
-  CheckCircle, Sparkles
+  CheckCircle, Sparkles, Server, Database, Layers,
+  Target, Code, Cpu as CpuIcon, GitBranch, Cloud,
+  Terminal, FileCode, Layout
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { getTranslation } from "@/utils/translations";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Capabilities() {
   const [expandedCard, setExpandedCard] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
-  const [language, setLanguage] = useState("es");
-  const [isMounted, setIsMounted] = useState(false);
-
-  // Escuchar cambios de idioma
-  useEffect(() => {
-    setIsMounted(true);
-    
-    // Función para manejar cambios de idioma
-    const handleLanguageChange = () => {
-      const savedLang = localStorage.getItem("language") || "es";
-      setLanguage(savedLang);
-    };
-
-    // Establecer idioma inicial
-    handleLanguageChange();
-    
-    // Escuchar cambios de idioma desde el Header
-    window.addEventListener("languageChange", handleLanguageChange);
-    
-    // También verificar periódicamente
-    const interval = setInterval(handleLanguageChange, 1000);
-    
-    return () => {
-      window.removeEventListener("languageChange", handleLanguageChange);
-      clearInterval(interval);
-    };
-  }, []);
+  const { language } = useLanguage();
 
   useEffect(() => {
     const handleResize = () => {
@@ -170,22 +147,80 @@ export default function Capabilities() {
     capabilitiesData = [];
   }
 
-  // Loading (evita SSR issues)
-  if (!isMounted) {
-    return (
-      <section
-        id="capabilities"
-        className="
-          relative w-full py-12 md:py-20 lg:py-32 px-4 sm:px-6 font-poppins
-          bg-gradient-to-b from-gray-900 via-black to-black
-          text-white overflow-hidden
-        "
-      >
-        <div className="h-96"></div>
-      </section>
-    );
-  }
+  // Datos de Stack Tecnológico (añadido desde Experience)
+  const stackTecnologico = [
+    {
+      titulo: "Frontend Especializado",
+      icono: <Palette className="w-5 h-5 text-cyan-400" />,
+      nivel: "Especialidad",
+      items: [
+        { habilidad: "Vue.js / Nuxt 3", nivel: 88 },
+        { habilidad: "TypeScript", nivel: 78 },
+        { habilidad: "React / Next.js", nivel: 82 },
+        { habilidad: "Tailwind CSS / Sass", nivel: 80 },
+        { habilidad: "HTML5 / CSS3", nivel: 82 },
+        { habilidad: "PWA & Performance", nivel: 75 }
+      ],
+      color: "from-cyan-500/10 to-cyan-900/5"
+    },
+    {
+      titulo: "Backend & APIs",
+      icono: <Server className="w-5 h-5 text-emerald-400" />,
+      nivel: "Con conocimientos",
+      items: [
+        { habilidad: "Java / Spring Boot", nivel: 58 },
+        { habilidad: "Node.js / Express", nivel: 55 },
+        { habilidad: "PHP / Laravel", nivel: 50 },
+        { habilidad: "REST APIs", nivel: 62 },
+        { habilidad: "JWT / OAuth2", nivel: 52 },
+        { habilidad: "Microservicios", nivel: 45 }
+      ],
+      color: "from-emerald-500/10 to-emerald-900/5"
+    },
+    {
+      titulo: "Infraestructura & DevOps",
+      icono: <Database className="w-5 h-5 text-orange-400" />,
+      nivel: "Nociones",
+      items: [
+        { habilidad: "MongoDB / NoSQL", nivel: 48 },
+        { habilidad: "MySQL / Oracle", nivel: 42 },
+        { habilidad: "Docker / Contenedores", nivel: 50 },
+        { habilidad: "Git / GitHub Flow", nivel: 72 },
+        { habilidad: "CI/CD Pipelines", nivel: 42 },
+        { habilidad: "AWS Basics", nivel: 35 }
+      ],
+      color: "from-orange-500/10 to-orange-900/5"
+    }
+  ];
 
+  const competenciasClave = [
+    {
+      icono: <Zap className="w-4 h-4" />,
+      titulo: "Performance Web",
+      descripcion: "Core Web Vitals, SSR/SSG, Lazy Loading, Bundle Optimization",
+      color: "from-blue-500/10 to-cyan-500/10"
+    },
+    {
+      icono: <Globe className="w-4 h-4" />,
+      titulo: "SEO Técnico",
+      descripcion: "Metadatos dinámicos, Schema markup, Canonical, Sitemaps XML",
+      color: "from-purple-500/10 to-pink-500/10"
+    },
+    {
+      icono: <CheckCircle className="w-4 h-4" />,
+      titulo: "Calidad & Testing",
+      descripcion: "Clean Code, Unit Testing, E2E, Code Reviews, Documentación",
+      color: "from-green-500/10 to-emerald-500/10"
+    },
+    {
+      icono: <Layers className="w-4 h-4" />,
+      titulo: "Arquitectura",
+      descripcion: "Escalabilidad, Mantenibilidad, Patrones, Seguridad, Microservicios",
+      color: "from-orange-500/10 to-amber-500/10"
+    }
+  ];
+
+  // Loading (evita SSR issues)
   return (
     <section
       id="capabilities"
@@ -381,6 +416,117 @@ export default function Capabilities() {
             </motion.div>
           ))}
         </div>
+
+        {/* ===== SECCIÓN AÑADIDA: Stack Tecnológico y Competencias ===== */}
+        <div className="mt-20 md:mt-32 space-y-16 md:space-y-24">
+          
+          {/* Stack Tecnológico Completo */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+          >
+            <div className="text-center mb-8 md:mb-16">
+              <h3 className="text-xl md:text-3xl lg:text-4xl font-bold text-white mb-3 md:mb-4">
+                Dominio Tecnológico
+              </h3>
+              <p className="text-gray-300 text-sm md:text-lg lg:text-xl max-w-3xl mx-auto px-4">
+                Stack completo con niveles de expertise validados por proyectos en producción
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-8">
+              {stackTecnologico.map((stack, index) => (
+                <div 
+                  key={index}
+                  className={`p-4 md:p-6 lg:p-7 rounded-xl md:rounded-2xl bg-gradient-to-br ${stack.color} border border-white/10`}
+                >
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4 md:mb-6">
+                    <div className="flex items-center gap-2 md:gap-3">
+                      <div className="p-1.5 md:p-2 rounded-lg bg-white/10">
+                        {stack.icono}
+                      </div>
+                      <h4 className="font-bold text-white text-sm md:text-lg lg:text-xl">
+                        {stack.titulo}
+                      </h4>
+                    </div>
+                    <span className="text-[10px] md:text-sm text-purple-300 bg-purple-500/10 px-2 py-0.5 md:px-3 md:py-1 rounded-full self-start sm:self-auto">
+                      {stack.nivel}
+                    </span>
+                  </div>
+                  
+                  <div className="space-y-3 md:space-y-5">
+                    {stack.items.map((item, itemIndex) => (
+                      <div key={itemIndex} className="space-y-1 md:space-y-2">
+                        <div className="flex justify-between text-xs md:text-base">
+                          <span className="text-gray-300">{item.habilidad}</span>
+                          <span className="text-purple-300 font-medium">{item.nivel}%</span>
+                        </div>
+                        <div className="h-1.5 md:h-2 bg-white/5 rounded-full overflow-hidden">
+                          <motion.div
+                            initial={{ width: 0 }}
+                            whileInView={{ width: `${item.nivel}%` }}
+                            transition={{ duration: 1, delay: 0.5 + itemIndex * 0.1 }}
+                            viewport={{ once: true }}
+                            className={`h-full rounded-full ${
+                              item.nivel >= 85 ? 'bg-gradient-to-r from-green-400 to-emerald-500' :
+                              item.nivel >= 75 ? 'bg-gradient-to-r from-blue-400 to-cyan-500' :
+                              'bg-gradient-to-r from-purple-400 to-pink-500'
+                            }`}
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* Competencias Clave */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            viewport={{ once: true }}
+          >
+            <div className="text-center mb-8 md:mb-16">
+              <h3 className="text-xl md:text-3xl lg:text-4xl font-bold text-white mb-3 md:mb-4">
+                Competencias Técnicas Clave
+              </h3>
+              <p className="text-gray-300 text-sm md:text-lg lg:text-xl max-w-3xl mx-auto px-4">
+                Áreas de especialización que diferencian mi enfoque de desarrollo
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
+              {competenciasClave.map((competencia, index) => (
+                <div 
+                  key={index}
+                  className={`p-4 md:p-6 rounded-xl bg-gradient-to-br ${competencia.color} border border-white/10 hover:border-white/20 transition-all duration-300`}
+                >
+                  <div className="flex sm:flex-col items-center text-center gap-3 sm:gap-4">
+                    <div className="p-2 sm:p-3 rounded-lg bg-gradient-to-r from-blue-500/20 to-purple-500/20">
+                      {competencia.icono}
+                    </div>
+                    <div className="text-left sm:text-center">
+                      <h4 className="font-bold text-white text-sm sm:text-lg md:text-xl mb-1 sm:mb-2">
+                        {competencia.titulo}
+                      </h4>
+                      <p className="text-gray-300 text-xs sm:text-sm md:text-base">
+                        {competencia.descripcion}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+
+        </div>
+        {/* ===== FIN SECCIÓN AÑADIDA ===== */}
+
       </div>
 
       {/* Separador inferior */}

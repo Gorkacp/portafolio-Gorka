@@ -2,16 +2,16 @@
 
 import { useState, useEffect, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { HiMenu, HiX, HiChevronDown } from "react-icons/hi";
+import { Menu, X, ChevronDown } from "lucide-react";
 import { getTranslation } from "@/utils/translations";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [language, setLanguage] = useState("es");
   const [desktopDropdownOpen, setDesktopDropdownOpen] = useState(false);
   const [mobileDropdownOpen, setMobileDropdownOpen] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
+  const { language, setLanguage } = useLanguage();
   const desktopRef = useRef(null);
   const mobileRef = useRef(null);
   const pathname = usePathname();
@@ -19,22 +19,8 @@ export default function Header() {
 
   const toggleMenu = () => setIsOpen((prev) => !prev);
 
-  /* Inicializar idioma en cliente */
-  useEffect(() => {
-    setIsMounted(true);
-    const savedLang = localStorage.getItem("language");
-    const validLangs = ["es", "en", "de"];
-    const langToUse = validLangs.includes(savedLang) ? savedLang : "es";
-    setLanguage(langToUse);
-    localStorage.setItem("language", langToUse);
-    document.documentElement.lang = langToUse;
-  }, []);
-
-  /* Cambiar idioma */
   const handleLanguageChange = (newLang) => {
     setLanguage(newLang);
-    localStorage.setItem("language", newLang);
-    document.documentElement.lang = newLang;
     setDesktopDropdownOpen(false);
     setMobileDropdownOpen(false);
   };
@@ -105,23 +91,47 @@ export default function Header() {
   };
 
   /* Loading (evita SSR issues) */
-  if (!isMounted) {
-    return <header className="fixed top-0 left-0 w-full z-50 bg-black h-[80px]" />;
-  }
-
   const menuItems = [
     { name: getTranslation(language, "Header.home"), href: "#home" },
     { name: getTranslation(language, "Header.about"), href: "#about" },
     { name: getTranslation(language, "Header.capabilities"), href: "#capabilities" },
+    { name: getTranslation(language, "Header.experience"), href: "#experience" },
     { name: getTranslation(language, "Header.projects"), href: "#projects" },
     { name: getTranslation(language, "Header.certifications"), href: "#certifications" },
     { name: getTranslation(language, "Header.contact"), href: "#contact" },
   ];
 
+  const flags = {
+    es: (
+      <svg className="w-5 h-5 rounded-sm flex-shrink-0" viewBox="0 0 500 500">
+        <rect width="500" height="500" fill="#c60b1e"/>
+        <rect y="125" width="500" height="250" fill="#ffc400"/>
+        <circle cx="250" cy="250" r="60" fill="#c60b1e"/>
+      </svg>
+    ),
+    en: (
+      <svg className="w-5 h-5 rounded-sm flex-shrink-0" viewBox="0 0 60 30">
+        <clipPath id="uk"><path d="M0 0v30h60V0z"/></clipPath>
+        <path d="M0 0v30h60V0z" fill="#012169"/>
+        <path d="M0 0l60 30m0-30L0 30" stroke="#fff" strokeWidth="6"/>
+        <path d="M0 0l60 30m0-30L0 30" clipPath="url(#uk)" stroke="#c8102e" strokeWidth="4"/>
+        <path d="M30 0v30M0 15h60" stroke="#fff" strokeWidth="10"/>
+        <path d="M30 0v30M0 15h60" stroke="#c8102e" strokeWidth="6"/>
+      </svg>
+    ),
+    de: (
+      <svg className="w-5 h-5 rounded-sm flex-shrink-0" viewBox="0 0 5 3">
+        <rect width="5" height="3" fill="#000"/>
+        <rect y="1" width="5" height="1" fill="#d00"/>
+        <rect y="2" width="5" height="1" fill="#ffce00"/>
+      </svg>
+    ),
+  };
+
   const languages = [
-    { code: "es", label: "Español", flag: "🇪🇸" },
-    { code: "en", label: "English", flag: "🇬🇧" },
-    { code: "de", label: "Deutsch", flag: "🇩🇪" },
+    { code: "es", label: "Español", flag: flags.es },
+    { code: "en", label: "English", flag: flags.en },
+    { code: "de", label: "Deutsch", flag: flags.de },
   ];
 
   const currentLanguage =
@@ -181,13 +191,11 @@ export default function Header() {
               onClick={() => setDesktopDropdownOpen((prev) => !prev)}
               className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-white/5 hover:bg-white/10 transition-all duration-300 border border-white/10"
             >
-              <span className="text-xl">
-                {currentLanguage.flag}
-              </span>
+              {currentLanguage.flag}
               <span className="text-white font-medium text-sm">
                 {currentLanguage.label}
               </span>
-              <HiChevronDown
+              <ChevronDown
                 className={`text-white/60 transition-transform duration-300 ${desktopDropdownOpen ? "rotate-180" : ""}`}
                 size={18}
               />
@@ -203,9 +211,7 @@ export default function Header() {
                       onClick={() => handleLanguageChange(lang.code)}
                       className="flex items-center gap-3 px-4 py-3 w-full text-white hover:bg-white/10 transition-all duration-200"
                     >
-                      <span className="text-xl">
-                        {lang.flag}
-                      </span>
+                      {lang.flag}
                       <span className="font-medium text-sm">{lang.label}</span>
                     </button>
                   ))}
@@ -222,8 +228,8 @@ export default function Header() {
               onClick={() => setMobileDropdownOpen((prev) => !prev)}
               className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10"
             >
-              <span className="text-lg">{currentLanguage.flag}</span>
-              <HiChevronDown
+              {currentLanguage.flag}
+              <ChevronDown
                 className={`text-white transition ${mobileDropdownOpen ? "rotate-180" : ""}`}
                 size={16}
               />
@@ -239,7 +245,7 @@ export default function Header() {
                       onClick={() => handleLanguageChange(lang.code)}
                       className="flex items-center gap-2 px-3 py-2.5 w-full text-white hover:bg-white/10 transition"
                     >
-                      <span className="text-lg">{lang.flag}</span>
+                      {lang.flag}
                       <span className="text-sm">{lang.label}</span>
                     </button>
                   ))}
@@ -253,9 +259,9 @@ export default function Header() {
             className="p-2.5 rounded-lg bg-white/5 hover:bg-white/10 transition-all border border-white/10"
           >
             {isOpen ? (
-              <HiX size={22} className="text-white" />
+              <X size={22} className="text-white" />
             ) : (
-              <HiMenu size={22} className="text-white" />
+              <Menu size={22} className="text-white" />
             )}
           </button>
         </div>

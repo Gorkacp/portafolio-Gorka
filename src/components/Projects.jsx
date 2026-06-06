@@ -5,46 +5,16 @@ import { motion } from "framer-motion";
 import { Rocket, Terminal, Server, Database, Globe } from "lucide-react";
 import { useState, useEffect } from "react";
 import { getTranslation } from "@/utils/translations";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Projects() {
   const [isMobile, setIsMobile] = useState(false);
-  const [language, setLanguage] = useState("es");
-  const [isMounted, setIsMounted] = useState(false);
+  const { language } = useLanguage();
   
-  // Escuchar cambios de idioma
   useEffect(() => {
-    setIsMounted(true);
-    
-    // Función para manejar cambios de idioma
-    const handleLanguageChange = () => {
-      const savedLang = localStorage.getItem("language") || "es";
-      setLanguage(savedLang);
-    };
-
-    // Establecer idioma inicial
-    handleLanguageChange();
-    
-    // Escuchar cambios de idioma desde el Header
-    window.addEventListener("languageChange", handleLanguageChange);
-    
-    // También verificar periódicamente
-    const interval = setInterval(handleLanguageChange, 1000);
-    
-    return () => {
-      window.removeEventListener("languageChange", handleLanguageChange);
-      clearInterval(interval);
-    };
-  }, []);
-
-  // Detectar si es móvil
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 1024); // lg breakpoint
-    };
-    
+    const checkMobile = () => setIsMobile(window.innerWidth < 1024);
     checkMobile();
     window.addEventListener('resize', checkMobile);
-    
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
@@ -91,22 +61,6 @@ export default function Projects() {
   };
 
   const projects = [projectData];
-
-  // Loading (evita SSR issues)
-  if (!isMounted) {
-    return (
-      <section
-        id="projects"
-        className="
-          relative w-full py-20 md:py-32 px-4 md:px-6 font-poppins
-          bg-gradient-to-b from-black via-gray-950 to-gray-900
-          text-white overflow-hidden
-        "
-      >
-        <div className="h-96"></div>
-      </section>
-    );
-  }
 
   return (
     <section

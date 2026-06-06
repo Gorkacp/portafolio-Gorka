@@ -1,11 +1,28 @@
 // src/app/page.js - SEO OPTIMIZADO Y SEGURO
+import dynamic from "next/dynamic";
 import Hero from "../components/Hero";
-import About from "../components/About";
-import Capabilities from "../components/Capabilities";
-import Projects from "../components/Projects";
-import Certifications from "../components/Certifications";
-import Contact from "../components/Contact";
-import Footer from "../components/Footer";
+
+const About = dynamic(() => import("../components/About"), {
+  loading: () => <div className="w-full h-screen bg-gradient-to-b from-gray-900 via-black to-black" />,
+});
+const Capabilities = dynamic(() => import("../components/Capabilities"), {
+  loading: () => <div className="w-full h-[600px] bg-gradient-to-b from-gray-900 via-black to-black" />,
+});
+const Experience = dynamic(() => import("@/components/Experience"), {
+  loading: () => <div className="w-full h-[600px] bg-gradient-to-b from-gray-900 via-black to-black" />,
+});
+const Projects = dynamic(() => import("../components/Projects"), {
+  loading: () => <div className="w-full h-[800px] bg-gradient-to-b from-black via-gray-950 to-gray-900" />,
+});
+const Certifications = dynamic(() => import("../components/Certifications"), {
+  loading: () => <div className="w-full h-[800px] bg-gradient-to-b from-gray-900 via-black to-black" />,
+});
+const Contact = dynamic(() => import("../components/Contact"), {
+  loading: () => <div className="w-full h-[600px] bg-gradient-to-b from-gray-900 via-black to-black" />,
+});
+const Footer = dynamic(() => import("../components/Footer"), {
+  loading: () => <div className="w-full h-64 bg-gradient-to-b from-gray-900 via-black to-black" />,
+});
 
 export const metadata = {
   // ============ TÍTULOS OPTIMIZADOS ============
@@ -53,7 +70,7 @@ export const metadata = {
   
   creator: "Gorka Carmona Pino",
   publisher: "Gorka Carmona Pino | Full Stack Developer Portfolio",
-  generator: "Next.js 14, React 18, Tailwind CSS",
+  generator: "Next.js 16, React 19, Tailwind CSS",
   
   // ============ ROBOTS CONFIGURACIÓN ============
   robots: {
@@ -236,7 +253,6 @@ export const metadata = {
     ]),
     
     // CONFIGURACIÓN TÉCNICA
-    "viewport": "width=device-width, initial-scale=1, maximum-scale=5",
     "theme-color": "#000000",
     
     // REDES SOCIALES (SOLO REALES)
@@ -257,6 +273,7 @@ export default function Home() {
       <Hero />
       <About />
       <Capabilities />
+      <Experience />
       <Projects />
       <Certifications />
       <Contact />

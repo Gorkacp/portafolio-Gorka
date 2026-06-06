@@ -7,52 +7,26 @@ import { useState, useEffect, useCallback } from "react";
 import { getTranslation } from "@/utils/translations";
 import { useRouter } from "next/navigation";
 import { showGlobalLoader, hideGlobalLoader } from "./GlobalLoader";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function ProjectCard({ project }) {
   const [isHovered, setIsHovered] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [techsToShow, setTechsToShow] = useState(6);
-  const [language, setLanguage] = useState("es");
-  const [isMounted, setIsMounted] = useState(false);
   const [isNavigating, setIsNavigating] = useState(false);
+  const { language } = useLanguage();
   const router = useRouter();
 
-  // Escuchar cambios de idioma
-  useEffect(() => {
-    setIsMounted(true);
-    
-    const handleLanguageChange = () => {
-      const savedLang = localStorage.getItem("language") || "es";
-      setLanguage(savedLang);
-    };
-
-    handleLanguageChange();
-    
-    window.addEventListener("languageChange", handleLanguageChange);
-    
-    return () => {
-      window.removeEventListener("languageChange", handleLanguageChange);
-    };
-  }, []);
-
-  // Detectar tamaño de pantalla
   useEffect(() => {
     const checkMobile = () => {
       const width = window.innerWidth;
       setIsMobile(width < 768);
-      
-      if (width < 480) {
-        setTechsToShow(3);
-      } else if (width < 640) {
-        setTechsToShow(4);
-      } else {
-        setTechsToShow(6);
-      }
+      if (width < 480) setTechsToShow(3);
+      else if (width < 640) setTechsToShow(4);
+      else setTechsToShow(6);
     };
-    
     checkMobile();
     window.addEventListener('resize', checkMobile);
-    
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
@@ -152,7 +126,7 @@ export default function ProjectCard({ project }) {
     };
   }, [isNavigating]);
 
-  if (!project || !isMounted) return null;
+  if (!project) return null;
 
   return (
     <motion.article
@@ -201,7 +175,7 @@ export default function ProjectCard({ project }) {
             transition-transform duration-500
             group-hover/card:scale-110
           "
-          priority
+          loading="lazy"
           sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
         />
         

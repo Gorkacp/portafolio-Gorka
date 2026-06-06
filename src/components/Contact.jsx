@@ -4,6 +4,11 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Send, Mail, User, MessageSquare, ArrowRight, Clock, Shield, Calendar, Linkedin, Zap, Target, CheckCircle, AlertCircle, X } from "lucide-react";
 import { getTranslation } from "@/utils/translations";
+import { useLanguage } from "@/contexts/LanguageContext";
+
+const renderTextWithHTML = (text) => {
+  return { __html: text };
+};
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -14,30 +19,9 @@ export default function Contact() {
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [language, setLanguage] = useState("es");
-  const [isMounted, setIsMounted] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState(null); // 'success', 'error', 'validation'
+  const [submitStatus, setSubmitStatus] = useState(null);
   const [submitMessage, setSubmitMessage] = useState("");
-
-  // Escuchar cambios de idioma
-  useEffect(() => {
-    setIsMounted(true);
-    
-    const handleLanguageChange = () => {
-      const savedLang = localStorage.getItem("language") || "es";
-      setLanguage(savedLang);
-    };
-
-    handleLanguageChange();
-    
-    window.addEventListener("languageChange", handleLanguageChange);
-    return () => window.removeEventListener("languageChange", handleLanguageChange);
-  }, []);
-
-  // Función para renderizar texto con HTML
-  const renderTextWithHTML = (text) => {
-    return { __html: text };
-  };
+  const { language } = useLanguage();
 
   // Obtener traducciones
   const translations = {
@@ -171,25 +155,6 @@ export default function Contact() {
       setIsSubmitting(false);
     }
   };
-
-  // Loading (evita SSR issues)
-  if (!isMounted) {
-    return (
-      <section
-        id="contact"
-        className="relative w-full py-12 md:py-32 px-4 md:px-6 font-poppins bg-gradient-to-b from-gray-900 via-black to-black text-white"
-      >
-        <div className="max-w-[1200px] mx-auto">
-          <div className="h-96 flex items-center justify-center">
-            <div className="text-center">
-              <div className="w-12 h-12 border-2 border-purple-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-              <p className="text-gray-400">Cargando formulario de contacto...</p>
-            </div>
-          </div>
-        </div>
-      </section>
-    );
-  }
 
   return (
     <section

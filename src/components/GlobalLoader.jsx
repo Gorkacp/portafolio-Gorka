@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useSyncExternalStore } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 // Estado global simplificado
@@ -9,6 +9,15 @@ const loaderState = {
   listeners: new Set(),
 };
 
+function subscribeToLoader(callback) {
+  loaderState.listeners.add(callback);
+  return () => loaderState.listeners.delete(callback);
+}
+
+function getLoaderSnapshot() {
+  return loaderState.isLoading;
+}
+
 // Funciones de control
 export const showGlobalLoader = () => {
   if (!loaderState.isLoading) {
@@ -16,7 +25,7 @@ export const showGlobalLoader = () => {
     document.body.style.overflow = 'hidden';
     document.body.style.pointerEvents = 'none';
     
-    loaderState.listeners.forEach(listener => listener(true));
+    loaderState.listeners.forEach(listener => listener());
     
     // Timeout de seguridad
     setTimeout(() => {
@@ -32,30 +41,16 @@ export const hideGlobalLoader = () => {
     loaderState.isLoading = false;
     document.body.style.overflow = 'auto';
     document.body.style.pointerEvents = 'auto';
-    loaderState.listeners.forEach(listener => listener(false));
+    loaderState.listeners.forEach(listener => listener());
   }
 };
 
 export default function GlobalLoader() {
-  const [showLoader, setShowLoader] = useState(false);
-
-  useEffect(() => {
-    const handleStateChange = (state) => {
-      setShowLoader(state);
-    };
-    
-    loaderState.listeners.add(handleStateChange);
-    
-    if (loaderState.isLoading) {
-      setShowLoader(true);
-    }
-
-    return () => {
-      loaderState.listeners.delete(handleStateChange);
-      document.body.style.overflow = 'auto';
-      document.body.style.pointerEvents = 'auto';
-    };
-  }, []);
+  const showLoader = useSyncExternalStore(
+    subscribeToLoader,
+    getLoaderSnapshot,
+    () => false
+  );
 
   if (!showLoader) return null;
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import {
   Code2,
   Layers,
@@ -8,36 +8,10 @@ import {
   Server,
 } from "lucide-react";
 import { getTranslation } from "@/utils/translations";
-import { motion } from "framer-motion";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function About() {
-  const [language, setLanguage] = useState("es");
-  const [isMounted, setIsMounted] = useState(false);
-
-  // Escuchar cambios de idioma
-  useEffect(() => {
-    setIsMounted(true);
-    
-    // Función para manejar cambios de idioma
-    const handleLanguageChange = () => {
-      const savedLang = localStorage.getItem("language") || "es";
-      setLanguage(savedLang);
-    };
-
-    // Establecer idioma inicial
-    handleLanguageChange();
-    
-    // Escuchar cambios de idioma desde el Header
-    window.addEventListener("languageChange", handleLanguageChange);
-    
-    // También verificar periódicamente
-    const interval = setInterval(handleLanguageChange, 1000);
-    
-    return () => {
-      window.removeEventListener("languageChange", handleLanguageChange);
-      clearInterval(interval);
-    };
-  }, []);
+  const { language } = useLanguage();
 
   // Función para renderizar texto con HTML
   const renderTextWithHTML = (text) => {
@@ -91,25 +65,6 @@ export default function About() {
 
   // Extraer partes del subtítulo para el degradado
   const subtitleParts = extractHighlightedText(translations.subtitle);
-
-  // Loading (evita SSR issues)
-  if (!isMounted) {
-    return (
-      <section
-        id="about"
-        className="
-          relative w-full min-h-[auto] lg:min-h-screen py-20 sm:py-24 md:py-32 px-4 sm:px-6 font-poppins
-          bg-gradient-to-b from-gray-900 via-black to-black
-          text-white
-          flex items-center
-        "
-      >
-        <div className="w-full max-w-[1200px] mx-auto">
-          <div className="h-64"></div>
-        </div>
-      </section>
-    );
-  }
 
   // Asegurar que las tecnologías sean arrays
   const frontendTechs = Array.isArray(translations.frontend_tech) 

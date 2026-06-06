@@ -27,35 +27,14 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { getTranslation } from "@/utils/translations";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Certifications() {
   const [filter, setFilter] = useState("all");
   const [search, setSearch] = useState("");
   const [visibleCount, setVisibleCount] = useState(6);
   const [isMobile, setIsMobile] = useState(false);
-  const [language, setLanguage] = useState("es");
-  const [isMounted, setIsMounted] = useState(false);
-
-  // Escuchar cambios de idioma
-  useEffect(() => {
-    setIsMounted(true);
-    
-    const handleLanguageChange = () => {
-      const savedLang = localStorage.getItem("language") || "es";
-      setLanguage(savedLang);
-    };
-
-    handleLanguageChange();
-    
-    window.addEventListener("languageChange", handleLanguageChange);
-    
-    const interval = setInterval(handleLanguageChange, 1000);
-    
-    return () => {
-      window.removeEventListener("languageChange", handleLanguageChange);
-      clearInterval(interval);
-    };
-  }, []);
+  const { language } = useLanguage();
 
   // Detectar si es móvil
   useEffect(() => {
@@ -297,21 +276,6 @@ export default function Certifications() {
   };
 
   // Loading (evita SSR issues)
-  if (!isMounted) {
-    return (
-      <section
-        id="certifications"
-        className="
-          relative w-full py-20 md:py-32 px-4 md:px-6 font-poppins
-          bg-gradient-to-b from-gray-900 via-black to-black
-          text-white overflow-hidden
-        "
-      >
-        <div className="h-96"></div>
-      </section>
-    );
-  }
-
   return (
     <section
       id="certifications"
@@ -557,7 +521,7 @@ export default function Certifications() {
                         )}
                         {search && (
                           <span className="px-2 py-1 rounded-full bg-white/5">
-                            "{search}"
+                            &ldquo;{search}&rdquo;
                           </span>
                         )}
                       </div>
