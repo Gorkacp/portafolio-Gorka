@@ -51,13 +51,13 @@ const experiences = [
       "Implementación de tests end-to-end con Playwright, reforzando la estabilidad y fiabilidad del producto en producción"
     ],
     tecnologias: ["Vue 3", "Nuxt 3", "JavaScript", "TypeScript", "Tailwind CSS", "Playwright", "Git", "Docker", "Responsive Design", "SSR", "SEO Técnico", "Frameworks JS"],
-    brandColor: "blue",
-    color: "from-blue-600 to-cyan-500",
-    borderColor: "border-l-blue-500",
-    dotBorder: "border-blue-500/40",
-    dotShadow: "rgba(59,130,246,0.35)",
-    hoverBorder: "hover:border-blue-500/40",
-    bgGradient: "from-blue-900/10 to-transparent"
+    brandColor: "turquoise",
+    color: "from-[#00ffeb] to-[#00d4c4]",
+    borderColor: "border-l-[#00ffeb]",
+    dotBorder: "transparent",
+    dotShadow: "rgba(0,255,235,0.35)",
+    hoverBorder: "hover:border-[#00ffeb]",
+    bgGradient: "from-[#00ffeb]/[0.07] to-transparent"
   },
   {
     id: "wegow-intern",
@@ -82,35 +82,33 @@ const experiences = [
       "Participación en flujos Git con pull requests y code reviews"
     ],
     tecnologias: ["Vue 3", "Nuxt 3", "JavaScript", "Tailwind CSS", "PWA", "Docker", "Git", "Responsive Design"],
-    brandColor: "blue",
-    color: "from-blue-600 to-cyan-500",
-    borderColor: "border-l-blue-500",
-    dotBorder: "border-blue-500/40",
-    dotShadow: "rgba(59,130,246,0.35)",
-    hoverBorder: "hover:border-blue-500/40",
-    bgGradient: "from-blue-900/10 to-transparent"
+    brandColor: "turquoise",
+    color: "from-[#00ffeb] to-[#00d4c4]",
+    borderColor: "border-l-[#00ffeb]",
+    dotBorder: "transparent",
+    dotShadow: "rgba(0,255,235,0.35)",
+    hoverBorder: "hover:border-[#00ffeb]",
+    bgGradient: "from-[#00ffeb]/[0.07] to-transparent"
   }
 ];
 
-function TimelineDot({ logo, alt, borderColor, shadowColor }) {
-  if (logo) {
-    return (
+function LogoDot({ logo, alt, borderColor, shadowColor, size = "md" }) {
+  const isDesktop = size === "md";
+  return (
+    <div
+      className={`relative z-10 flex-shrink-0 ${isDesktop ? "w-16" : "w-14"} flex justify-center`}
+    >
       <div
-        className="absolute left-0 top-0 w-9 h-9 md:w-16 md:h-16 md:-translate-x-1/2 rounded-xl md:rounded-2xl bg-gradient-to-br from-gray-900 to-gray-950 flex items-center justify-center z-10 overflow-hidden"
+        className={`${isDesktop ? "w-14 h-14 rounded-2xl" : "w-10 h-10 rounded-xl"} bg-gradient-to-br from-gray-900 to-gray-950 flex items-center justify-center overflow-hidden`}
         style={{
           border: `1px solid ${borderColor}`,
           boxShadow: `0 0 20px -5px ${shadowColor}`
         }}
       >
-        <div className="relative w-5 h-5 md:w-[38px] md:h-[38px]">
+        <div className={`relative ${isDesktop ? "w-[38px] h-[38px]" : "w-[26px] h-[26px]"}`}>
           <Image src={logo} alt={alt} fill className="object-contain" />
         </div>
       </div>
-    );
-  }
-  return (
-    <div className="absolute left-0 top-0 w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center shadow-lg shadow-purple-500/30 z-10">
-      <div className="w-2.5 h-2.5 rounded-full bg-white" />
     </div>
   );
 }
@@ -124,11 +122,11 @@ function MobileCard({ exp, index }) {
       whileInView={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.5, delay: index * 0.15 }}
       viewport={{ once: true, margin: "-30px" }}
-      className="relative pl-12 md:pl-16"
+      className="flex items-start gap-3"
     >
-      <TimelineDot logo={exp.logo} alt={exp.empresa} borderColor={exp.dotBorder} shadowColor={exp.dotShadow} />
+      <LogoDot logo={exp.logo} alt={exp.empresa} borderColor={exp.dotBorder} shadowColor={exp.dotShadow} size="sm" />
 
-      <div className={`rounded-xl bg-gradient-to-br ${exp.bgGradient} border border-white/10 ${exp.borderColor} border-l-4 ${exp.hoverBorder} transition-all duration-300 overflow-hidden`}>
+      <div className={`flex-1 min-w-0 rounded-xl bg-gradient-to-br ${exp.bgGradient} border border-white/10 ${exp.borderColor} border-l-4 ${exp.hoverBorder} transition-all duration-300 overflow-hidden`}>
         <div className="p-4">
           <div className="flex flex-wrap items-center gap-1.5 mb-2">
             <span className={`px-2.5 py-0.5 rounded-full bg-gradient-to-r ${exp.color} text-white text-xs font-medium`}>
@@ -225,11 +223,11 @@ function DesktopCard({ exp, index }) {
       whileInView={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.6, delay: index * 0.15 }}
       viewport={{ once: true, margin: "-50px" }}
-      className="relative pl-20"
+      className="flex items-start gap-6"
     >
-      <TimelineDot logo={exp.logo} alt={exp.empresa} borderColor={exp.dotBorder} shadowColor={exp.dotShadow} />
+      <LogoDot logo={exp.logo} alt={exp.empresa} borderColor={exp.dotBorder} shadowColor={exp.dotShadow} size="md" />
 
-      <div className={`p-7 rounded-2xl bg-gradient-to-br ${exp.bgGradient} border border-white/10 ${exp.hoverBorder} transition-all duration-300 ${exp.borderColor} border-l-4`}>
+      <div className={`flex-1 min-w-0 p-7 rounded-2xl bg-gradient-to-br ${exp.bgGradient} border border-white/10 ${exp.hoverBorder} transition-all duration-300 ${exp.borderColor} border-l-4`}>
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-4">
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1.5">
@@ -363,8 +361,8 @@ export default function Experience() {
         </div>
 
         <div className="relative">
-          <div className="absolute left-4 md:left-8 top-0 bottom-0 w-[2px] bg-gradient-to-b from-orange-500/60 via-blue-500/60 to-transparent rounded-full" />
-          <div className="absolute left-4 md:left-8 top-0 bottom-0 w-[2px] bg-gradient-to-b from-orange-500/20 via-blue-500/20 to-transparent blur-sm rounded-full" />
+          <div className="absolute left-7 md:left-8 top-0 bottom-0 w-[3px] md:w-[4px] bg-gradient-to-b from-orange-500 via-[#00ffeb] to-transparent rounded-full -translate-x-1/2" />
+          <div className="absolute left-7 md:left-8 top-0 bottom-0 w-[3px] md:w-[4px] bg-gradient-to-b from-orange-500/40 via-[#00ffeb]/40 to-transparent blur-sm rounded-full -translate-x-1/2" />
 
           {/* Mobile layout */}
           <div className="space-y-6 md:hidden">
