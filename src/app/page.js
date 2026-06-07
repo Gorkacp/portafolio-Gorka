@@ -1,28 +1,12 @@
-// src/app/page.js - SEO OPTIMIZADO Y SEGURO
-import dynamic from "next/dynamic";
+// src/app/page.js - SEO OPTIMIZADO
 import Hero from "../components/Hero";
-
-const About = dynamic(() => import("../components/About"), {
-  loading: () => <div className="w-full h-screen bg-gradient-to-b from-gray-900 via-black to-black" />,
-});
-const Capabilities = dynamic(() => import("../components/Capabilities"), {
-  loading: () => <div className="w-full h-[600px] bg-gradient-to-b from-gray-900 via-black to-black" />,
-});
-const Experience = dynamic(() => import("@/components/Experience"), {
-  loading: () => <div className="w-full h-[600px] bg-gradient-to-b from-gray-900 via-black to-black" />,
-});
-const Projects = dynamic(() => import("../components/Projects"), {
-  loading: () => <div className="w-full h-[800px] bg-gradient-to-b from-black via-gray-950 to-gray-900" />,
-});
-const Certifications = dynamic(() => import("../components/Certifications"), {
-  loading: () => <div className="w-full h-[800px] bg-gradient-to-b from-gray-900 via-black to-black" />,
-});
-const Contact = dynamic(() => import("../components/Contact"), {
-  loading: () => <div className="w-full h-[600px] bg-gradient-to-b from-gray-900 via-black to-black" />,
-});
-const Footer = dynamic(() => import("../components/Footer"), {
-  loading: () => <div className="w-full h-64 bg-gradient-to-b from-gray-900 via-black to-black" />,
-});
+import About from "../components/About";
+import Capabilities from "../components/Capabilities";
+import Experience from "@/components/Experience";
+import Projects from "../components/Projects";
+import Certifications from "../components/Certifications";
+import Contact from "../components/Contact";
+import Footer from "../components/Footer";
 
 export const metadata = {
   // ============ TÍTULOS OPTIMIZADOS ============
@@ -249,6 +233,18 @@ export const metadata = {
           "@id": "https://portafolio-gorka.vercel.app/#person"
         },
         "applicationCategory": "BusinessApplication"
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "Project",
+        "name": "JARVIS Voice Assistant",
+        "description": "100% local intelligent voice assistant with offline speech recognition, local LLM, and ChatGPT-like web interface.",
+        "url": "https://portafolio-gorka.vercel.app/proyectos/jarvis",
+        "technologies": ["Python", "FastAPI", "Vosk", "Ollama", "Qwen 2.5", "Tailwind CSS"],
+        "creator": {
+          "@id": "https://portafolio-gorka.vercel.app/#person"
+        },
+        "applicationCategory": "VoiceApplication"
       }
     ]),
     

@@ -8,6 +8,8 @@ import {
   CheckCircle, GraduationCap, Sparkles,
   ChevronDown
 } from "lucide-react";
+import { getTranslation } from "@/utils/translations";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const experiences = [
   {
@@ -288,6 +290,15 @@ function DesktopCard({ exp, index }) {
 }
 
 export default function Experience() {
+  const { language } = useLanguage();
+
+  const translations = {
+    section_title: getTranslation(language, "Experience.section_title"),
+    title_part1: getTranslation(language, "Experience.title_part1"),
+    title_highlight: getTranslation(language, "Experience.title_highlight"),
+    description: getTranslation(language, "Experience.description"),
+  };
+
   return (
     <section
       id="experience"
@@ -307,7 +318,7 @@ export default function Experience() {
           >
             <Briefcase className="w-4 h-4 text-purple-400" />
             <span className="text-sm font-medium text-gray-300 tracking-wider uppercase">
-              Experiencia Profesional
+              {translations.section_title}
             </span>
           </motion.div>
 
@@ -317,9 +328,9 @@ export default function Experience() {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight"
           >
-            Trayectoria{" "}
+            {translations.title_part1}{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400">
-              Profesional
+              {translations.title_highlight}
             </span>
           </motion.h2>
 
@@ -329,7 +340,7 @@ export default function Experience() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="text-gray-400 text-base md:text-lg mt-4 max-w-2xl mx-auto"
           >
-            De las prácticas al desarrollo profesional, mi evolución en el mundo del desarrollo web
+            {translations.description}
           </motion.p>
         </div>
 

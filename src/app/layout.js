@@ -34,11 +34,7 @@ export const metadata = {
   manifest: "/site.webmanifest",
   metadataBase: new URL("https://portafolio-gorka.vercel.app"),
   alternates: {
-    languages: {
-      "es-ES": "/",
-      en: "/en",
-      de: "/de",
-    },
+    canonical: "https://portafolio-gorka.vercel.app",
   },
 };
 

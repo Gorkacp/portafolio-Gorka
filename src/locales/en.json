@@ -159,6 +159,12 @@
     "in_progress_badge": "In Progress",
     "impact_label": "Impact"
   },
+  "Experience": {
+    "section_title": "Professional Experience",
+    "title_part1": "Professional",
+    "title_highlight": "Journey",
+    "description": "From internships to professional development, my evolution in web development"
+  },
   "Certifications": {
     "section_title": "certifications",
     "main_title": "Professional",

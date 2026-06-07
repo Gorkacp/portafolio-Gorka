@@ -159,6 +159,12 @@
     "in_progress_badge": "In Bearbeitung",
     "impact_label": "Wirkung"
   },
+  "Experience": {
+    "section_title": "Berufserfahrung",
+    "title_part1": "Beruflicher",
+    "title_highlight": "Werdegang",
+    "description": "Vom Praktikum zur professionellen Entwicklung, meine Entwicklung in der Webentwicklung"
+  },
   "Certifications": {
     "section_title": "Zertifizierungen",
     "main_title": "Professionelle",
