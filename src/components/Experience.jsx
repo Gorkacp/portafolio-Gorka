@@ -23,9 +23,13 @@ const experiences = [
     modalidad: "Teletrabajo",
     descripcion: [],
     tecnologias: [],
-    color: "from-blue-600 to-cyan-600",
-    borderColor: "border-l-blue-500",
-    bgGradient: "from-blue-900/10 to-transparent"
+    brandColor: "orange",
+    color: "from-orange-600 to-amber-500",
+    borderColor: "border-l-orange-500",
+    dotBorder: "border-orange-500/40",
+    dotShadow: "rgba(251,146,60,0.35)",
+    hoverBorder: "hover:border-orange-500/40",
+    bgGradient: "from-orange-900/10 to-transparent"
   },
   {
     id: "wegow-junior",
@@ -47,9 +51,13 @@ const experiences = [
       "Implementación de tests end-to-end con Playwright, reforzando la estabilidad y fiabilidad del producto en producción"
     ],
     tecnologias: ["Vue 3", "Nuxt 3", "JavaScript", "TypeScript", "Tailwind CSS", "Playwright", "Git", "Docker", "Responsive Design", "SSR", "SEO Técnico", "Frameworks JS"],
-    color: "from-purple-600 to-pink-600",
-    borderColor: "border-l-purple-500",
-    bgGradient: "from-purple-900/10 to-transparent"
+    brandColor: "blue",
+    color: "from-blue-600 to-cyan-500",
+    borderColor: "border-l-blue-500",
+    dotBorder: "border-blue-500/40",
+    dotShadow: "rgba(59,130,246,0.35)",
+    hoverBorder: "hover:border-blue-500/40",
+    bgGradient: "from-blue-900/10 to-transparent"
   },
   {
     id: "wegow-intern",
@@ -74,16 +82,26 @@ const experiences = [
       "Participación en flujos Git con pull requests y code reviews"
     ],
     tecnologias: ["Vue 3", "Nuxt 3", "JavaScript", "Tailwind CSS", "PWA", "Docker", "Git", "Responsive Design"],
-    color: "from-green-600 to-emerald-600",
-    borderColor: "border-l-green-500",
-    bgGradient: "from-green-900/10 to-transparent"
+    brandColor: "blue",
+    color: "from-blue-600 to-cyan-500",
+    borderColor: "border-l-blue-500",
+    dotBorder: "border-blue-500/40",
+    dotShadow: "rgba(59,130,246,0.35)",
+    hoverBorder: "hover:border-blue-500/40",
+    bgGradient: "from-blue-900/10 to-transparent"
   }
 ];
 
-function TimelineDot({ logo, alt }) {
+function TimelineDot({ logo, alt, borderColor, shadowColor }) {
   if (logo) {
     return (
-      <div className="absolute left-0 top-0 w-9 h-9 md:w-16 md:h-16 md:-translate-x-1/2 rounded-xl md:rounded-2xl bg-gradient-to-br from-gray-900 to-gray-950 border border-purple-500/20 flex items-center justify-center shadow-[0_0_20px_-5px_rgba(168,85,247,0.3)] z-10 overflow-hidden">
+      <div
+        className="absolute left-0 top-0 w-9 h-9 md:w-16 md:h-16 md:-translate-x-1/2 rounded-xl md:rounded-2xl bg-gradient-to-br from-gray-900 to-gray-950 flex items-center justify-center z-10 overflow-hidden"
+        style={{
+          border: `1px solid ${borderColor}`,
+          boxShadow: `0 0 20px -5px ${shadowColor}`
+        }}
+      >
         <div className="relative w-5 h-5 md:w-[38px] md:h-[38px]">
           <Image src={logo} alt={alt} fill className="object-contain" />
         </div>
@@ -108,9 +126,9 @@ function MobileCard({ exp, index }) {
       viewport={{ once: true, margin: "-30px" }}
       className="relative pl-12 md:pl-16"
     >
-      <TimelineDot logo={exp.logo} alt={exp.empresa} />
+      <TimelineDot logo={exp.logo} alt={exp.empresa} borderColor={exp.dotBorder} shadowColor={exp.dotShadow} />
 
-      <div className={`rounded-xl bg-gradient-to-br ${exp.bgGradient} border border-white/10 ${exp.borderColor} border-l-4 overflow-hidden`}>
+      <div className={`rounded-xl bg-gradient-to-br ${exp.bgGradient} border border-white/10 ${exp.borderColor} border-l-4 ${exp.hoverBorder} transition-all duration-300 overflow-hidden`}>
         <div className="p-4">
           <div className="flex flex-wrap items-center gap-1.5 mb-2">
             <span className={`px-2.5 py-0.5 rounded-full bg-gradient-to-r ${exp.color} text-white text-xs font-medium`}>
@@ -209,9 +227,9 @@ function DesktopCard({ exp, index }) {
       viewport={{ once: true, margin: "-50px" }}
       className="relative pl-20"
     >
-      <TimelineDot logo={exp.logo} alt={exp.empresa} />
+      <TimelineDot logo={exp.logo} alt={exp.empresa} borderColor={exp.dotBorder} shadowColor={exp.dotShadow} />
 
-      <div className={`p-7 rounded-2xl bg-gradient-to-br ${exp.bgGradient} border border-white/10 hover:border-purple-500/30 transition-all duration-300 ${exp.borderColor} border-l-4`}>
+      <div className={`p-7 rounded-2xl bg-gradient-to-br ${exp.bgGradient} border border-white/10 ${exp.hoverBorder} transition-all duration-300 ${exp.borderColor} border-l-4`}>
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-4">
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1.5">
@@ -345,7 +363,8 @@ export default function Experience() {
         </div>
 
         <div className="relative">
-          <div className="absolute left-4 md:left-8 top-0 bottom-0 w-px bg-gradient-to-b from-purple-500/50 via-blue-500/50 to-transparent" />
+          <div className="absolute left-4 md:left-8 top-0 bottom-0 w-[2px] bg-gradient-to-b from-orange-500/60 via-blue-500/60 to-transparent rounded-full" />
+          <div className="absolute left-4 md:left-8 top-0 bottom-0 w-[2px] bg-gradient-to-b from-orange-500/20 via-blue-500/20 to-transparent blur-sm rounded-full" />
 
           {/* Mobile layout */}
           <div className="space-y-6 md:hidden">
