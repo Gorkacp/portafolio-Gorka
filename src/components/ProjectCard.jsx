@@ -37,6 +37,7 @@ export default function ProjectCard({ project }) {
     code_button: getTranslation(language, "ProjectCard.code_button"),
     view_more_button: getTranslation(language, "ProjectCard.view_more_button"),
     impact_label: getTranslation(language, "ProjectCard.impact_label"),
+    in_progress_badge: getTranslation(language, "ProjectCard.in_progress_badge"),
   };
 
   // Función para navegar a la página de detalles - OPTIMIZADA CON SCROLL AL INICIO
@@ -186,8 +187,24 @@ export default function ProjectCard({ project }) {
           opacity-70
         " />
         
-        {/* Badge Full Stack */}
-        <div className="absolute top-3 right-3 sm:top-4 sm:right-4">
+        {/* Badges */}
+        <div className="absolute top-3 right-3 sm:top-4 sm:right-4 flex flex-col gap-2 items-end">
+          {/* Badge estado (en proceso) */}
+          {project.status === "in_progress" && (
+            <div className="
+              px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg
+              bg-gradient-to-r from-amber-500/30 to-orange-500/30
+              border border-amber-400/40
+              backdrop-blur-md
+              flex items-center gap-1.5 sm:gap-2
+            ">
+              <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-amber-400 animate-pulse" />
+              <span className="text-xs sm:text-sm font-semibold text-amber-300 whitespace-nowrap">
+                {translations.in_progress_badge}
+              </span>
+            </div>
+          )}
+          {/* Badge Full Stack */}
           <div className="
             px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg
             bg-gradient-to-r from-blue-500/20 to-purple-500/20

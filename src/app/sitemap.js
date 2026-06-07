@@ -2,6 +2,7 @@ const BASE_URL = "https://portafolio-gorka.vercel.app";
 
 const projects = [
   { slug: "golive-platform", lastmod: "2026-06-06", priority: 0.8 },
+  { slug: "jarvis", lastmod: "2026-06-07", priority: 0.7 },
 ];
 
 export default function sitemap() {

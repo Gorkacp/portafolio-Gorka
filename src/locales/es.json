@@ -120,18 +120,43 @@
     "cta_title": "¿Necesitas una solución similar?",
     "cta_description": "Puedo desarrollar aplicaciones completas adaptadas a tus necesidades, con las mejores prácticas y tecnologías modernas.",
     "cta_button": "Hablar sobre tu proyecto",
-    "project": {
-      "title": "GoLive Platform",
-      "description": "Plataforma Full Stack para gestión y venta de entradas de eventos musicales con sistema de pagos real, validación QR y dashboard administrativo.",
-      "technologies": ["Nuxt 3", "Vue 3", "TypeScript", "Spring Boot", "Java 17", "MongoDB", "JWT", "Docker"],
-      "impact": "Proyecto de fin de grado demostrando dominio completo del desarrollo Full Stack con arquitectura escalable."
-    }
+    "projects": [
+      {
+        "id": 1,
+        "title": "GoLive Platform",
+        "description": "Plataforma Full Stack para gestión y venta de entradas de eventos musicales con sistema de pagos real, validación QR y dashboard administrativo.",
+        "technologies": ["Nuxt 3", "Vue 3", "TypeScript", "Spring Boot", "Java 17", "MongoDB", "JWT", "Docker"],
+        "impact": "Proyecto de fin de grado demostrando dominio completo del desarrollo Full Stack con arquitectura escalable.",
+        "status": "completed",
+        "architecture": {
+          "frontend": "<strong>Nuxt 3 + Vue 3 + TypeScript</strong> con SSR, PWA y Tailwind CSS.",
+          "backend": "<strong>Spring Boot + Java 17</strong> con REST API, JWT y optimización.",
+          "database": "<strong>MongoDB</strong> NoSQL con modelo flexible y consultas optimizadas.",
+          "deployment": "<strong>Docker + Render</strong> con configuración de producción lista."
+        }
+      },
+      {
+        "id": 2,
+        "title": "JARVIS",
+        "description": "Asistente de voz inteligente completamente local (sin nube) con reconocimiento Vosk, LLM via Ollama, interfaz web tipo ChatGPT y detección de palmadas.",
+        "technologies": ["Python", "FastAPI", "Vosk", "Ollama", "Qwen 2.5", "Tailwind CSS", "yt-dlp", "pyttsx3"],
+        "impact": "Proyecto personal de asistente de voz 100% local que combina NLP, STT, TTS y automatizaciones en un ecosistema integrado.",
+        "status": "in_progress",
+        "architecture": {
+          "frontend": "<strong>Tailwind CSS (via CDN)</strong> Interfaz tipo ChatGPT, sin build step ni npm.",
+          "backend": "<strong>FastAPI + Python</strong> con REST API, WebSockets y procesamiento asíncrono.",
+          "database": "<strong>SQLite</strong> Base de datos local para conversaciones y preferencias.",
+          "deployment": "<strong>100% Local</strong> Arranque directo con python main.py, sin Docker ni cloud."
+        }
+      }
+    ]
   },
   "ProjectCard": {
     "full_stack_badge": "Full Stack",
     "demo_button": "Demo",
     "code_button": "Código",
     "view_more_button": "Ver más",
+    "in_progress_badge": "En Proceso",
     "impact_label": "Impacto"
   },
   "Certifications": {
@@ -672,6 +697,89 @@
     "demo_feature_3": "Dashboard administración",
     "demo_feature_4": "Panel usuario con historial",
     "demo_note": "Demo con datos de prueba. Transacciones simuladas."
+  },
+  "JarvisProjectDetail": {
+    "project_title": "JARVIS",
+    "project_subtitle": "Asistente de Voz Inteligente Local",
+    "project_type": "Proyecto Personal",
+    "project_description": "Asistente de voz inteligente completamente local (sin depender de la nube) que combina reconocimiento de voz offline, LLM local, interfaz web tipo ChatGPT y múltiples automatizaciones.",
+    
+    "status": "Estado",
+    "status_in_progress": "En Proceso",
+    "security": "Privacidad",
+    "application": "Aplicación",
+    
+    "tabs": {
+      "overview": "Resumen",
+      "features": "Funciones",
+      "tech": "Stack Tecnológico",
+      "architecture": "Arquitectura",
+      "modes": "Modos"
+    },
+    
+    "what_does_project_do": "¿Qué hace el proyecto?",
+    "overview_description": "JARVIS es un ecosistema de asistencia por voz que opera completamente en local. Usa Vosk para reconocimiento de voz offline, Ollama con Qwen 2.5 para procesamiento de lenguaje natural, y ofrece una interfaz web moderna tipo ChatGPT. Incluye detección de palmadas, reproductor de YouTube integrado, acciones rápidas sub-100ms y dos modos de operación.",
+    "two_modes": "Dos Modos de Operación",
+    "voice_mode": "Modo Voz",
+    "voice_mode_desc": "Asistente por consola activado por voz o palmadas. Ideal para interacción manos libres.",
+    "web_mode": "Modo Web",
+    "web_mode_desc": "Interfaz gráfica de tres columnas con monitor de sistema, transcripción en tiempo real y chat. Se inicia con python main.py --web",
+    
+    "key_capabilities": "Capacidades Principales",
+    "capability_1": "Reconocimiento de voz 100% offline (modelo Vosk español)",
+    "capability_2": "LLM local vía Ollama (qwen2.5:3b) para conversaciones naturales",
+    "capability_3": "Texto a voz offline con pyttsx3 (SAPI5)",
+    "capability_4": "Detección de palmadas para activar/desactivar",
+    "capability_5": "Reproductor de YouTube integrado",
+    "capability_6": "Acciones rápidas (hora, clima, abrir apps) en sub-100ms",
+    
+    "features_title": "Funcionalidades",
+    "features_subtitle": "Asistente completo con capacidades avanzadas",
+    
+    "tech_title": "Stack Tecnológico",
+    "tech_subtitle": "Stack Python puro, sin depender de servicios cloud",
+    "backend": "Backend (Python)",
+    "voice_audio": "Voz y Audio",
+    "frontend": "Frontend",
+    
+    "architecture_title": "Arquitectura",
+    "architecture_subtitle": "Diseño modular con procesamiento offline",
+    
+    "modes_title": "Modos de Uso",
+    "modes_subtitle": "Dos formas de interactuar con JARVIS",
+    
+    "learnings_title": "Tecnologías Clave",
+    "fastapi_purpose": "Servidor REST API + WebSocket",
+    "fastapi_mobile": "API REST",
+    "vosk_purpose": "Reconocimiento de voz offline (modelo español)",
+    "vosk_mobile": "STT Offline",
+    "ollama_purpose": "LLM local con modelos cuantizados",
+    "ollama_mobile": "LLM Local",
+    "sounddevice_purpose": "Captura de audio del micrófono",
+    "sounddevice_mobile": "Audio Input",
+    "pyttsx3_purpose": "Texto a voz offline (SAPI5)",
+    "pyttsx3_mobile": "TTS Offline",
+    "ytdlp_purpose": "Extracción de audio de YouTube",
+    "ytdlp_mobile": "YouTube DL",
+    "mpv_purpose": "Reproductor multimedia portátil",
+    "mpv_mobile": "Media Player",
+    "psutil_purpose": "Monitorización del sistema (CPU, RAM, temperatura)",
+    "psutil_mobile": "System Monitor",
+    "tailwind_purpose": "Interfaz web tipo ChatGPT (via CDN)",
+    "tailwind_mobile": "UI ChatGPT",
+    "sqlite_purpose": "Persistencia de conversaciones y preferencias",
+    "sqlite_mobile": "SQLite DB",
+    
+    "arch_feature_1": "FastAPI + Uvicorn como servidor REST",
+    "arch_feature_2": "Vosk para STT offline (modelo Kaldi español)",
+    "arch_feature_3": "Ollama + Qwen 2.5 para LLM local",
+    "arch_feature_4": "pyttsx3 (SAPI5) para TTS offline",
+    "arch_feature_5": "Web Speech API para TTS en navegador",
+    "arch_feature_6": "Web Audio API para captura de micrófono",
+    "arch_feature_7": "Detección de palmadas por audio",
+    "arch_feature_8": "Cola de acciones rápidas sub-100ms",
+    "arch_feature_9": "SQLite para persistencia local",
+    "arch_feature_10": "Todo Python + Tailwind CSS, sin npm/build step"
   }
 }
   
