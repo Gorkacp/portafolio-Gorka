@@ -83,7 +83,7 @@ export default function About() {
     <section
       id="about"
       className="
-        relative w-full min-h-[auto] lg:min-h-screen py-20 sm:py-24 md:py-32 px-4 sm:px-6 font-poppins
+        relative w-full min-h-[auto] lg:min-h-screen py-16 sm:py-20 md:py-24 px-4 sm:px-6 font-poppins
         bg-gradient-to-b from-gray-900 via-black to-black
         text-white
         flex items-center

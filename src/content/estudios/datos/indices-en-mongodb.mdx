@@ -1,0 +1,111 @@
+---
+title: "Índices en MongoDB: el Exit Plan cuando la consulta tarda 2 segundos"
+description: "Cómo decide MongoDB si usar un índice, por qué tu índice compuesto no se está usando, y qué muestra explain para responder las preguntas difíciles."
+tags: ["mongodb", "índices", "rendimiento", "nosql", "explain"]
+published: 2026-08-22
+updated: 2026-09-25
+featured: true
+related: ["autenticacion-sesiones-o-jwt", "inversion-de-dependencias"]
+---
+
+MongoDB se vende como "esquema-less y rápido". Lo que no se dice es que **sin índices, una consulta sobre una colección es un escaneo completo de la colección**, sin importar cuánta lógica tenga tu aplicación. El índice no es una optimización: es la diferencia entre dos algoritmos distintos.
+
+## El concepto que hay que entender primero
+
+Una consulta sobre una colección se resuelve de una de dos formas:
+
+- **Colección (COLLSCAN)**: lee todos los documentos y descarta los que no coinciden. El coste crece con el tamaño de la colección.
+- **Índice (IXSCAN)**: busca solo lo que coincide. El coste crece con lo que devuelve.
+
+No hay un " partly indexado". O se usa el índice, o se escanea todo. Ver siempre el plan de ejecución antes de asumir nada:
+
+```js title="explain.js"
+db.ticket_events
+  .find({ eventId: "evt_882", status: "confirmed" })
+  .explain("executionStats");
+```
+
+El campo que importa es `winningPlan`:
+
+```txt
+stage: COLLSCAN
+  totalDocsExamined: 482913
+  totalKeysExamined: 0
+  executionTimeMillis: 2143
+```
+
+`totalKeysExamined: 0` te dice que no se consultó ningún índice. Ahí está tu problema.
+
+## Por qué MongoDB no usa tu índice
+
+Esta es la parte que más tiempo me costó entender, y la causa es siempre la misma: **el orden de los campos en la consulta y en el índice no coinciden**.
+
+La regla real es la regla del prefijo más el rango:
+
+```js title="consulta.js"
+db.ticket_events.find({ eventId: "evt_882", status: "confirmed", createdAt: { $gte: fecha } });
+```
+
+El índice tiene que tener los campos **en el mismo orden** que los de la consulta: primero igualdad, después rango.
+
+```js title="indice.js" {2,3}
+// eventId y status son igualdad: orden entre ellos es indistinto.
+// createdAt es rango: tiene que ir último.
+db.ticket_events.createIndex({ eventId: 1, status: 1, createdAt: -1 });
+```
+
+Si el índice fuera `{ createdAt, eventId, status }`, MongoDB no puede usarlo para esa consulta: `createdAt` es un rango, así que todo lo que viene después queda inutilizable.
+
+<Aviso>
+El error clásico es construir el índice "en el orden lógico del modelo", que suele
+poner primero los campos que se filtran "por fecha". Si la consulta igual empieza
+por `eventId`, ese índice no se va a usar.
+</Aviso>
+
+## La regla de ESR y cuándo no aplica
+
+La regla ESR (**Igualdad, Sort, Rango**) ordena los campos del índice así:
+
+1. **Igualdad**: campos con comparación exacta.
+2. **Sort**: campos por los que se ordena el resultado.
+3. **Rango**: campos con operadores de rango (`$gt`, `$lt`, `$in`, `$ne`).
+
+Con `sort` explícito, el orden deja de ser libre: el índice tiene que servir **exactamente** ese orden de sort o el planner lo descarta. Si ordenás por `createdAt: -1` y tu índice termina en `createdAt: 1`, no hay sort que valga.
+
+## Diagnóstico en 30 segundos
+
+```js title="diagnostico.js"
+db.ticket_events
+  .find({ eventId: "evt_882", status: "confirmed" })
+  .explain("executionStats")
+  .executionStats;
+```
+
+Mirá estas cuatro cosas, en este orden:
+
+| Campo | Lo que significa |
+| --- | --- |
+| `winningPlan.stage` | Si es `COLLSCAN`, el índice no se usó |
+| `totalDocsExamined` | Documentos leídos. Debería ser cercano a los devueltos |
+| `nReturned` | Documentos que realmente import |
+| `executionTimeMillis` | El número que importa |
+
+La eficiencia se lee como `totalDocsExamined / nReturned`. Si es `1.0`, perfecto. Si es `1000`, estás escaneando mil documentos por cada uno que necesitás.
+
+## Cubrir la consulta, no el modelo
+
+Cada índice tiene un coste: espacio en disco y, sobre todo, **escritura**. Cada `insert` y cada `update` tiene que mantener el índice actualizado. Un índice que nunca se usa es solo overhead.
+
+<Nota>
+Los índices con prefijo se aprovechan: un índice `{ a: 1, b: 1 }` también sirve
+para consultas que solo filtran por `a`. Eso hace que compense tener el campo más
+selectivo primero, aunque ESR diga otra cosa.
+</Nota>
+
+## Lo que me llevo
+
+- Sin índice, toda consulta es un `COLLSCAN`. Siempre.
+- El orden de los campos en el índice **no es libre**: es la regla ESR.
+- `totalKeysExamined: 0` es la señal inequívoca de que el índice no se está usando.
+- Un índice se paga en cada escritura. Agregá uno solo si una consulta lo necesita.
+- `explain("executionStats")` antes de optimizar, no después.

@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 /* =========================
    Variables de colores
@@ -9,6 +10,17 @@
   --secondary: #e5e7eb;        /* texto secundario */
   --accent-hover: #8b5cf6;     /* morado para hover */
   --font-sans: 'Poppins', Arial, Helvetica, sans-serif;
+
+  /*
+   * Alto real del header fijo: py-5 (40px) + la columna del logo de dos
+   * líneas (50px) ≈ 90px, más el border-b cuando hace scroll.
+   *
+   * El offset que lo compensa se aplica UNA sola vez, en `layout.js`. Antes lo
+   * compensaban `layout.js` (pt-20) Y cada sección por su cuenta (pt-16 /
+   * pt-24), así que cada página arrancaba con ~176px de vacío antes de su
+   * primer texto y las secciones se separaban por 256px.
+   */
+  --header-h: 6rem;
 }
 
 /* =========================
@@ -132,4 +144,220 @@ a:hover {
 
 .animate-slide-up.delay-300 {
   animation-delay: 300ms;
+}
+
+/* =========================
+   Loader global (sin framer-motion)
+   ========================= */
+
+/*
+ * Estas animaciones reemplazan a los `motion.div` que GlobalLoader usaba. Las
+ * duraciones y las curvas son las mismas para que no se note el cambio:
+ * el glow y los puntos 2s/1.5s easeInOut, los anillos 1.5s/2s linear, la barra
+ * 1.5s easeInOut y los halos 3s+ easeInOut.
+ *
+ * GlobalLoader vive en layout.js, asi que se descarga en cada ruta del sitio.
+ * Importar framer-motion ahi costaba ~39 KB gzip en todas las paginas para
+ * animar un spinner que solo aparece mientras carga un proyecto.
+ */
+@keyframes loader-glow-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.3; }
+  50% { transform: scale(1.1); opacity: 0.5; }
+}
+
+@keyframes loader-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes loader-spin-reverse {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-360deg); }
+}
+
+@keyframes loader-dot-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.5); opacity: 0.8; }
+}
+
+@keyframes loader-bar-fill {
+  0% { width: 0%; }
+  50% { width: 100%; }
+  100% { width: 0%; }
+}
+
+@keyframes loader-halo-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.02; }
+  50% { transform: scale(1.2); opacity: 0.05; }
+}
+
+.loader-glow {
+  animation: loader-glow-pulse 2s ease-in-out infinite;
+}
+
+.loader-ring {
+  animation: loader-spin 1.5s linear infinite;
+}
+
+.loader-ring-reverse {
+  animation: loader-spin-reverse 2s linear infinite;
+}
+
+.loader-dot {
+  animation: loader-dot-pulse 1.5s ease-in-out infinite;
+  animation-delay: 0.2s;
+}
+
+.loader-dot-delay {
+  animation-delay: 0.4s;
+}
+
+.loader-bar {
+  animation: loader-bar-fill 1.5s ease-in-out infinite;
+}
+
+.loader-halo {
+  animation: loader-halo-pulse 3s ease-in-out infinite;
+}
+
+/* =========================
+   Botón "volver arriba" del Footer
+   ========================= */
+
+/*
+ * Reemplaza a AnimatePresence + motion.button. La entrada y la salida usan
+ * visibility para que el boton sea retirable con `pointer-events-none` en vez de
+ * depender de un exit animado, y el hover/tap es un transform en CSS.
+ */
+.footer-scrolltop-enter {
+  animation: footer-scrolltop-in 0.25s ease-out both;
+}
+
+.footer-scrolltop-exit {
+  animation: footer-scrolltop-out 0.2s ease-in both;
+  pointer-events: none;
+}
+
+@keyframes footer-scrolltop-in {
+  from { opacity: 0; transform: scale(0.8) translateY(20px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes footer-scrolltop-out {
+  from { opacity: 1; transform: scale(1) translateY(0); }
+  to { opacity: 0; transform: scale(0.8) translateY(20px); }
+}
+
+/* =========================
+   Prosa de los artículos (/estudios)
+========================= */
+
+/*
+ * El cuerpo del artículo se renderiza desde MDX, así que no puede llevar
+ * clases utilitarias elemento a elemento. `prose` aporta la base y las
+ * variables CSS de abajo la re-pintan con la paleta del sitio en vez de la
+ * que trae el plugin por defecto.
+ */
+.estudio-prose {
+  --tw-prose-body: #d1d5db;
+  --tw-prose-headings: #ffffff;
+  --tw-prose-lead: #e5e7eb;
+  --tw-prose-links: #93c5fd;
+  --tw-prose-bold: #ffffff;
+  --tw-prose-counters: #9ca3af;
+  --tw-prose-bullets: #6b7280;
+  --tw-prose-hr: rgba(255, 255, 255, 0.1);
+  --tw-prose-quotes: #e5e7eb;
+  --tw-prose-quote-borders: #8b5cf6;
+  --tw-prose-captions: #9ca3af;
+  --tw-prose-code: #e9d5ff;
+  --tw-prose-pre-code: #e5e7eb;
+  --tw-prose-pre-bg: transparent;
+  --tw-prose-th-borders: rgba(255, 255, 255, 0.15);
+  --tw-prose-td-borders: rgba(255, 255, 255, 0.07);
+}
+
+/* Los anclas deben quedar por debajo del header fijo al saltar desde el índice. */
+.estudio-prose :is(h2, h3, h4)[id] {
+  scroll-margin-top: 6rem;
+}
+
+.estudio-prose a {
+  text-decoration-color: rgba(147, 197, 253, 0.4);
+  text-underline-offset: 3px;
+  transition: text-decoration-color 0.2s ease;
+}
+
+.estudio-prose a:hover {
+  text-decoration-color: rgba(147, 197, 253, 0.9);
+}
+
+/* =========================
+   Código resaltado (rehype-pretty-code + shiki)
+========================= */
+
+.estudio-prose [data-rehype-pretty-code-figure] {
+  margin: 2rem 0;
+}
+
+.estudio-prose [data-rehype-pretty-code-figure] pre {
+  overflow-x: auto;
+}
+
+.estudio-prose [data-rehype-pretty-code-figure] code {
+  display: grid;
+  font-size: 0.875rem;
+  line-height: 1.7;
+}
+
+/* Código en línea, es decir, todo lo que no esté dentro de un bloque cercado. */
+.estudio-prose :not(pre) > code {
+  font-size: 0.875em;
+  padding: 0.15rem 0.4rem;
+  border-radius: 0.375rem;
+  background-color: rgba(139, 92, 246, 0.14);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  font-weight: 500;
+}
+
+.estudio-prose [data-rehype-pretty-code-figure] [data-line] {
+  padding: 0 1.25rem;
+  border-left: 2px solid transparent;
+}
+
+.estudio-prose [data-highlighted-line] {
+  background-color: rgba(139, 92, 246, 0.14);
+  border-left-color: #a78bfa;
+}
+
+/*
+ * Los números de línea son opt-in por bloque con la sintaxis meta `{2-3}`.
+ * Se dejan fuera por defecto para no sugerir que el artículo es un volcado
+ * de código.
+ */
+.estudio-prose [data-rehype-pretty-code-figure] code[data-line-numbers] {
+  counter-reset: line;
+}
+
+.estudio-prose [data-rehype-pretty-code-figure] code[data-line-numbers] > [data-line]::before {
+  counter-increment: line;
+  content: counter(line);
+  display: inline-block;
+  width: 1rem;
+  margin-right: 1.25rem;
+  text-align: right;
+  color: #4b5563;
+}
+
+/* Título del bloque (```js title="foo.js"). */
+.estudio-prose [data-rehype-pretty-code-title] {
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: #9ca3af;
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 0;
+  border-radius: 0.75rem 0.75rem 0 0;
+  padding: 0.5rem 1.25rem;
 }

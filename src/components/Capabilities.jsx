@@ -225,7 +225,7 @@ export default function Capabilities() {
     <section
       id="capabilities"
       className="
-        relative w-full py-12 md:py-20 lg:py-32 px-4 sm:px-6 font-poppins
+        relative w-full py-14 sm:py-16 md:py-20 lg:py-24 px-4 sm:px-6 font-poppins
         bg-gradient-to-b from-gray-900 via-black to-black
         text-white overflow-hidden
       "
@@ -418,7 +418,7 @@ export default function Capabilities() {
         </div>
 
         {/* ===== SECCIÓN AÑADIDA: Stack Tecnológico y Competencias ===== */}
-        <div className="mt-20 md:mt-32 space-y-16 md:space-y-24">
+        <div className="mt-14 md:mt-20 space-y-12 md:space-y-16">
           
           {/* Stack Tecnológico Completo */}
           <motion.div

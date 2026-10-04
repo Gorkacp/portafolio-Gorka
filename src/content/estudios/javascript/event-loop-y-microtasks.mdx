@@ -1,0 +1,133 @@
+---
+title: "El event loop: por qué tu setTimeout de 0 ms tarda 5 ms"
+description: "Microtareas, macrotareas y una sola pregunta útil: qué se ejecuta primero y por qué el orden nunca es el que esperás."
+tags: ["javascript", "event-loop", "asincronía", "performance"]
+published: 2026-09-14
+updated: 2026-09-28
+featured: true
+related: ["closures-y-memoria"]
+---
+
+Cada vez que alguien escribe `setTimeout(fn, 0)` esperando que `fn` corra "ya mismo", hay una expectativa rota ahí. `0` no significa *inmediato*: significa **"en la próxima vuelta del bucle de eventos"**, y esa vuelta tiene una cola con varios turnos.
+
+## El modelo mental correcto
+
+El runtime de JavaScript (V8, o SpiderMonkey, o lo que sea) tiene una sola pila de ejecución. Eso significa que **nada corre en paralelo dentro de tu código**. La "asincronía" no es concurrencia, es **diferimiento ordenado**.
+
+Cuando el bucle de eventos itera, hace exactamente dos cosas:
+
+1. Vacía **por completo** la cola de microtareas.
+2. Toma **una sola** tarea de la cola de macrotareas y la ejecuta.
+
+Vuelve a 1. Repite.
+
+El detalle que lo cambia todo: el paso 1 está **dentro** del paso 2. O sea, cuando ejecutás una macrotarea, primero se vacía la cola de microtareas.
+
+<Nota>
+Este es el motivo por el que `Promise.resolve().then()` se ejecuta **antes** que
+`setTimeout(0)`, aunque el `setTimeout` se haya escrito primero. No es magia ni es
+"las promesas tienen prioridad": es que las promesas van a la cola de microtareas
+y los timers a la de macrotareas, y las microtareas se vacían antes.
+</Nota>
+
+## Las dos colas
+
+| Qué entra | Dónde va | Cuándo se ejecuta |
+| --- | --- | --- |
+| `Promise.then`, `catch`, `finally` | microtareas | Al terminar la macrotarea actual, antes de la siguiente |
+| `queueMicrotask()` | microtareas | Igual que las promesas |
+| `setTimeout`, `setInterval` | macrotareas | En la próxima vuelta |
+| Eventos del DOM y resolución de `fetch` | macrotareas | En la próxima vuelta |
+| `MutationObserver` | microtareas | Al terminar la macrotarea actual |
+
+## El experimento
+
+Este código imprime en este orden exacto:
+
+```js title="orden.js" {9-12}
+console.log("1 - script");
+
+setTimeout(() => console.log("2 - timeout 0"), 0);
+
+Promise.resolve().then(() => console.log("3 - microtask"));
+
+queueMicrotask(() => console.log("4 - microtask explicita"));
+
+console.log("5 - script sigue");
+```
+
+```txt
+1 - script
+5 - script sigue
+3 - microtask
+4 - microtask explicita
+2 - timeout 0
+```
+
+Leelo dos veces. El script se ejecuta entero de corrido (líneas 1 y 5), después se vacían las microtareas (3 y 4), y recién ahí arranca la primera macrotarea (2).
+
+## El caso que duele: el bucle que te frena la UI
+
+Este es el problema real en el que casi siempre me topo. Un bucle sincrónico enorme bloquea la pila, y la interfaz se congela:
+
+```js title="bloqueo.js"
+const items = Array.from({ length: 50_000 }, (_, i) => i);
+
+items.forEach((item) => {
+  // Cada iteracion pinta en el DOM. 50.000 reflows.
+  document.getElementById("list").appendChild(render(item));
+});
+```
+
+La solución no es "usar `setTimeout` en el bucle", que es lo que más se ve por ahí y **tampoco** resuelve bien. Es ceder el control con un scheduler que interrumpe el trabajo solo cuando el navegador puede pintar:
+
+```js title="ceder-el-control.js" {6,12}
+async function processInChunks(items, chunkSize = 1000) {
+  for (let i = 0; i < items.length; i += chunkSize) {
+    const chunk = items.slice(i, i + chunkSize);
+
+    chunk.forEach((item) => {
+      document.getElementById("list").appendChild(render(item));
+    });
+
+    // Cada chunk devuelve el control al bucle: el navegador puede pintar.
+    await new Promise((resolve) => setTimeout(resolve, 0));
+  }
+}
+```
+
+<Aviso>
+Meter un `await` con `setTimeout` **dentro** de una cadena de microtareas no
+resuelve el bloqueo: si esperás siempre a la misma promesa ya resuelta, el
+`await` te devuelve el control pero se reencola como microtarea, y el bucle
+sigue sin darle oportunidad al render.
+</Aviso>
+
+## `requestAnimationFrame` es la otra mitad
+
+Cuando el problema es visual y no de lógica, la herramienta correcta es otra:
+
+```js
+// Se ejecuta justo antes del proximo repintado.
+requestAnimationFrame(() => {
+  // Cualquier lectura de layout aca es barata: el navegador ya la calculo.
+  const height = panel.offsetHeight;
+});
+```
+
+Leer `offsetHeight`, `scrollTop` o `getBoundingClientRect()` fuerza un reflow **sincrónico**. Si lo hacés dentro de un `requestAnimationFrame`, estás dentro del mismo frame que el navegador acaba de computar, así que el cálculo ya está en caché.
+
+## Lo que me llevo
+
+- **Microtareas antes que macrotareas**, siempre. Sin excepciones.
+- La cola de microtareas se vacía **dentro** de cada vuelta del bucle.
+- JavaScript es monohilo. La asincronía ordena el trabajo, no lo paraleliza.
+- Para CPU larga, trocear y ceder. Para trabajo visual, `requestAnimationFrame`.
+
+Si querés verificarlo con tus propios ojos, pegá el experimento anterior en la consola del navegador y mirá el orden. Después agregá un `while (true) {}` al principio del script y observá cómo la pestaña entera deja de responder. Eso es el punto.
+
+<Idea>
+`setTimeout(0)` está tan limitante que ni siquiera garantiza el mínimo de 4 ms: los
+navegadores aplican un **clamp** de unos 4 ms a los temporizadores anidados
+(nivel 5 o más). Es decir, el `0` de tu código puede ser un `4` real.
+</Idea>

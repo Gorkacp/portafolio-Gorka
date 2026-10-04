@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import { Sparkles, ChevronRight, Eye, Rocket, Award, Clock, TrendingUp } from "lucide-react";
@@ -13,7 +13,6 @@ const Particles = dynamic(() => import("react-tsparticles").then(mod => mod.defa
 });
 
 export default function Hero() {
-  const [particlesLoaded, setParticlesLoaded] = useState(false);
   const [isDesktop, setIsDesktop] = useState(true);
   const { language } = useLanguage();
 
@@ -24,11 +23,21 @@ export default function Hero() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const particlesInit = async (engine) => {
+  /*
+   * react-tsparticles compara `init` por identidad (Particles.js:31), no por
+   * contenido. Si la funcion cambia de referencia, `shouldComponentUpdate` da
+   * true y se dispara `refresh()`, que hace `destroy()` + `loadParticles()` de
+   * nuevo: canvas desarmado, listenersreadados y loop de animacion reiniciado.
+   *
+   * Antes se definia inline, o sea que cambiava en cada render. Y como
+   * `particlesLoaded` solo existia para forzar un segundo render, eso disparaba
+   * dos re-inicializaciones completas del motor al montar. `useCallback` deja una
+   * sola referencia estable.
+   */
+  const particlesInit = useCallback(async (engine) => {
     const { loadSlim } = await import("tsparticles-slim");
     await loadSlim(engine);
-    setParticlesLoaded(true);
-  };
+  }, []);
 
   const particleOptions = {
     fullScreen: { enable: false },
@@ -141,7 +150,12 @@ export default function Hero() {
     footer_text: getTranslation(language, "Hero.footer_text"),
   };
   return (
-    <section className="relative w-full min-h-screen flex items-start justify-center overflow-hidden font-poppins bg-gradient-to-b from-black via-gray-900 to-black pt-12 sm:pt-16 md:pt-10 lg:pt-8">
+    /*
+     * `min-h-screen` + `items-start` ya dan el aire de un hero, así que el
+     * padding superior es mínimo. Antes sumaban layout.js (80px), el section
+     * (32px) y este div (96px): 208px antes del badge en escritorio.
+     */
+    <section className="relative w-full min-h-screen flex items-start justify-center overflow-hidden font-poppins bg-gradient-to-b from-black via-gray-900 to-black pt-6 sm:pt-8 md:pt-6 lg:pt-4">
       
       {/* Partículas */}
       <Particles
@@ -161,7 +175,7 @@ export default function Hero() {
       <div className="absolute inset-0 -z-10 bg-[linear-gradient(rgba(255,255,255,0.008)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.008)_1px,transparent_1px)] bg-[size:30px_30px] sm:bg-[size:40px_40px]" />
 
       {/* Contenedor principal */}
-      <div className="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-16 md:pt-20 lg:pt-24 pb-8">
+      <div className="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-2 sm:pt-4 md:pt-8 lg:pt-10 pb-10">
         {/* Badge */}
         <motion.div
           initial={{ opacity: 0, y: 15 }}

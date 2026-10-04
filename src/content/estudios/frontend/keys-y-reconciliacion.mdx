@@ -1,0 +1,105 @@
+---
+title: "La key de React no es un key: es una identidad"
+description: "Qué rompe exactamente el reconciliador cuando la key es el índice, y cómo el mismo bug se manifiesta distinto en Vue y en React."
+tags: ["react", "vue", "renderizado", "reconciliación", "keys"]
+published: 2026-09-06
+updated: 2026-10-01
+featured: true
+related: ["inversion-de-dependencias"]
+---
+
+Casi todo lo que se escribe sobre keys en React mezcla dos cosas distintas. La key **no identifica un elemento**. Identifica **un ítem de una lista entre sus hermanos**, y esa es exactamente la razón por la que el error aparece solo cuando la lista se reordena.
+
+## Qué hace el reconciliador
+
+Cuando React actualiza una lista, no borra y recrea todo. Compara la lista nueva contra la anterior **en orden de posición** y decide, para cada posición, si puede reusar el nodo existente o si tiene que desmontarlo.
+
+La key es lo que le permite salirse de la comparación por posición:
+
+```jsx title="sin-key.jsx" {3}
+function Lista({ tareas }) {
+  return (
+    <ul>
+      {tareas.map((tarea) => (
+        <li>{tarea.texto}</li>
+      ))}
+    </ul>
+  );
+}
+```
+
+Sin key, React asume que el ítem en la posición 0 es el mismo de antes. Si la lista se reordena, **reusa el nodo existente y le cambia el contenido**. El nodo de la tarea "Comprar pan" pasa a contener "Hacer exercise", y los inputs con estado interno quedan descolocados de su fila.
+
+```jsx title="con-key.jsx" {4}
+function Lista({ tareas }) {
+  return (
+    <ul>
+      {tareas.map((tarea) => (
+        <li key={tarea.id}>{tarea.texto}</li>
+      ))}
+    </ul>
+  );
+}
+```
+
+## Por qué el índice es la peor opción
+
+La documentación de React dice "no uses el índice", y casi siempre se explica mal. El índice no falla **porque cambie de valor**: falla porque **es el valor que el reconciliador ya estaba usando implícitamente**. Con índice no estás negando la estrategia posicional, la estás ratificando de forma explícita y por lo tanto frágil.
+
+```jsx title="index-como-key.jsx" {4}
+{tareas.map((tarea, index) => (
+  <li key={index}>{tarea.texto}</li>
+))}
+```
+
+Esto funciona perfecto mientras la lista solo crece y el orden no cambia. En el momento en que hacés borrar, insertar o reordenar, cada elemento hereda el estado interno del elemento que estaba antes en esa posición.
+
+El caso visible: un `<input>` con lo que el usuario escribió. Escribís "hola" en la fila 0, borrás la fila 0, y el texto salta a la fila que pasó a ocupar ese lugar.
+
+<Aviso>
+No es un bug de estado de React. Es React haciendo **exactamente** lo que le
+pediste: le dijiste que la identidad es la posición.
+</Aviso>
+
+## El bug en tres frases
+
+1. El estado interno de un componente **no viaja** con el dato.
+2. Viaja con la **identidad del nodo**.
+3. La identidad del nodo la define la key.
+
+Por eso la key incorrecta no produce un error: produce un estado pegado al lugar equivocado.
+
+## Cómo se ve en Vue
+
+Vue 3 usa un enfoque distinto: un `key` explícito cuando lo das, y un **algoritmo de diff heuristics** cuando no. Ese algoritmo genera keys implícitas a partir del contenido, la posición y el tipo del nodo.
+
+```vue title="Lista.vue"
+<template>
+  <li v-for="tarea in tareas" :key="tarea.id">{{ tarea.texto }}</li>
+</template>
+```
+
+La diferencia clave: en Vue, omitir la key **no rompe** en una lista estática o que solo crece, porque Vue puede deducir la identidad del contenido. En React, omitir la key **siempre** cae a la estrategia posicional.
+
+La consecuencia práctica es la misma en ambos frameworks: poné `:key`/`key` siempre, incluso cuando "no hace falta". El día que la lista se reordena, ese "no hace falta" era una bomba.
+
+## Cuándo el índice sí es válido
+
+Un caso real y honesto: la lista es estática, no se reordena, no se borra, y no hay estado interno en los hijos.
+
+```jsx title="lista-estatica.jsx" {4}
+const FILTROS = ["Todos", "Activos", "Completados", "Archivados"];
+
+{FILTROS.map((filtro) => (
+  <button key={filtro}>{filtro}</button>
+))}
+```
+
+Acá `filtro` es un string constante: es una key tan estable como un `id`. Si la lista fuera reordenable, usarías la posición y el bug volvería.
+
+## Lo que me llevo
+
+- La key identifica **ítems entre hermanos**, no elementos del DOM.
+- El índice no es una key alternativa: es la estrategia posicional explícita, y por eso rompe al reordenar.
+- El estado interno sigue al nodo, no al dato. De ahí que el síntoma sea "el estado quedó en otro lugar".
+- Poné key siempre. En Vue y en React.

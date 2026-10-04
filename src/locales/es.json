@@ -7,7 +7,8 @@
     "projects": "Proyectos",
     "certifications": "Certificaciones",
     "contact": "Contacto"
-  },
+  , "glosario": "Glosario",
+"estudios": "Estudios"},
   "Hero": {
     "badge": "DESARROLLADOR FULL STACK",
     "title_part1": "Desarrollo",
@@ -786,7 +787,122 @@
     "arch_feature_8": "Cola de acciones rápidas sub-100ms",
     "arch_feature_9": "SQLite para persistencia local",
     "arch_feature_10": "Todo Python + Tailwind CSS, sin npm/build step"
+  },
+  "Estudios": {
+    "meta_title": "Estudios y Concepts",
+    "meta_description": "Notas técnicas sobre JavaScript, frontend, backend, datos, arquitectura y DevOps. Conceptos explicados desde cero, con código y ejemplos reales.",
+    "hero_eyebrow": "Estudios",
+    "hero_title": "Lo que voy aprendiendo,",
+    "hero_title_highlight": "explicado por escrito",
+    "hero_description": "No son apuntes de clase ni documentación copiada. Son conceptos que tuve que entender de verdad para poder usarlos en producción, escritos para alguien que está en el mismo punto donde estaba yo.",
+    "read_more": "Leer",
+    "reading_time": "{minutes} min de lectura",
+    "search_placeholder": "Buscar por título, tema o tag...",
+    "clear_search": "Limpiar búsqueda",
+    "results": "{count} artículos",
+    "all": "Todas",
+    "no_results_title": "Nada por acá",
+    "no_results_body": "Probá con otro término o quitá los filtros.",
+    "toc_title": "En este artículo",
+    "related_title": "Seguir leyendo",
+    "updated_on": "Actualizado",
+    "published_on": "Publicado",
+    "reading_time_label": "de lectura",
+    "by_author": "Escrito por {author}",
+    "cta_title": "¿Se te ocurre algo que debería explained?",
+    "cta_body": "Estas notas crecen cuando algo me obliga a entenderlo bien. Si hay un concepto que siempre se me escapa, escribime y lo atacamos.",
+    "cta_button": "Escribime",
+    "category_eyebrow": "Sección",
+    "empty_category": "Todavía no hay artículos en esta sección.",
+    "count_suffix": "artículos",
+    "sections_title": "Explorá por sección",
+    "articles_title": "Todos los artículos",
+    "categories": {
+      "javascript": {
+        "label": "JavaScript",
+        "description": "El lenguaje por debajo de todo: el motor, el event loop y los mecanismos que hacen que un setTimeout no haga lo que pensás."
+      },
+      "frontend": {
+        "label": "Frontend",
+        "description": "Vue, React y Nuxt. Renderizado, ciclo de vida y las decisiones que hay detrás de cada componente."
+      },
+      "backend": {
+        "label": "Backend",
+        "description": "APIs REST, Spring Boot, autenticación y todo lo que pasa en el servidor cuando alguien hace clic."
+      },
+      "datos": {
+        "label": "Datos",
+        "description": "Modelado, índices y consultas. Por qué la base de datos casi siempre es el cuello de botella real."
+      },
+      "arquitectura": {
+        "label": "Arquitectura",
+        "description": "Patrones, límites y estructura. Las decisiones que salen caras si las tomás tarde."
+      },
+      "devops": {
+        "label": "DevOps",
+        "description": "Docker, despliegue y automatización. Lo que hace que todo siga en pie cuando tocás algo."
+      }
+    }
+  },
+  "Glosario": {
+    "meta_title": "Glosario técnico: qué es y para qué sirve cada término",
+    "meta_description": "Términos técnicos explicados en una frase: qué es, para qué sirve y cuándo lo vas a encontrar en un proyecto real.",
+    "hero_eyebrow": "Glosario",
+    "hero_title": "Conceptos que me apunto",
+    "hero_title_highlight": "para no perderlos",
+    "hero_description": "No son cosas que di: son términos que escuché, vi en el código de un proyecto o me crucé leyendo y anoté para no volver a olvidarlos. Cada entrada es corta a propósito: qué es, para qué sirve y cuándo te lo vas a encontrar.",
+    "search_placeholder": "Buscar un término...",
+    "clear_search": "Limpiar búsqueda",
+    "results": "{count} términos",
+    "all": "Todos",
+    "no_results_title": "Nada por acá",
+    "no_results_body": "Probá con otro término o quitá los filtros.",
+    "terms_title": "Todos los términos",
+    "groups_title": "Explorá por grupo",
+    "what_is": "Qué es",
+    "why": "Para qué sirve",
+    "when": "Cuándo lo vas a encontrar",
+    "note": "Ojo",
+    "also_known_as": "También se llama",
+    "back_title": "Volver al glosario",
+    "count_suffix": "términos",
+    "cta_title": "¿Falta alguno?",
+    "cta_body": "Este glosario crece cada vez que anoto algo nuevo. Si hay un término que siempre se me escapa, escribime y lo agrego.",
+    "cta_button": "Escribime",
+    "group_eyebrow": "Grupo",
+    "groups": {
+      "frontend": {
+        "label": "Frontend",
+        "description": "React, hooks y lo que corre en JavaScript dentro del navegador."
+      },
+      "css": {
+        "label": "CSS y Tailwind",
+        "description": "Clases de Tailwind, tokens de diseño y HTML estructural. No son conceptos, son utilidades."
+      },
+      "backend": {
+        "label": "Backend",
+        "description": "HTTP, APIs y el código que corre en el servidor."
+      },
+      "datos": {
+        "label": "Datos",
+        "description": "Mensajería, índices, ETL y almacenamiento."
+      },
+      "infra": {
+        "label": "Infraestructura",
+        "description": "Contenedores, orquestación, red y almacenamiento."
+      },
+      "arquitectura": {
+        "label": "Arquitectura",
+        "description": "Patrones y decisiones de estructura."
+      },
+      "seguridad": {
+        "label": "Seguridad",
+        "description": "Autenticación, autorización, criptografía y normativa."
+      },
+      "proceso": {
+        "label": "Proceso y calidad",
+        "description": "Cómo se trabaja en equipo, cómo se prueba el código y con qué herramientas."
+      }
+    }
   }
 }
-  
-

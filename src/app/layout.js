@@ -2,6 +2,7 @@ import "./globals.css";
 import Header from "../components/Header"; 
 import GlobalLoader from "@/components/GlobalLoader";
 import { LanguageProvider } from "@/contexts/LanguageContext";
+import { headerLabels } from "@/lib/clientLabels";
 import { Poppins } from "next/font/google";
 
 const poppins = Poppins({
@@ -34,9 +35,9 @@ export const metadata = {
   },
   manifest: "/site.webmanifest",
   metadataBase: new URL("https://portafolio-gorka.vercel.app"),
-  alternates: {
-    canonical: "https://portafolio-gorka.vercel.app",
-  },
+  // No global `alternates.canonical` here on purpose. Declaring the home URL as
+  // canonical in the layout makes every route that does not override it a
+  // declared duplicate of the home page. Each route owns its own canonical.
 };
 
 export default function RootLayout({ children }) {
@@ -45,8 +46,13 @@ export default function RootLayout({ children }) {
       <body className="bg-black text-white font-sans">
         <LanguageProvider>
           <GlobalLoader />
-          <Header />
-          <main className="pt-20">{children}</main>
+          <Header labelsByLang={headerLabels} />
+          {/*
+            El header es `fixed`, así que el flujo normal queda por debajo y hay
+            que compensarlo. Este es el ÚNICO punto donde se hace: las secciones
+            ya no suman su propio `pt-*`.
+          */}
+          <main className="pt-[var(--header-h)]">{children}</main>
         </LanguageProvider>
       </body>
     </html>

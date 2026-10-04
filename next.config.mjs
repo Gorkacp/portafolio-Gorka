@@ -1,7 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  // Next ya comprime por defecto; en Vercel lo hace el CDN. Se deja por
+  // claridad, no porque cambie algo.
   compress: true,
+  // Por defecto Next responde con `X-Powered-By: Next.js`.
+  poweredByHeader: false,
 
   images: {
     formats: ["image/avif", "image/webp"],

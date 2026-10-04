@@ -159,7 +159,7 @@ export default function Contact() {
   return (
     <section
       id="contact"
-      className="relative w-full py-12 md:py-32 px-4 md:px-6 font-poppins bg-gradient-to-b from-gray-900 via-black to-black text-white"
+      className="relative w-full py-14 md:py-24 px-4 md:px-6 font-poppins bg-gradient-to-b from-gray-900 via-black to-black text-white"
     >
       {/* Separador superior - más sutil */}
       <div className="absolute top-0 left-0 w-full h-[0.5px] bg-gradient-to-r from-transparent via-purple-500/30 to-transparent" />

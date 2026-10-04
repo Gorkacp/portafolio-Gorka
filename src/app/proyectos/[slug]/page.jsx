@@ -1,5 +1,7 @@
+import { notFound } from "next/navigation";
 import GoLiveDetailClient from "./GoLiveDetailClient";
 import JarvisDetailClient from "./JarvisDetailClient";
+import { footerLabels } from "@/lib/clientLabels";
 
 const projectMetadata = {
   "golive-platform": {
@@ -16,9 +18,26 @@ const projectMetadata = {
   },
 };
 
+/**
+ * Los datos viven en un literal del modulo de arriba: no hay fs, ni fetch, ni
+ * API. La ruta era dinamica sin motivo, o sea que cada visita renderizaba en
+ * servidor un componente cliente de ~1400 lineas.
+ *
+ * Con esto se prerenderizan los dos proyectos y, junto con `dynamicParams =
+ * false`, un slug desconocido pasa a ser un 404 real. Antes caia en el `default`
+ * del switch y devolvia la pagina de GoLive con HTTP 200: un soft-404, que es
+ * lo peor para un buscador porque declara como indexable una URL que no existe.
+ */
+export function generateStaticParams() {
+  return Object.keys(projectMetadata).map((slug) => ({ slug }));
+}
+
+export const dynamicParams = false;
+
 export async function generateMetadata({ params }) {
   const { slug } = await params;
-  const meta = projectMetadata[slug] || projectMetadata["golive-platform"];
+  const meta = projectMetadata[slug];
+  if (!meta) return {};
 
   return {
     title: meta.title,
@@ -57,11 +76,13 @@ export async function generateMetadata({ params }) {
 export default async function ProjectPage({ params }) {
   const { slug } = await params;
 
+  if (!projectMetadata[slug]) notFound();
+
   switch (slug) {
     case "jarvis":
-      return <JarvisDetailClient />;
+      return <JarvisDetailClient footerLabels={footerLabels} />;
     case "golive-platform":
     default:
-      return <GoLiveDetailClient />;
+      return <GoLiveDetailClient footerLabels={footerLabels} />;
   }
 }

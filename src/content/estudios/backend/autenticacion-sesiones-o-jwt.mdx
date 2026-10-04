@@ -1,0 +1,93 @@
+---
+title: "Sesiones o JWT: la decisión que se toma por costumbre y se paga después"
+description: "Por qué el token en localStorage parece la opción obvia, qué amenaza mitiga cada enfoque, y cuándo la respuesta honesta es cookie de sesión."
+tags: ["backend", "autenticación", "seguridad", "api", "cookies"]
+published: 2026-08-30
+updated: 2026-09-18
+featured: false
+related: ["inversion-de-dependencias", "indices-en-mongodb"]
+---
+
+Casi todo tutorial de autenticación arranca con JWT en `localStorage` y termina sin explicar por qué. El problema es que la decisión no es "¿cuál es más moderno?", sino **"¿qué amenaza concreta estoy cubriendo?"**.
+
+## Las dos familias
+
+| | Sesión en servidor | JWT |
+| --- | --- | --- |
+| Dónde vive el estado | Servidor (base de datos, caché) | Cliente (cookie `httpOnly` o `localStorage`) |
+| Revocar es | Trivial: borrás la fila | Difícil: hay que esperar a que expire |
+| Escalado | Requiere estado compartido | Stateless, escala horizontal sola |
+| Detección de uso robado | Inmediata | Casi imposible antes de expirar |
+
+La columna que decide todo es la tercera: **con JWT no podés revocar**. Si alguien te roba el token, el token funciona hasta que expira. Punto. No hay excepción, no hay hack: es una consecuencia directa de que la validación sea local y sin estado.
+
+## Por qué `localStorage` es la peor opción
+
+El razonamiento habitual dice "el token va en el cliente, así que va en `localStorage`". Ese salto esconde un detalle importante: `localStorage` es **accesible desde JavaScript**. Si tenés XSS, el atacante no necesita robar nada: ejecuta `localStorage.getItem('token')` desde la consola.
+
+```js title="robo.js"
+// El atacante ya tiene ejecución de JS en tu página.
+const token = localStorage.getItem("access_token");
+
+// Se lo lleva. Y lo usa desde donde quiera, sin pasar por tu dominio.
+fetch("https://api.tuapp.com/orders", {
+  headers: { Authorization: `Bearer ${token}` },
+});
+```
+
+La cookie `httpOnly` no es atacable desde JavaScript. El navegador la manda sola y el script no puede ni leerla ni escribirla. Eso elimina una categoría entera de ataques, y es gratis.
+
+<Aviso>
+`httpOnly` no te salva de XSS. El atacante todavía puede **usar** tu sesión
+desde el navegador de la víctima. Lo que elimina es la **exfiltración** del
+token, que es lo que permite reutilizarlo desde otro dispositivo indefinidamente.
+</Aviso>
+
+## La opción que casi nadie menciona
+
+Cookie de sesión + identificador opaco en servidor. No es "tecnología vieja": es la que usa la mayoría de la web real.
+
+```java title="CookieConfig.java" title="Spring Boot"
+@Bean
+public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    return http
+        .csrf(csrf -> csrf
+            // El token CSRF se manda en un header, no en la cookie,
+            // asi que un sitio tercero no puede replicar la peticion.
+            .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+            .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
+        )
+        .authorizeHttpRequests(auth -> auth
+            .requestMatchers("/api/auth/**").permitAll()
+            .anyRequest().authenticated())
+        .sessionManagement(session -> session
+            .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
+        .build();
+}
+```
+
+Con esto: la sesión es revocable (borrás la fila), el identificador no es accesible desde JavaScript, y el CSRF se cubre con un token aparte porque las cookies sí viajan solas en peticiones cross-origin.
+
+## Cuándo sí tiene sentido JWT
+
+JWT no es una opción por defecto superior. Tiene sentido cuando **no podés** tener estado en el servidor:
+
+- **Microservicios** que no comparten almacén de sesiones.
+- **Verificación por email** o recuperación de contraseña, donde el token es de un solo uso y de vida corta.
+- **Integraciones de terceros** donde no existe una sesión que mantener.
+
+En esos casos, el token es de vida corta, se valida contra una lista de revocación, y el refresh token rota.
+
+<Nota>
+El patrón correcto cuando igual necesitás revocación es el **access token corto
+(m15 min) + refresh token largo que rota**. La rotación del refresh token es la
+que te da la revocación: si un refresh token robado se usa dos veces, sabés que
+comprometieron la cuenta y podés invalidar la familia entera.
+</Nota>
+
+## Lo que me llevo
+
+- La pregunta no es "¿sesiones o JWT?", es **"¿necesito revocar?"**. Si la respuesta es sí, el token opaco en servidor gana.
+- `localStorage` para credenciales es una decisión, y es una mala: equivale a guardar la contraseña en texto plano.
+- Cookie `httpOnly` + `SameSite=Lax` + CSRF token cubre más superficie que JWT en `localStorage`, con menos código.
+- JWT shine cuando no hay estado compartido posible, no porque sea "más moderno".

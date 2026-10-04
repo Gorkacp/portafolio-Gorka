@@ -1,0 +1,78 @@
+// src/data/glosario/terms/seguridad.js
+//
+// Autenticación, autorización, criptografía y normativa.
+
+export const seguridad = [
+  {
+    slug: "oidc",
+    term: "OIDC",
+    aliases: ["oidc", "openid connect", "oauth2", "sin-leaks"],
+    what: "Un estándar para que una identidad de terceros te diga quién es el usuario.",
+    why: "Permite login con Google o Microsoft sin que tu app toque contraseñas.",
+    when: "En login con proveedores externos o SSO corporativo.",
+    note: "En el frontend nunca pongas client secret: es público por definición. El intercambio de tokens va en el servidor.",
+  },
+  {
+    slug: "rbac",
+    term: "RBAC",
+    aliases: ["rbac", "roles y permisos", "control de acceso"],
+    what: "Los permisos se agrupan en roles y el usuario tiene roles, no permisos sueltos.",
+    why: "Asignar permisos uno a uno es imposible de mantener cuando llegan 200 usuarios.",
+    when: "En cualquier panel de administración.",
+    note: "Comprueba el permiso en el servidor. Ocultar el botón en el frontend es cortesía, no seguridad.",
+  },
+  {
+    slug: "auth-guards",
+    term: "Auth guards",
+    aliases: ["authguards", "route guards", "guardas de ruta", "middleware de auth"],
+    what: "El código que se ejecuta antes de dejar entrar a una ruta.",
+    why: "Convierte la autorización en algo que se aplica siempre, en un solo sitio.",
+    when: "En el enrutador, con cada ruta protegida declarada explícitamente.",
+    note: "Una ruta sin declarar como protegida es una ruta pública. El fallo por defecto tiene que ser bloquear, no dejar pasar.",
+  },
+  {
+    slug: "api-keys",
+    term: "Keys",
+    aliases: ["keys", "claves", "api key", "signing key"],
+    what: "El secreto que demuestra quién eres.",
+    why: "Permite autenticar sin mandar contraseñas y firmar tokens.",
+    when: "Al integrar servicios y al firmar datos.",
+    note: "Una key en el frontend es una key pública. Lo que distingue una API key de un secret es si puede ir al navegador, no el nombre que le pongas.",
+  },
+  {
+    slug: "audit-log",
+    term: "Audit log",
+    aliases: ["audit log", "registro de auditoria", "bitacora"],
+    what: "Un registro de quién hizo qué y cuándo, que no se puede modificar.",
+    why: "Es lo que responde a la pregunta que siempre llega tarde: quién tocó esto.",
+    when: "En acciones sensibles: cambios de permisos, accesos, exportaciones.",
+    note: "Si el log se puede editar, no es un log. Es un registro de intenciones, no de hechos.",
+  },
+  {
+    slug: "infisical",
+    term: "Gestor de secretos",
+    aliases: ["infisical", "vault", "gestor de secretos"],
+    what: "Un sitio donde viven las claves y contraseñas, en vez de en el código.",
+    why: "Evita que los secretos viajen en el repositorio.",
+    when: "En cualquier despliegue.",
+    note: "Añadir el gestor al .gitignore no quita el secreto del historial. Si ya se subió, hay que rotarlo.",
+  },
+  {
+    slug: "pci",
+    term: "PCI",
+    aliases: ["pci", "pci dss"],
+    what: "El estándar de la industria de tarjetas de pago sobre cómo tratar los datos de una tarjeta.",
+    why: "Si procesás pagos, tenés que cumplirlo o no podés cobrar.",
+    when: "Al integrar una pasarela de pagos.",
+    note: "PCI DSS se puede reducir mucho alojando los campos de tarjeta directamente en el proveedor y sin que toquen tu servidor.",
+  },
+  {
+    slug: "fuga-de-secretos",
+    term: "Fuga de secretos",
+    aliases: ["sin leaks", "leak", "fuga", "secretos en el repo"],
+    what: "Un token o una contraseña que se sube al repositorio y queda en el historial para siempre.",
+    why: "Un repositorio público con una key es una key que hay que revocar.",
+    when: "Al hacer commit.",
+    note: "Borrar la línea no borra la key: sigue en el historial de git. Rotar el secreto es obligatorio; borrar el archivo, opcional.",
+  },
+];

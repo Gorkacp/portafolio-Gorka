@@ -34,7 +34,6 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { getTranslation } from "@/utils/translations";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -54,7 +53,7 @@ const projectImages = [
   { src: "/img/GoLive4.png", alt: "GoLive Tickets QR" },
 ];
 
-export default function GoLiveDetailClient() {
+export default function GoLiveDetailClient({ footerLabels }) {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState("overview");
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -384,7 +383,6 @@ export default function GoLiveDetailClient() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 via-black to-black text-white overflow-x-hidden">
       {/* Header */}
-      <Header />
 
       {/* Hero Section - Completamente responsive */}
       <section className={`relative ${isMobile ? 'pt-8' : 'py-6 md:py-12 lg:py-20'} overflow-hidden`}>
@@ -1461,7 +1459,7 @@ export default function GoLiveDetailClient() {
       </AnimatePresence>
 
       {/* Footer */}
-      <Footer />
+      <Footer labelsByLang={footerLabels} />
     </div>
   );
 }

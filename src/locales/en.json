@@ -7,7 +7,8 @@
     "projects": "Projects",
     "certifications": "Certifications",
     "contact": "Contact"
-  },
+  , "glosario": "Glossary",
+"estudios": "Studies"},
   "Hero": {
     "badge": "FULL STACK DEVELOPER",
     "title_part1": "Developing",
@@ -786,7 +787,122 @@
     "arch_feature_8": "Sub-100ms quick action queue",
     "arch_feature_9": "SQLite for local persistence",
     "arch_feature_10": "All Python + Tailwind CSS, no npm/build step"
+  },
+  "Estudios": {
+    "meta_title": "Studies and Concepts",
+    "meta_description": "Technical notes on JavaScript, frontend, backend, data, architecture and DevOps. Concepts explained from scratch, with real code and examples.",
+    "hero_eyebrow": "Studies",
+    "hero_title": "What I keep learning,",
+    "hero_title_highlight": "written down",
+    "hero_description": "These are not lecture notes or copied documentation. They are concepts I had to actually understand to use them in production, written for someone standing where I was standing.",
+    "read_more": "Read",
+    "reading_time": "{minutes} min read",
+    "search_placeholder": "Search by title, topic or tag...",
+    "clear_search": "Clear search",
+    "results": "{count} articles",
+    "all": "All",
+    "no_results_title": "Nothing here",
+    "no_results_body": "Try a different term or clear the filters.",
+    "toc_title": "On this page",
+    "related_title": "Keep reading",
+    "updated_on": "Updated",
+    "published_on": "Published",
+    "reading_time_label": "read",
+    "by_author": "Written by {author}",
+    "cta_title": "Think something belongs here?",
+    "cta_body": "These notes grow whenever something forces me to understand it properly. If there is a concept that keeps slipping away, message me and we will crack it.",
+    "cta_button": "Get in touch",
+    "category_eyebrow": "Section",
+    "empty_category": "No articles in this section yet.",
+    "count_suffix": "articles",
+    "sections_title": "Browse by section",
+    "articles_title": "All articles",
+    "categories": {
+      "javascript": {
+        "label": "JavaScript",
+        "description": "The language underneath everything: the engine, the event loop and the mechanisms that make setTimeout not do what you think."
+      },
+      "frontend": {
+        "label": "Frontend",
+        "description": "Vue, React and Nuxt. Rendering, lifecycle and the decisions behind every component."
+      },
+      "backend": {
+        "label": "Backend",
+        "description": "REST APIs, Spring Boot, authentication and everything that happens on the server when someone clicks."
+      },
+      "datos": {
+        "label": "Data",
+        "description": "Modelling, indexes and queries. Why the database is almost always the real bottleneck."
+      },
+      "arquitectura": {
+        "label": "Architecture",
+        "description": "Patterns, boundaries and structure. The decisions that get expensive when made too late."
+      },
+      "devops": {
+        "label": "DevOps",
+        "description": "Docker, deployment and automation. What keeps everything standing when you touch something."
+      }
+    }
+  },
+  "Glosario": {
+    "meta_title": "Technical glossary: what each term is and what it is for",
+    "meta_description": "Technical terms explained in one line: what it is, what it is for, and when you will run into it in a real project.",
+    "hero_eyebrow": "Glossary",
+    "hero_title": "Concepts I write down",
+    "hero_title_highlight": "so I stop forgetting them",
+    "hero_description": "These are not things I taught: they are terms I heard, spotted in a codebase or came across while reading, and wrote down so I would not lose them again. Every entry is deliberately short: what it is, what it is for, and when you will run into it.",
+    "search_placeholder": "Search a term...",
+    "clear_search": "Clear search",
+    "results": "{count} terms",
+    "all": "All",
+    "no_results_title": "Nothing here",
+    "no_results_body": "Try another term or drop the filters.",
+    "terms_title": "All terms",
+    "groups_title": "Browse by group",
+    "what_is": "What it is",
+    "why": "What it is for",
+    "when": "When you will run into it",
+    "note": "Watch out",
+    "also_known_as": "Also called",
+    "back_title": "Back to the glossary",
+    "count_suffix": "terms",
+    "cta_title": "Is one missing?",
+    "cta_body": "This glossary grows every time I write something new. If there is a term that always escapes me, send it over and I will add it.",
+    "cta_button": "Send me one",
+    "group_eyebrow": "Group",
+    "groups": {
+      "frontend": {
+        "label": "Frontend",
+        "description": "React, hooks and everything JavaScript runs in the browser."
+      },
+      "css": {
+        "label": "CSS and Tailwind",
+        "description": "Tailwind classes, design tokens and structural HTML. Not concepts, utilities."
+      },
+      "backend": {
+        "label": "Backend",
+        "description": "HTTP, APIs and the code that runs on the server."
+      },
+      "datos": {
+        "label": "Data",
+        "description": "Messaging, indexes, ETL and storage."
+      },
+      "infra": {
+        "label": "Infrastructure",
+        "description": "Containers, orchestration, networking and storage."
+      },
+      "arquitectura": {
+        "label": "Architecture",
+        "description": "Patterns and structural decisions."
+      },
+      "seguridad": {
+        "label": "Security",
+        "description": "Authentication, authorization, cryptography and compliance."
+      },
+      "proceso": {
+        "label": "Process and quality",
+        "description": "How teams work, how code gets tested and with which tools."
+      }
+    }
   }
 }
-
-  

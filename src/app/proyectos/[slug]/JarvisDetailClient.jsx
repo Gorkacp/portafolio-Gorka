@@ -14,7 +14,6 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { getTranslation } from "@/utils/translations";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -25,7 +24,7 @@ const JarvisIcon = ({ className }) => (
   </svg>
 );
 
-export default function JarvisDetailClient() {
+export default function JarvisDetailClient({ footerLabels }) {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState("overview");
   const [isMobile, setIsMobile] = useState(false);
@@ -378,7 +377,6 @@ export default function JarvisDetailClient() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 via-black to-black text-white overflow-x-hidden">
-      <Header />
 
       {/* Hero Section */}
       <section className={`relative ${isMobile ? 'pt-8' : 'py-6 md:py-12 lg:py-20'} overflow-hidden`}>
@@ -552,7 +550,7 @@ export default function JarvisDetailClient() {
       {/* Separator */}
       <div className="w-full h-px bg-gradient-to-r from-transparent via-purple-500 to-transparent" />
 
-      <Footer />
+      <Footer labelsByLang={footerLabels} />
     </div>
   );
 }

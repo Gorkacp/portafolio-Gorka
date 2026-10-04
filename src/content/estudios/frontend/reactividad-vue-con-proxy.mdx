@@ -1,0 +1,115 @@
+---
+title: "Why Vue 3 usa Proxy y no defineProperty"
+description: "Qué problema concreto resolvió el cambio de reactividad en Vue 3, y por qué la versión anterior no podía detectar propiedades nuevas."
+tags: ["vue", "reactividad", "javascript", "proxy", "performance"]
+published: 2026-07-15
+updated: 2026-09-05
+featured: false
+related: ["event-loop-y-microtasks", "keys-y-reconciliacion"]
+---
+
+Cambiar la reactividad de `Object.defineProperty` a `Proxy` no fue una decisión estética. Fue la respuesta a una limitación concreta y difícil de sortear: **en Vue 2, una propiedad que se agregaba después no era reactiva**.
+
+## El problema real de Vue 2
+
+En Vue 2 la reactividad se instalaba recorriendo el objeto y redefiniendo cada propiedad existente con getters y setters:
+
+```js title="vue2.js" {3}
+function observe(obj) {
+  Object.keys(obj).forEach((key) => {
+    defineReactive(obj, key, obj[key]);
+  });
+  return obj;
+}
+```
+
+El problema es `Object.keys`. Solo ve lo que **ya existe**. Si después hacés esto:
+
+```js title="vue2-fallo.js"
+const state = Vue.observable({ nombre: "Gorka" });
+
+// No existe todavia: no fue observada al crear el objeto.
+state.apellido = "Carmona";
+
+console.log(state.nombre); // tracked
+console.log(state.apellido); // NO tracked. Un simple console.log.
+```
+
+Si esa propiedad se usa en un `computed` o en un `watch`, la vista no se actualiza. Y la única solución era declarar todo por adelantado con `Vue.set()`:
+
+```js title="vue2-set.js"
+Vue.set(state, "apellido", "Carmona");
+```
+
+Esto funciona, pero **obligaba al consumidor a conocer las reglas del framework**. Un `state.apellido = x` que funciona y otro que no, sin ninguna diferencia visible en el código. Ese es el peor tipo de bug.
+
+<Aviso>
+El caso peor no es "no se actualiza la vista". Es el caso silencioso: un `computed`
+que devuelve `NaN`, un `v-if` que nunca se cumple, un default que nunca se
+redefine. Todo funciona en desarrollo, porque el objeto se declara completo al
+arrancar.
+</Aviso>
+
+## Cómo lo resuelve Proxy
+
+`Proxy` intercepta operaciones sobre el objeto **completo**, incluidas las propiedades que todavía no existen:
+
+```js title="proxy.js" {4}
+const state = new Proxy({ nombre: "Gorka" }, {
+  set(target, key, value) {
+    target[key] = value;
+    console.log("Cambio en", key, "=", value);
+    trigger(key);
+    return true;
+  },
+});
+```
+
+`state.apellido = "Carmona"` dispara el `set`. No hay `set()` que llamar. El caso que en Vue 2 era una trampa ahora es indistinguible del caso normal.
+
+Ese es el resumen del cambio: **la limitación desapareció de la API pública**.
+
+## Las tres cosas que `Proxy` también arregla
+
+**Detección de borrado.** `deleteProperty` es un trap propio. En Vue 2, borrar una propiedad reactiva era otro agujero sin resolver.
+
+**Arrays.** En Vue 2 había que interceptar siete métodos de array (`push`, `splice`, `sort`...). Con Proxy, `push` es un `set` sobre una propiedad del índice. Los métodos del array dejan de ser un caso especial.
+
+**Mejor rendimiento.** Recorrer un array de 10.000 elementos para redefinir cada índice tiene un coste que no existe si no hay nada que redefinir. En Vue 3, un array plano al que solo le hacés `push` se trackea de forma muy barata.
+
+## El trade-off que casi nadie menciona
+
+`Proxy` tiene una restricción que no es menor: **no funciona con variables primitivas**.
+
+```js title="primitivas.js"
+let count = 0;
+
+count = new Proxy(count, handler); // TypeError: cannot wrap a primitive
+```
+
+Por eso la API de Vue 3 tiene dos capas:
+
+| Forma | Mecanismo | Cuándo |
+| --- | --- | --- |
+| `ref(valor)` | Objeto con `.value` | Cualquier valor, incluidas primitivas |
+| `reactive(objeto)` | `Proxy` directo | Objetos y arrays |
+
+```js title="ref-vs-reactive.js"
+const count = ref(0);          // el .value es lo que se envuelve en un Proxy
+const state = reactive({ a: 1 }); // el objeto entero es un Proxy
+```
+
+Y esa es la razón de que `ref` te obligue a escribir `.value` en el script: no es arbitrario, es que **el motor necesita un objeto al que envolver**. En el template, Vue lo desenvuelve automáticamente, y por eso ahí escribís `count` y no `count.value`.
+
+## Una consecuencia poco conocida
+
+`Proxy` también se usa para detectar **qué se está usando en el template**, no solo qué se está leyendo en el script. Si una propiedad nunca se lee, Vue la marca como no trackeada y el efecto no se vuelve a ejecutar cuando cambia.
+
+Eso es la base de las mismas optimizaciones que hacen que la reactividad sea granular: el sistema sabe qué necesita cada componente y no recalcula lo que no cambió.
+
+## Lo que me llevo
+
+- El cambio a `Proxy` resolvió una limitación de la API, no una cuestión de rendimiento.
+- `Object.defineProperty` solo puede observar lo que existe. `Proxy` observa el objeto entero.
+- `ref` existe por una razón mecánica: no se puede envolver una primitiva.
+- La granularidad no es una optimización del runtime, es consecuencia de saber exactamente qué se lee.

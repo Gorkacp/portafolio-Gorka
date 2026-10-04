@@ -7,7 +7,8 @@
     "projects": "Projekte",
     "certifications": "Zertifizierungen",
     "contact": "Kontakt"
-  },
+  , "glosario": "Glossar",
+"estudios": "Studien"},
   "Hero": {
     "badge": "FULL STACK ENTWICKLER",
     "title_part1": "Entwicklung von",
@@ -786,5 +787,122 @@
     "arch_feature_8": "Sub-100ms Schnellaktions-Warteschlange",
     "arch_feature_9": "SQLite für lokale Persistenz",
     "arch_feature_10": "Alles Python + Tailwind CSS, kein npm/Build-Schritt"
+  },
+  "Estudios": {
+    "meta_title": "Studien und Konzepte",
+    "meta_description": "Technische Notizen zu JavaScript, Frontend, Backend, Daten, Architektur und DevOps. Konzepte von Grund auf erklärt, mit echtem Code und Beispielen.",
+    "hero_eyebrow": "Studien",
+    "hero_title": "Was ich lerne,",
+    "hero_title_highlight": "zu Papier gebracht",
+    "hero_description": "Das sind keine Vorlesungsnotizen und keine kopierte Dokumentation. Es sind Konzepte, die ich wirklich verstehen musste, um sie produktiv einzusetzen, geschrieben für jemanden, der genau da steht, wo ich stand.",
+    "read_more": "Lesen",
+    "reading_time": "{minutes} Min. Lesezeit",
+    "search_placeholder": "Nach Titel, Thema oder Tag suchen...",
+    "clear_search": "Suche löschen",
+    "results": "{count} Artikel",
+    "all": "Alle",
+    "no_results_title": "Nichts gefunden",
+    "no_results_body": "Versuche einen anderen Begriff oder entferne die Filter.",
+    "toc_title": "In diesem Artikel",
+    "related_title": "Weiterlesen",
+    "updated_on": "Aktualisiert",
+    "published_on": "Veröffentlicht",
+    "reading_time_label": "Lesezeit",
+    "by_author": "Geschrieben von {author}",
+    "cta_title": "Fehlt dir ein Konzept?",
+    "cta_body": "Diese Notizen wachsen jedes Mal, wenn mich etwas zwingt, es wirklich zu verstehen. Wenn dir ein Konzept immer wieder entgleitet, schreib mir und wir gehen es gemeinsam an.",
+    "cta_button": "Schreib mir",
+    "category_eyebrow": "Bereich",
+    "empty_category": "Noch keine Artikel in diesem Bereich.",
+    "count_suffix": "Artikel",
+    "sections_title": "Nach Bereich stöbern",
+    "articles_title": "Alle Artikel",
+    "categories": {
+      "javascript": {
+        "label": "JavaScript",
+        "description": "Die Sprache unter allem: die Engine, die Event Loop und die Mechanismen, warum setTimeout nicht das tut, was du denkst."
+      },
+      "frontend": {
+        "label": "Frontend",
+        "description": "Vue, React und Nuxt. Rendering, Lebenszyklus und die Entscheidungen hinter jeder Komponente."
+      },
+      "backend": {
+        "label": "Backend",
+        "description": "REST-APIs, Spring Boot, Authentifizierung und alles, was auf dem Server passiert, wenn jemand klickt."
+      },
+      "datos": {
+        "label": "Daten",
+        "description": "Modellierung, Indizes und Queries. Warum die Datenbank fast immer der echte Engpass ist."
+      },
+      "arquitectura": {
+        "label": "Architektur",
+        "description": "Patterns, Grenzen und Struktur. Entscheidungen, die teuer werden, wenn man sie zu spät trifft."
+      },
+      "devops": {
+        "label": "DevOps",
+        "description": "Docker, Deployment und Automatisierung. Was alles am Laufen hält, wenn du etwas anfasst."
+      }
+    }
+  },
+  "Glosario": {
+    "meta_title": "Technisches Glossar: was jeder Begriff ist und wozu er dient",
+    "meta_description": "Technische Begriffe in einem Satz erklärt: was es ist, wozu es dient und wann dir das in einem echten Projekt begegnet.",
+    "hero_eyebrow": "Glossar",
+    "hero_title": "Konzepte, die ich mir",
+    "hero_title_highlight": "aufschreibe, um sie nicht zu verlieren",
+    "hero_description": "Das sind keine Themen, die ich unterrichtet habe: es sind Begriffe, die ich gehört, im Code gesehen oder beim Lesen notiert habe, damit ich sie nicht wieder vergesse. Jeder Eintrag ist bewusst kurz: was es ist, wozu es dient und wann du darauf stößt.",
+    "search_placeholder": "Begriff suchen...",
+    "clear_search": "Suche löschen",
+    "results": "{count} Begriffe",
+    "all": "Alle",
+    "no_results_title": "Nichts hier",
+    "no_results_body": "Versuch einen anderen Begriff oder nimm die Filter raus.",
+    "terms_title": "Alle Begriffe",
+    "groups_title": "Nach Gruppe stöbern",
+    "what_is": "Was es ist",
+    "why": "Wozu es dient",
+    "when": "Wann du darauf stößt",
+    "note": "Achtung",
+    "also_known_as": "Heißt auch",
+    "back_title": "Zurück zum Glossar",
+    "count_suffix": "Begriffe",
+    "cta_title": "Fehlt einer?",
+    "cta_body": "Dieses Glossar wächst jedes Mal, wenn ich etwas Neues notiere. Wenn dir ein Begriff immer entgleitet, schick ihn mir und ich nehme ihn auf.",
+    "cta_button": "Schick ihn mir",
+    "group_eyebrow": "Gruppe",
+    "groups": {
+      "frontend": {
+        "label": "Frontend",
+        "description": "React, Hooks und alles, was JavaScript im Browser ausführt."
+      },
+      "css": {
+        "label": "CSS und Tailwind",
+        "description": "Tailwind-Klassen, Design-Tokens und strukturelles HTML. Keine Konzepte, sondern Utilities."
+      },
+      "backend": {
+        "label": "Backend",
+        "description": "HTTP, APIs und der Code, der auf dem Server läuft."
+      },
+      "datos": {
+        "label": "Daten",
+        "description": "Messaging, Indizes, ETL und Speicher."
+      },
+      "infra": {
+        "label": "Infrastruktur",
+        "description": "Container, Orchestrierung, Netzwerk und Speicher."
+      },
+      "arquitectura": {
+        "label": "Architektur",
+        "description": "Patterns und Strukturentscheidungen."
+      },
+      "seguridad": {
+        "label": "Sicherheit",
+        "description": "Authentifizierung, Autorisierung, Kryptografie und Compliance."
+      },
+      "proceso": {
+        "label": "Prozess und Qualität",
+        "description": "Wie Teams arbeiten, wie Code getestet wird und womit."
+      }
+    }
   }
 }

@@ -1,0 +1,107 @@
+---
+title: "Docker multi-stage: de 1,2 GB a 180 MB en un archivo"
+description: "Por qué una imagen de Node arrastra el compilador de TypeScript y tus tests a producción, y cómo las capas se montan para evitarlo."
+tags: ["docker", "devops", "contenedores", "despliegue", "optimización"]
+published: 2026-07-28
+updated: 2026-09-12
+featured: false
+related: ["inversion-de-dependencias"]
+---
+
+Un `Dockerfile` de Node de cuatro líneas produce una imagen de más de un gigabyte. No es culpa de Node: es que estás instalando **el compilador de TypeScript, el framework de tests y las dependencias de desarrollo** dentro de la imagen que va a producción.
+
+Multi-stage no es una optimización menor. Es la diferencia entre subir 1,2 GB y 180 MB por cada despliegue.
+
+## Por qué el tamaño importa de verdad
+
+Tres razones, en orden de importancia real:
+
+1. **Tiempo de despliegue**. Subir 1,2 GB a un registry remoto puede tardar minutos por conexión lenta.
+2. **Superficie de ataque**. Cada dependencia de desarrollo es un paquete que puede tener un CVE. La imagen final solo necesita lo que ejecuta.
+3. **Cache de capas**. Una imagen grande invalida la cache antes de empezar.
+
+<Nota>
+El punto clave: `node_modules` de una imagen final **no** puede ser el mismo
+directorio que el de desarrollo. Las dependencias de producción son un
+subconjunto distinto, y por eso hace falta una etapa aparte.
+</Nota>
+
+## Las etapas
+
+```dockerfile title="Dockerfile" {1,10,17,24}
+# Etapa 1: todo lo necesario para construir
+FROM node:22-alpine AS deps
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+
+# Etapa 2: compilar y testear
+FROM node:22-alpine AS build
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+RUN npm run build && npm test
+
+# Etapa 3: solo dependencias de produccion
+FROM node:22-alpine AS prod-deps
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --omit=dev
+
+# Etapa 4: la imagen que se despliega
+FROM node:22-alpine AS runner
+WORKDIR /app
+ENV NODE_ENV=production
+COPY --from=prod-deps /app/node_modules ./node_modules
+COPY --from=build /app/.next ./.next
+COPY --from=build /app/public ./public
+USER node
+EXPOSE 3000
+CMD ["npm", "start"]
+```
+
+Lo que **no** viaja a la imagen final: `typescript`, `eslint`, `jest`, `webpack`, los archivos `.mdx` originales, los tests, el `.git`. Todo eso se queda en las etapas intermedias, que existen solo durante el `docker build`.
+
+## Detalles que parecen menores y no lo son
+
+**`npm ci` y no `npm install`.** `ci` instala exactamente lo que dice el lockfile y falla si no está sincronizado. `install` puede resolver versiones nuevas y produce builds no reproducibles.
+
+**`npm ci --omit=dev` en etapa propia.** No podés borrar `devDependencies` de un `node_modules` ya instalado de forma fiable: los paquetes con dependencias transitivas compartidas dejan archivos que no se pueden separar sin romper nada.
+
+**`COPY package*.json` antes que `COPY . .`.** Es lo que hace funcionar la cache. Si copiás todo el proyecto primero, cualquier cambio en el código invalida la capa de `npm ci` y reinstallás todo en cada build.
+
+**`USER node`.** La imagen base ya trae un usuario sin privilegios. Usarlo no cuesta nada y convierte "proceso corriendo como root dentro del contenedor" en "no".
+
+**`.dockerignore`.** Sin esto, `COPY . .` se lleva `node_modules` del host, `.git` y `.env`. Es la causa número uno de builds lentos y de secretos filtrados en imágenes.
+
+```text title=".dockerignore"
+node_modules
+.git
+.next
+.env
+.env.local
+*.log
+```
+
+## El detalle del `COPY --from`
+
+Vale la pena entender qué está pasando ahí. `--from=build /app/.next` no copia "la carpeta `.next` de producción" porque una carpeta sea especial: **copia los bytes que esa etapa dejó en ese path**. `/app/.next` existe porque en la etapa 2 alguien ejecutó `npm run build`.
+
+Es una foto del sistema de archivos, no una referencia. Si el build falla, la imagen final falla: no hay forma de saltarse una etapa.
+
+## Verificar que funcionó
+
+```bash title="verificar.sh"
+docker images | head -3
+docker history --no-trunc mi-imagen:latest | head -20
+```
+
+El segundo comando es el underrated: te muestra **exactamente qué capa añadió cada instrucción**. Si una capa pesa 800 MB, la vas a ver ahí.
+
+## Lo que me llevo
+
+- La imagen final debe contener solo lo que ejecuta. Todo lo demás, en etapas intermedias.
+- `npm ci` para builds reproducibles, `--omit=dev` en una etapa aparte para la imagen final.
+- Copiá los manifiestos **antes** que el código, o la cache de capas no sirve de nada.
+- `.dockerignore` no es opcional.
+- `docker history` te dice dónde se fue el peso sin instrumentar nada.

@@ -1,9 +1,10 @@
 "use client";
 
 import { useSyncExternalStore } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 
-// Estado global simplificado
+/*
+ * Estado global simplificado
+ */
 const loaderState = {
   isLoading: false,
   listeners: new Set(),
@@ -18,15 +19,17 @@ function getLoaderSnapshot() {
   return loaderState.isLoading;
 }
 
-// Funciones de control
+/*
+ * Funciones de control
+ */
 export const showGlobalLoader = () => {
   if (!loaderState.isLoading) {
     loaderState.isLoading = true;
     document.body.style.overflow = 'hidden';
     document.body.style.pointerEvents = 'none';
-    
+
     loaderState.listeners.forEach(listener => listener());
-    
+
     // Timeout de seguridad
     setTimeout(() => {
       if (loaderState.isLoading) {
@@ -45,6 +48,13 @@ export const hideGlobalLoader = () => {
   }
 };
 
+/*
+ * Este componente NO importa framer-motion. Vive en layout.js, o sea que se
+ * descarga en TODAS las rutas, y pagar 39 KB de libreria de animacion para
+ * dibujar un spinner que solo aparece mientras un proyecto carga era el peor
+ * gasto del sitio. Los @keyframes equivalentes estan en globals.css, con las
+ * mismas duraciones y curvas que usaba antes.
+ */
 export default function GlobalLoader() {
   const showLoader = useSyncExternalStore(
     subscribeToLoader,
@@ -67,73 +77,49 @@ export default function GlobalLoader() {
         {/* Spinner elegante */}
         <div className="relative">
           {/* Glow exterior */}
-          <motion.div
-            className="absolute -inset-4 bg-purple-500/10 blur-xl rounded-full"
-            animate={{
-              scale: [1, 1.1, 1],
-              opacity: [0.3, 0.5, 0.3],
-            }}
-            transition={{
-              duration: 2,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
+          <div
+            className="
+              loader-glow
+              absolute -inset-4 bg-purple-500/10 blur-xl rounded-full
+            "
           />
-          
+
           {/* Spinner principal */}
           <div className="relative w-20 h-20">
-            {/* Anillo exterior */}
-            <motion.div
-              className="absolute inset-0 border-4 border-transparent border-t-purple-500 border-r-blue-400 rounded-full"
-              animate={{ rotate: 360 }}
-              transition={{
-                duration: 1.5,
-                repeat: Infinity,
-                ease: "linear",
-              }}
+            {/* Anillo exterior: 1.5s linear, como el ease:linear de antes */}
+            <div
+              className="
+                loader-ring
+                absolute inset-0 border-4 border-transparent
+                border-t-purple-500 border-r-blue-400 rounded-full
+              "
             />
-            
-            {/* Anillo interior */}
-            <motion.div
-              className="absolute inset-2 border-3 border-transparent border-b-cyan-400 border-l-pink-400 rounded-full"
-              animate={{ rotate: -360 }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                ease: "linear",
-              }}
+
+            {/* Anillo interior: 2s en sentido contrario */}
+            <div
+              className="
+                loader-ring-reverse
+                absolute inset-2 border-3 border-transparent
+                border-b-cyan-400 border-l-pink-400 rounded-full
+              "
             />
-            
+
             {/* Punto central */}
             <div className="absolute inset-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-white rounded-full" />
           </div>
-          
-          {/* Puntos decorativos */}
-          <motion.div
-            className="absolute -top-2 -right-2 w-3 h-3 bg-blue-400 rounded-full"
-            animate={{
-              scale: [1, 1.5, 1],
-              opacity: [0.5, 0.8, 0.5],
-            }}
-            transition={{
-              duration: 1.5,
-              repeat: Infinity,
-              ease: "easeInOut",
-              delay: 0.2,
-            }}
+
+          {/* Puntos decorativos: 1.5s con delay 0.2 y 0.4 */}
+          <div
+            className="
+              loader-dot
+              absolute -top-2 -right-2 w-3 h-3 bg-blue-400 rounded-full
+            "
           />
-          <motion.div
-            className="absolute -bottom-2 -left-2 w-3 h-3 bg-purple-400 rounded-full"
-            animate={{
-              scale: [1, 1.5, 1],
-              opacity: [0.5, 0.8, 0.5],
-            }}
-            transition={{
-              duration: 1.5,
-              repeat: Infinity,
-              ease: "easeInOut",
-              delay: 0.4,
-            }}
+          <div
+            className="
+              loader-dot loader-dot-delay
+              absolute -bottom-2 -left-2 w-3 h-3 bg-purple-400 rounded-full
+            "
           />
         </div>
 
@@ -147,40 +133,23 @@ export default function GlobalLoader() {
           </p>
         </div>
 
-        {/* Barra de progreso mínima */}
+        {/* Barra de progreso: 1.5s easeInOut en bucle */}
         <div className="w-48 h-1 bg-gray-800 rounded-full overflow-hidden">
-          <motion.div
-            className="h-full bg-gradient-to-r from-purple-500 to-blue-500"
-            initial={{ width: "0%" }}
-            animate={{ width: "100%" }}
-            transition={{
-              duration: 1.5,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-          />
+          <div className="loader-bar h-full bg-gradient-to-r from-purple-500 to-blue-500" />
         </div>
       </div>
 
-      {/* Efectos de fondo sutiles */}
+      {/* Efectos de fondo sutiles: 3s, 4s y 5s con 0, 0.5 y 1 de delay */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(3)].map((_, i) => (
-          <motion.div
+        {[0, 1, 2].map((i) => (
+          <div
             key={i}
-            className="absolute w-[300px] h-[300px] rounded-full border border-white/5"
+            className="loader-halo absolute w-[300px] h-[300px] rounded-full border border-white/5"
             style={{
               left: `${20 + i * 30}%`,
               top: `${30 + i * 20}%`,
-            }}
-            animate={{
-              scale: [1, 1.2, 1],
-              opacity: [0.02, 0.05, 0.02],
-            }}
-            transition={{
-              duration: 3 + i,
-              repeat: Infinity,
-              ease: "easeInOut",
-              delay: i * 0.5,
+              animationDuration: `${3 + i}s`,
+              animationDelay: `${i * 0.5}s`,
             }}
           />
         ))}

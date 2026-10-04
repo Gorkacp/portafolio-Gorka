@@ -106,7 +106,12 @@ function LogoDot({ logo, alt, borderColor, shadowColor, size = "md" }) {
         }}
       >
         <div className={`relative ${isDesktop ? "w-[38px] h-[38px]" : "w-[26px] h-[26px]"}`}>
-          <Image src={logo} alt={alt} fill className="object-contain" />
+          {/*
+            Sin `sizes`, next/image emite sizes="100vw" y el navegador elige el
+            candidato mas grande de deviceSizes (1280w) para un logo que se
+            dibuja a 26-38px.
+          */}
+          <Image src={logo} alt={alt} fill sizes="38px" className="object-contain" />
         </div>
       </div>
     </div>
@@ -318,7 +323,7 @@ export default function Experience() {
   return (
     <section
       id="experience"
-      className="relative w-full py-20 md:py-32 px-4 md:px-6 font-poppins bg-gradient-to-b from-gray-900 via-black to-black text-white overflow-hidden"
+      className="relative w-full py-16 md:py-24 px-4 md:px-6 font-poppins bg-gradient-to-b from-gray-900 via-black to-black text-white overflow-hidden"
     >
       <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-purple-500 to-transparent" />
       <div className="absolute top-1/3 right-0 w-96 h-96 bg-purple-900/5 rounded-full blur-3xl hidden md:block" />

@@ -1,12 +1,19 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
+import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Menu, X, ChevronDown } from "lucide-react";
-import { getTranslation } from "@/utils/translations";
 import { useLanguage } from "@/contexts/LanguageContext";
 
-export default function Header() {
+/**
+ * `labelsByLang` lo pasa layout.js (servidor) con la seccion `Header` de los tres
+ * idiomas. Antes este componente importaba `getTranslation`, que arrastra los
+ * tres locale files al bundle del cliente: 85 KB de JSON para pintar ocho
+ * etiquetas. Header se monta en todas las rutas, asi que ese costo se pagaba en
+ * cada pagina del sitio.
+ */
+export default function Header({ labelsByLang }) {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [desktopDropdownOpen, setDesktopDropdownOpen] = useState(false);
@@ -90,15 +97,24 @@ export default function Header() {
     setIsOpen(false);
   };
 
-  /* Loading (evita SSR issues) */
+  /* Las etiquetas llegan ya resueltas por idioma desde el servidor. */
+  const t = useMemo(
+    () => labelsByLang?.[language] ?? labelsByLang?.es ?? {},
+    [labelsByLang, language]
+  );
+
   const menuItems = [
-    { name: getTranslation(language, "Header.home"), href: "#home" },
-    { name: getTranslation(language, "Header.about"), href: "#about" },
-    { name: getTranslation(language, "Header.capabilities"), href: "#capabilities" },
-    { name: getTranslation(language, "Header.experience"), href: "#experience" },
-    { name: getTranslation(language, "Header.projects"), href: "#projects" },
-    { name: getTranslation(language, "Header.certifications"), href: "#certifications" },
-    { name: getTranslation(language, "Header.contact"), href: "#contact" },
+    { name: t.home, href: "#home" },
+    { name: t.about, href: "#about" },
+    { name: t.capabilities, href: "#capabilities" },
+    { name: t.experience, href: "#experience" },
+    { name: t.projects, href: "#projects" },
+    // Real route, not an in-page anchor: it must not go through handleSmoothScroll
+    // or the app would push("/") and land the visitor on the home page instead.
+    { name: t.estudios, href: "/estudios", route: true },
+    { name: t.glosario, href: "/glosario", route: true },
+    { name: t.certifications, href: "#certifications" },
+    { name: t.contact, href: "#contact" },
   ];
 
   const flags = {
@@ -163,20 +179,32 @@ export default function Header() {
         </button>
 
         {/* Desktop */}
-        <div className="hidden md:flex items-center gap-12">
-          <nav className="flex items-center gap-8">
-            {menuItems.map((item, index) => {
+        <div className="hidden lg:flex items-center gap-8">
+          <nav className="flex items-center gap-6">
+            {menuItems.map((item) => {
               // No mostrar "Inicio" si ya estamos en home
               if (item.href === "#home" && pathname === "/") return null;
               
-              return (
+              return item.route ? (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="relative group"
+                  aria-current={pathname === item.href ? "page" : undefined}
+                >
+                  <span className="text-base font-medium tracking-wide text-white/90 group-hover:text-white transition-colors duration-300">
+                    {item.name}
+                  </span>
+                  <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-gradient-to-r from-blue-500 to-purple-500 group-hover:w-full transition-all duration-300"></span>
+                </Link>
+              ) : (
                 <a
                   key={item.href}
                   href={item.href}
                   onClick={(e) => handleSmoothScroll(e, item.href)}
                   className="relative group"
                 >
-                  <span className="text-base font-medium tracking-wide text-white/90 hover:text-white transition-colors duration-300">
+                  <span className="text-base font-medium tracking-wide text-white/90 group-hover:text-white transition-colors duration-300">
                     {item.name}
                   </span>
                   <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-gradient-to-r from-blue-500 to-purple-500 group-hover:w-full transition-all duration-300"></span>
@@ -221,7 +249,7 @@ export default function Header() {
         </div>
 
         {/* Mobile */}
-        <div className="md:hidden flex items-center gap-3">
+        <div className="lg:hidden flex items-center gap-3">
           {/* Selector de idioma móvil */}
           <div className="relative" ref={mobileRef}>
             <button
@@ -269,18 +297,31 @@ export default function Header() {
 
       {/* Menú móvil */}
       {isOpen && (
-        <div className="md:hidden bg-black/95 backdrop-blur-lg border-t border-white/10">
+        <div className="lg:hidden bg-black/95 backdrop-blur-lg border-t border-white/10">
           <nav className="flex flex-col py-6">
             {menuItems.map((item) => {
               // No mostrar "Inicio" si ya estamos en home
               if (item.href === "#home" && pathname === "/") return null;
-              
-              return (
+
+              const className =
+                "px-8 py-4 text-lg text-white hover:text-blue-300 transition-colors duration-300 border-b border-white/5 last:border-b-0";
+
+              return item.route ? (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setIsOpen(false)}
+                  className={className}
+                  aria-current={pathname === item.href ? "page" : undefined}
+                >
+                  {item.name}
+                </Link>
+              ) : (
                 <a
                   key={item.href}
                   href={item.href}
                   onClick={(e) => handleSmoothScroll(e, item.href)}
-                  className="px-8 py-4 text-lg text-white hover:text-blue-300 transition-colors duration-300 border-b border-white/5 last:border-b-0"
+                  className={className}
                 >
                   {item.name}
                 </a>

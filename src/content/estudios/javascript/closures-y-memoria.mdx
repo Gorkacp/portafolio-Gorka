@@ -1,0 +1,136 @@
+---
+title: "Closures y memoria: por qué tu listener no se libera"
+description: "Qué es realmente un closure, cómo decide el motor qué memoria liberar, y el patrón de fuga más común en producción."
+tags: ["javascript", "closures", "memoria", "gc"]
+published: 2026-09-21
+updated: 2026-09-21
+featured: false
+related: ["event-loop-y-microtasks"]
+---
+
+Un closure no es un concepto exótico. Es la consecuencia más directa de que el alcance léxico exista en el lenguaje: **cuando una función se crea, captura el entorno donde fue declarada, no el entorno donde se la llama**.
+
+## Lo mínimo que hay que entender
+
+```js title="closure.js"
+function crearContador() {
+  let total = 0; // vive en el entorno capturado
+
+  return function incrementar() {
+    total += 1;
+    return total;
+  };
+}
+
+const contador = crearContador();
+contador(); // 1
+contador(); // 2
+contador(); // 3
+```
+
+`total` es una variable local de `crearContador`. Cuando la función termina, su retorno se descarta. Pero `incrementar` sigue reachable desde `contador`, y `incrementar` referencia `total`. Por lo tanto `total` **no se puede liberar**. Eso es todo.
+
+El motor de JavaScript no "decide" liberarlo: no puede. Cualquier valor alcanzable desde una raíz está vivo por definición.
+
+## La fuga clásica: listener sin `removeEventListener`
+
+Este patrón aparece en cualquier código que registre un handler por cada elemento que se renderiza:
+
+```js title="fuga.js" {5-11}
+function montarTarjeta(tarjeta) {
+  const manejarClick = () => {
+    console.log("Clic en", tarjeta.id);
+  };
+
+  document.addEventListener("click",manejarClick);
+
+  // manejarClick queda referenciado por el listener.
+  // Por eso tarjeta, con todo su contenido, tampoco se puede liberar.
+}
+```
+
+Mientras ese handler esté registrado, la tarjeta entera queda viva. Si el componente se desmonta y monta cien veces, cientos de tarjetas quedan en memoria sin que exista ninguna referencia tuya a ellas.
+
+La solución es simétrica y aburrida, que es exactamente lo que debería ser:
+
+```js title="sin-fuga.js" {8}
+function montarTarjeta(tarjeta) {
+  const manejarClick = () => {
+    console.log("Clic en", tarjeta.id);
+  };
+
+  document.addEventListener("click", manejarClick);
+
+  return () => document.removeEventListener("click", manejarClick);
+}
+```
+
+<Idea>
+`addEventListener` acepta un tercer argumento: un objeto con `signal`. Es la
+forma moderna de evitar este tipo de fuga, porque el ciclo de vida queda atado al
+`AbortController` y no a tu disciplina.
+</Idea>
+
+```js title="abort-controller.js"
+const controller = new AbortController();
+
+document.addEventListener("click", manejarClick, {
+  signal: controller.signal,
+});
+
+// Cuando el componente se desmonta, esto cancela TODOS los listeners que
+// compartieron ese signal. Sin hunts a mano.
+controller.abort();
+```
+
+## El otro punto: closures en bucles
+
+Este bug es tan clásico que merece su propia sección. Con `var`, todas las iteraciones comparten el mismo binding:
+
+```js title="bug-var.js"
+const funciones = [];
+
+for (var i = 0; i < 3; i++) {
+  funciones.push(() => i);
+}
+
+funciones.map((fn) => fn()); // [3, 3, 3]
+```
+
+Tres funciones, tres valores distintos. Con `let` cada iteración crea un binding nuevo, y el closure captura el correcto:
+
+```js title="ok-let.js"
+const funciones = [];
+
+for (let i = 0; i < 3; i++) {
+  funciones.push(() => i);
+}
+
+funciones.map((fn) => fn()); // [0, 1, 2]
+```
+
+`let` en el `for` no crea "un binding por vuelta" como efecto secundario raro: es parte de la especificación. Cada vuelta crea un entorno nuevo, se ejecuta el cuerpo, y el entorno se captura en el closure.
+
+<Aviso>
+El mismo razonamiento aplica dentro de un `setTimeout` dentro del bucle. No es un
+caso particular de closures: es el mismo mecanismo, visto desde otro ángulo.
+</Aviso>
+
+## Cómo se verifica, sin instrumentación
+
+Herramientas y qué mirar en cada una:
+
+| Herramienta | Pregunta que responde |
+| --- | --- |
+| Pestaña **Memory** de Chrome, heap snapshot | ¿Qué objetos están vivos y qué los retiene? |
+| **Performance** con *Allocations* | ¿Cuánta memoria se asigna por segundo en el tiempo? |
+| `node --inspect` + `heapdump` | Lo mismo fuera del navegador |
+
+La pregunta útil en el snapshot no es "cuánta memoria hay", sino **"¿qué ruta de referencias mantiene vivo esto que no debería?"**. Chrome lo muestra explícitamente en el panel *Retainers*.
+
+## Lo que me llevo
+
+- Un closure es un entorno capturado, no un objeto mágico.
+- Cualquier referencia alcanzable desde una raíz es memoria viva. Punto.
+- Todo `addEventListener` necesita su contrapartida de limpieza. Idealmente un `AbortSignal`.
+- `let` en bucles crea un entorno por iteración; `var` no.

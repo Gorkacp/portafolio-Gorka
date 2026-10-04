@@ -6,125 +6,19 @@ import Experience from "@/components/Experience";
 import Projects from "../components/Projects";
 import Certifications from "../components/Certifications";
 import Contact from "../components/Contact";
-import Footer from "../components/Footer";
+import SiteFooter from "@/components/SiteFooter";
+import JsonLd from "@/components/JsonLd";
 
-export const metadata = {
-  // ============ TÍTULOS OPTIMIZADOS ============
-  title: "Gorka Carmona Pino | Full Stack Developer Granada | Vue.js, Nuxt 3, React, Spring Boot, MongoDB Expert",
-  
-  description: "Full Stack Developer from Granada, Spain specializing in Vue.js, Nuxt 3, React, Spring Boot, and MongoDB. Built GoLive Platform + holds 15 technical certifications. Available for opportunities.",
-  
-  // ============ KEYWORDS ESTRATÉGICAS (EVITANDO KEYWORD STUFFING) ============
-  keywords: [
-    // === IDENTIDAD PRINCIPAL (4-5) ===
-    "Gorka Carmona Pino", "Gorka Carmona", "Gorka Full Stack Developer",
-    
-    // === UBICACIÓN ESTRATÉGICA (4-5) ===
-    "Full Stack Developer Granada", "Web Developer Granada", "Desarrollador web Granada",
-    "Spanish developer Granada",
-    
-    // === NIVEL Y ESPECIALIZACIÓN (4-5) ===
-    "Junior Full Stack Developer", "Entry Level Full Stack", "FP Developer Granada",
-    "Vocational Training Developer",
-    
-    // === TECNOLOGÍAS PRINCIPALES (8-10) ===
-    "Vue.js Developer", "Nuxt 3 Developer", "React Developer", "Spring Boot Developer",
-    "MongoDB Developer", "Docker Certified", "JavaScript Developer", "TypeScript Developer",
-    
-    // === CERTIFICACIONES (3-4) ===
-    "Certified Docker Developer", "Python PCEP Certified", "AWS Certified Developer",
-    
-    // === PROYECTOS REALES (2-3) ===
-    "GoLive Platform Developer", "Real Project Portfolio",
-    
-    // === PORTFOLIO PROFESIONAL (2-3) ===
-    "Developer Portfolio", "Web Developer Portfolio",
-    
-    // === DISPONIBILIDAD (2-3) ===
-    "Available Developer", "Open to Opportunities", "Junior Developer Available"
-  ],
-  
-  // ============ INFORMACIÓN ESTRUCTURADA ============
-  authors: [
-    { 
-      name: "Gorka Carmona Pino",
-      url: "https://portafolio-gorka.vercel.app"
-    }
-  ],
-  
-  creator: "Gorka Carmona Pino",
-  publisher: "Gorka Carmona Pino | Full Stack Developer Portfolio",
-  generator: "Next.js 16, React 19, Tailwind CSS",
-  
-  // ============ ROBOTS CONFIGURACIÓN ============
-  robots: {
-    index: true,
-    follow: true,
-    nocache: false,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1
-    }
-  },
-  
-  // ============ OPEN GRAPH PROFESIONAL ============
-  openGraph: {
-    type: "profile",
-    profile: {
-      firstName: "Gorka",
-      lastName: "Carmona Pino",
-      username: "gorka_cpda"
-    },
-    locale: "es_ES",
-    url: "https://portafolio-gorka.vercel.app",
-    siteName: "Gorka Carmona Pino - Full Stack Developer Portfolio",
-    title: "Gorka Carmona Pino | Full Stack Developer Specializing in Vue.js, React & Spring Boot",
-    description: "Full Stack Developer portfolio showcasing Vue.js, Nuxt 3, React, Spring Boot, and MongoDB skills. Real project experience + technical certifications.",
-    images: [
-      {
-        url: "https://portafolio-gorka.vercel.app/opengraph-image.jpg",
-        width: 1200,
-        height: 630,
-        alt: "Gorka Carmona Pino - Full Stack Developer Portfolio",
-        type: "image/jpeg"
-      }
-    ],
-    emails: ["gorkacarmonapino@gmail.com"],
-    address: {
-      addressLocality: "Granada",
-      addressRegion: "Andalusia",
-      addressCountry: "ES"
-    }
-  },
-  
-  // ============ TWITTER CARD ============
-  twitter: {
-    card: "summary_large_image",
-    site: "@gorka_cpda",
-    creator: "@gorka_cpda",
-    title: "Gorka Carmona Pino | Full Stack Developer Portfolio",
-    description: "Full Stack Developer specializing in Vue.js, Nuxt 3, React, Spring Boot, and MongoDB.",
-    images: [
-      "https://portafolio-gorka.vercel.app/opengraph-image.jpg"
-    ]
-  },
-  
-  // ============ CANONICAL ============
-  alternates: {
-    canonical: "https://portafolio-gorka.vercel.app"
-  },
-  
-  // ============ CATEGORÍAS ============
-  category: "Technology",
-  classification: "Web Development, Programming, Software Engineering",
-  
-  // ============ SCHEMA.ORG OPTIMIZADO Y SEGURO ============
-  other: {
-    // SCHEMA.ORG PRINCIPAL - VERSIÓN SEGURA
-    "application/ld+json": JSON.stringify([
+/**
+ * Structured data de la home: Person, WebSite y los dos Project.
+ *
+ * Vive fuera de `metadata` a proposito. Ponerlo en
+ * `metadata.other['application/ld+json']` hace que Next lo serialice como
+ * `<meta name=... content=...>`, y un buscador NO lee structured data desde un
+ * `<meta>`: tiene que ser un `<script type='application/ld+json'>`. La pagina lo
+ * renderiza con `<JsonLd />`.
+ */
+const structuredData = [
       {
         "@context": "https://schema.org",
         "@type": "Person",
@@ -246,7 +140,124 @@ export const metadata = {
         },
         "applicationCategory": "VoiceApplication"
       }
-    ]),
+];
+
+export const metadata = {
+  // ============ TÍTULOS OPTIMIZADOS ============
+  title: "Gorka Carmona Pino | Full Stack Developer Granada | Vue.js, Nuxt 3, React, Spring Boot, MongoDB Expert",
+  
+  description: "Full Stack Developer from Granada, Spain specializing in Vue.js, Nuxt 3, React, Spring Boot, and MongoDB. Built GoLive Platform + holds 15 technical certifications. Available for opportunities.",
+  
+  // ============ KEYWORDS ESTRATÉGICAS (EVITANDO KEYWORD STUFFING) ============
+  keywords: [
+    // === IDENTIDAD PRINCIPAL (4-5) ===
+    "Gorka Carmona Pino", "Gorka Carmona", "Gorka Full Stack Developer",
+    
+    // === UBICACIÓN ESTRATÉGICA (4-5) ===
+    "Full Stack Developer Granada", "Web Developer Granada", "Desarrollador web Granada",
+    "Spanish developer Granada",
+    
+    // === NIVEL Y ESPECIALIZACIÓN (4-5) ===
+    "Junior Full Stack Developer", "Entry Level Full Stack", "FP Developer Granada",
+    "Vocational Training Developer",
+    
+    // === TECNOLOGÍAS PRINCIPALES (8-10) ===
+    "Vue.js Developer", "Nuxt 3 Developer", "React Developer", "Spring Boot Developer",
+    "MongoDB Developer", "Docker Certified", "JavaScript Developer", "TypeScript Developer",
+    
+    // === CERTIFICACIONES (3-4) ===
+    "Certified Docker Developer", "Python PCEP Certified", "AWS Certified Developer",
+    
+    // === PROYECTOS REALES (2-3) ===
+    "GoLive Platform Developer", "Real Project Portfolio",
+    
+    // === PORTFOLIO PROFESIONAL (2-3) ===
+    "Developer Portfolio", "Web Developer Portfolio",
+    
+    // === DISPONIBILIDAD (2-3) ===
+    "Available Developer", "Open to Opportunities", "Junior Developer Available"
+  ],
+  
+  // ============ INFORMACIÓN ESTRUCTURADA ============
+  authors: [
+    { 
+      name: "Gorka Carmona Pino",
+      url: "https://portafolio-gorka.vercel.app"
+    }
+  ],
+  
+  creator: "Gorka Carmona Pino",
+  publisher: "Gorka Carmona Pino | Full Stack Developer Portfolio",
+  generator: "Next.js 16, React 19, Tailwind CSS",
+  
+  // ============ ROBOTS CONFIGURACIÓN ============
+  robots: {
+    index: true,
+    follow: true,
+    nocache: false,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1
+    }
+  },
+  
+  // ============ OPEN GRAPH PROFESIONAL ============
+  openGraph: {
+    type: "profile",
+    profile: {
+      firstName: "Gorka",
+      lastName: "Carmona Pino",
+      username: "gorka_cpda"
+    },
+    locale: "es_ES",
+    url: "https://portafolio-gorka.vercel.app",
+    siteName: "Gorka Carmona Pino - Full Stack Developer Portfolio",
+    title: "Gorka Carmona Pino | Full Stack Developer Specializing in Vue.js, React & Spring Boot",
+    description: "Full Stack Developer portfolio showcasing Vue.js, Nuxt 3, React, Spring Boot, and MongoDB skills. Real project experience + technical certifications.",
+    images: [
+      {
+        url: "https://portafolio-gorka.vercel.app/opengraph-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Gorka Carmona Pino - Full Stack Developer Portfolio",
+        type: "image/jpeg"
+      }
+    ],
+    emails: ["gorkacarmonapino@gmail.com"],
+    address: {
+      addressLocality: "Granada",
+      addressRegion: "Andalusia",
+      addressCountry: "ES"
+    }
+  },
+  
+  // ============ TWITTER CARD ============
+  twitter: {
+    card: "summary_large_image",
+    site: "@gorka_cpda",
+    creator: "@gorka_cpda",
+    title: "Gorka Carmona Pino | Full Stack Developer Portfolio",
+    description: "Full Stack Developer specializing in Vue.js, Nuxt 3, React, Spring Boot, and MongoDB.",
+    images: [
+      "https://portafolio-gorka.vercel.app/opengraph-image.jpg"
+    ]
+  },
+  
+  // ============ CANONICAL ============
+  alternates: {
+    canonical: "https://portafolio-gorka.vercel.app"
+  },
+  
+  // ============ CATEGORÍAS ============
+  category: "Technology",
+  classification: "Web Development, Programming, Software Engineering",
+  
+  // ============ SCHEMA.ORG OPTIMIZADO Y SEGURO ============
+  other: {
+    // SCHEMA.ORG PRINCIPAL - VERSIÓN SEGURA
     
     // CONFIGURACIÓN TÉCNICA
     "theme-color": "#000000",
@@ -266,6 +277,7 @@ export const metadata = {
 export default function Home() {
   return (
     <main className="flex flex-col bg-black text-white">
+      <JsonLd data={structuredData} />
       <Hero />
       <About />
       <Capabilities />
@@ -273,7 +285,7 @@ export default function Home() {
       <Projects />
       <Certifications />
       <Contact />
-      <Footer />
+      <SiteFooter />
     </main>
   );
 }

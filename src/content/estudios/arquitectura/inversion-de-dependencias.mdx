@@ -1,0 +1,145 @@
+---
+title: "Inversión de dependencias: el refactor más barato que vas a hacer"
+description: "El principio que parece un detalle de nombres y en realidad decide si tu capa de dominio se puede testear sin levantar una base de datos."
+tags: ["arquitectura", "dependencias", "testing", "solid", "capas"]
+published: 2026-08-15
+updated: 2026-09-30
+featured: true
+related: ["keys-y-reconciliacion", "indices-en-mongodb"]
+---
+
+Se define en una frase: **las dependencias apuntan hacia adentro**. El dominio no sabe que existe la base de datos, ni HTTP, ni un framework. Lo que hay afuera sabe que existe el dominio.
+
+Suena a arquitectura de manual. En la práctica, es lo que separa un código testeable de un código que necesita tres contenedores Levantados para probar un cálculo.
+
+## El síntoma: no podés testear sin infrastructure
+
+Este test es la señal de alarma absoluta:
+
+```java title="MalTest.java"
+@Test
+void should_calcular_total() {
+    TicketRepository repository = new MongoTicketRepository(
+        new MongoClient("mongodb://localhost:27017"),   // base de datos real
+        "gongo_live"
+    );
+
+    TicketService service = new TicketService(repository);
+
+    assertThat(service.totalFor("evt_1")).isEqualTo(120.0);
+}
+```
+
+¿Qué es un mal test? Un test que necesita de un servidor externo para verificar aritmética. Está probando tres cosas a la vez: tu lógica, tu configuración y tu red. Cuando falla, no sabés cuál de las tres.
+
+Y no es que falte "un buen patrón": el problema está en **la dirección de los imports**.
+
+## El diagnóstico está en los imports
+
+```java title="Antes.java"
+package com.golive.ticket;
+
+import org.springframework.data.mongodb.repository.MongoRepository; // dehors
+import org.springframework.stereotype.Service;                      // dehors
+
+@Service
+public class TicketService {
+    private final MongoRepository<Evento, String> repo;           // el problema
+}
+```
+
+La clase de negocio importa infraestructura. Eso significa que el dominio **depende** del mundo exterior, y el mundo exterior (Spring, Mongo) determina cómo se puede probar, desplegar y evolucionar el dominio.
+
+La inversión es literalmente eso, dado vuelta.
+
+## El antes y el después
+
+```java title="Despues.java"
+package com.golive.ticket;
+
+import java.util.List;                    // stdlib, sin problema
+
+public class TicketService {
+    private final TicketRepository repo;  // interfaz propia, definida acá
+
+    public TicketService(TicketRepository repo) {
+        this.repo = repo;
+    }
+
+    public double totalFor(String eventoId) {
+        return repo.findByEvento(eventoId)
+                   .stream()
+                   .mapToDouble(Ticket::precio)
+                   .sum();
+    }
+}
+```
+
+```java title="TicketRepository.java" {1}
+package com.golive.ticket;
+
+import java.util.List;
+
+public interface TicketRepository {
+    List<Ticket> findByEvento(String eventoId);
+}
+```
+
+Ahora el test es esto:
+
+```java title="BienTest.java" {5}
+@Test
+void should_calcular_total() {
+    TicketRepository repo = new FakeTicketRepository(List.of(
+        new Ticket("evt_1", 40.0),
+        new Ticket("evt_1", 80.0)
+    ));
+
+    TicketService service = new TicketService(repo);
+
+    assertThat(service.totalFor("evt_1")).isEqualTo(120.0);
+}
+```
+
+Cero red. Cero framework. Corre en milisegundos.
+
+## Dónde queda la interfaz, y por qué importa
+
+La interfaz **no va con la implementación**. Va con quien la consume.
+
+Es el error conceptual número uno: poner `TicketRepository` en una carpeta `repository/` junto a `MongoTicketRepository`. Si compartís el paquete, en algún momento `TicketService` va a terminar importando la de Mongo "porque estaba a mano".
+
+La respuesta corta es: la interfaz se define **dentro del dominio**, y la implementación en la capa de infraestructura. La separación ya está resuelta por paquetes, no por buena voluntad.
+
+## Lo que NO es inversión de dependencias
+
+Confundir esto es el error habitual:
+
+- **No es** "poner interfaces en todas partes". Una interfaz sin al menos dos implementaciones reales (una real y un fake) es ruido.
+- **No es** un `Repository` genérico que devuelve `Any`. Abstraer de más te deja sin tipos.
+- **No es** arquitectura hexagonal obligatoria. Es un resultado: si los imports apuntan adentro, el hexagonal aparece solo.
+
+<Aviso>
+El patrón repositorio se apoya sobre un `List` de la stdlib cuando el dominio es
+simple. La inversión se justifica cuando el dominio necesita acceder a un sistema
+externo: base de datos, HTTP, sistema de archivos o reloj.
+</Aviso>
+
+## Cómo lo convenzo en un equipo real
+
+No lo vendas como "arquitectura mejorada". Vendelo como esto:
+
+1. Hacé que **un solo test nuevo** use un fake. Medí cuánto tarda la suite.
+2. Mostrá que el tiempo de la suite es tiempo de feedback.
+3. Mostrá que agregar un caso de test dejó de requerir levantar Docker.
+
+El resto es consecuencia. Y el argumento técnico es el de siempre: la pregunta
+que importa no es "si esto está bien diseñado", sino **"cuánto me va a costar
+cambiar esto dentro de seis meses"**.
+
+## Lo que me llevo
+
+- El síntoma es concreto: si testear lógica de negocio necesita base de datos, la capa está mal.
+- La inversión se verifica en los imports, no en la intención.
+- La interfaz se define donde se **consume**, no donde se **implementa**.
+- No es abstracción máxima: es el mínimo necesario para poder testear sin infraestructura.

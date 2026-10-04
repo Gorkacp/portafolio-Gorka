@@ -280,7 +280,7 @@ export default function Certifications() {
     <section
       id="certifications"
       className="
-        relative w-full py-20 md:py-32 px-4 md:px-6 font-poppins
+        relative w-full py-16 md:py-24 px-4 md:px-6 font-poppins
         bg-gradient-to-b from-gray-900 via-black to-black
         text-white overflow-hidden
       "

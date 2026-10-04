@@ -135,7 +135,7 @@ export default function Projects() {
     <section
       id="projects"
       className="
-        relative w-full py-20 md:py-32 px-4 md:px-6 font-poppins
+        relative w-full py-16 md:py-24 px-4 md:px-6 font-poppins
         bg-gradient-to-b from-black via-gray-950 to-gray-900
         text-white overflow-hidden
       "

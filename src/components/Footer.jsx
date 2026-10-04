@@ -1,37 +1,30 @@
 "use client";
 
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
 import { Github, Linkedin, Mail, ArrowUp, ExternalLink, Code2, Send, FileCode, User, FolderKanban } from "lucide-react";
-import { useState, useEffect } from "react";
-import { getTranslation } from "@/utils/translations";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
-export default function Footer() {
+/**
+ * `labelsByLang` lo pasa el servidor con la seccion `Footer` de los tres idiomas.
+ * Antes este componente importaba `getTranslation`, que arrastra los tres locale
+ * files (85 KB de JSON) al bundle del cliente en todas las rutas, porque Footer
+ * se renderiza en cada pagina.
+ *
+ * La seccion `Footer` de los locales ya viene como objeto, asi que no hay que
+ * aplanar claves: `social.github_label` se lee igual que antes.
+ */
+export default function Footer({ labelsByLang }) {
   const year = new Date().getFullYear();
-  const [scrollProgress, setScrollProgress] = useState(0);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const progressBarRef = useRef(null);
   const { language } = useLanguage();
 
-  // Obtener traducciones
-  const translations = {
-    title: getTranslation(language, "Footer.title"),
-    contact_title: getTranslation(language, "Footer.contact_title"),
-    contact_title_highlight: getTranslation(language, "Footer.contact_title_highlight"),
-    navigation_title: getTranslation(language, "Footer.navigation_title"),
-    navigation_title_highlight: getTranslation(language, "Footer.navigation_title_highlight"),
-    connect_title: getTranslation(language, "Footer.connect_title"),
-    connect_title_highlight: getTranslation(language, "Footer.connect_title_highlight"),
-    quick_links: getTranslation(language, "Footer.quick_links"),
-    social: getTranslation(language, "Footer.social"),
-    copyright: getTranslation(language, "Footer.copyright"),
-    built_with: getTranslation(language, "Footer.built_with"),
-    and: getTranslation(language, "Footer.and"),
-    links: getTranslation(language, "Footer.links"),
-    version: getTranslation(language, "Footer.version"),
-    back_to_top: getTranslation(language, "Footer.back_to_top"),
-  };
+  const translations = useMemo(
+    () => labelsByLang?.[language] ?? labelsByLang?.es ?? {},
+    [labelsByLang, language]
+  );
 
   // Cargar quick links desde traducciones
   const quickLinks = () => {
@@ -75,18 +68,45 @@ export default function Footer() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Controlar progreso de scroll y mostrar botón
+  /*
+   * Progreso de scroll.
+   *
+   * Antes el progreso iba a `useState`, y como es un numero que cambia en cada
+   * pixel, React no podia abortar el render (solo aborta si el valor es
+   * identico con Object.is). Eso forced un re-render del Footer completo, con sus
+   * ~40 nodos, por cada frame de scroll, en la pagina mas larga del sitio.
+   *
+   * Ahora la barra se escribe directo en el DOM por un ref y el handler se
+   * limita con requestAnimationFrame. `showScrollTop` si queda en state porque
+   * es booleano y ahi React si aborta.
+   */
   useEffect(() => {
-    const handleScroll = () => {
-      const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
-      const currentProgress = (window.scrollY / totalScroll) * 100;
-      setScrollProgress(currentProgress);
-      setShowScrollTop(window.scrollY > 500);
+    let ticking = false;
+
+    const paint = () => {
+      ticking = false;
+      const total = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = total > 0 ? (window.scrollY / total) * 100 : 0;
+      if (progressBarRef.current) {
+        progressBarRef.current.style.width = `${progress}%`;
+      }
     };
 
-    window.addEventListener('scroll', handleScroll);
-    handleScroll();
-    return () => window.removeEventListener('scroll', handleScroll);
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 500);
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(paint);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleScroll);
+    paint();
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
+    };
   }, []);
 
   // Scroll suave
@@ -117,13 +137,15 @@ export default function Footer() {
       <div className="absolute bottom-10 left-1/4 w-48 h-48 bg-purple-900/5 rounded-full blur-3xl" />
       <div className="absolute top-10 right-1/4 w-48 h-48 bg-blue-900/5 rounded-full blur-3xl" />
 
-      {/* Barra de progreso */}
+      {/*
+        Barra de progreso. El `motion.div` usaba un spring para suavizar el
+        valor, que se recalcula en cada evento de scroll. Un `transition` de
+        100ms lineales da la misma perception de continuidad sin la libreria.
+      */}
       <div className="absolute top-0 left-0 w-full h-[1px] bg-gray-900">
-        <motion.div 
-          className="h-full bg-gradient-to-r from-purple-500 to-blue-500"
-          initial={false}
-          animate={{ width: `${scrollProgress}%` }}
-          transition={{ type: "spring", damping: 30, stiffness: 100 }}
+        <div
+          ref={progressBarRef}
+          className="h-full bg-gradient-to-r from-purple-500 to-blue-500 transition-[width] duration-100 ease-linear"
         />
       </div>
 
@@ -242,7 +264,7 @@ export default function Footer() {
             </div>
             
             <div className={`${isMobile ? 'flex gap-2' : 'space-y-3'}`}>
-              <motion.a
+              <a
                 href="https://github.com/Gorkacp"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -253,11 +275,10 @@ export default function Footer() {
                   hover:bg-gradient-to-r hover:from-purple-600/20 hover:to-blue-600/20
                   border border-transparent hover:border-purple-500/30
                   transition-all duration-300
+                  hover:scale-[1.02] active:scale-[0.98]
                   group/github
                 `}
                 aria-label="GitHub"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
               >
                 <div className={`flex ${isMobile ? 'flex-col items-center gap-1' : 'items-center gap-3'}`}>
                   <div className="
@@ -286,9 +307,9 @@ export default function Footer() {
                     transition-all duration-300
                   " />
                 )}
-              </motion.a>
+              </a>
 
-              <motion.a
+              <a
                 href="https://www.linkedin.com/in/gorka-carmona-pino-803902294/"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -299,11 +320,10 @@ export default function Footer() {
                   hover:bg-gradient-to-r hover:from-blue-600/20 hover:to-cyan-600/20
                   border border-transparent hover:border-blue-500/30
                   transition-all duration-300
+                  hover:scale-[1.02] active:scale-[0.98]
                   group/linkedin
                 `}
                 aria-label="LinkedIn"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
               >
                 <div className={`flex ${isMobile ? 'flex-col items-center gap-1' : 'items-center gap-3'}`}>
                   <div className="
@@ -332,7 +352,7 @@ export default function Footer() {
                     transition-all duration-300
                   " />
                 )}
-              </motion.a>
+              </a>
             </div>
           </div>
         </div>
@@ -402,40 +422,39 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Back to top button - MODIFICADO PARA MÓVIL */}
-      <AnimatePresence>
-        {showScrollTop && (
-          <motion.button
-            initial={{ opacity: 0, scale: 0.8, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.8, y: 20 }}
-            onClick={scrollToTop}
-            className={`
-              fixed ${isMobile ? 'bottom-6 right-6 p-4' : 'bottom-6 right-6 p-3'}
-              rounded-lg
-              bg-gradient-to-r from-purple-600/30 to-blue-600/30
-              border border-purple-500/50
-              text-white
-              shadow-[0_0_15px_rgba(139,92,246,0.2)]
-              transition-all duration-300
-              z-50
-              group/scroll-top
-              hover:shadow-[0_0_25px_rgba(139,92,246,0.4)]
-              hover:from-purple-600/40 hover:to-blue-600/40
-              hover:border-purple-500/70
-              ${isMobile ? 'active:scale-95' : ''}
-            `}
-            aria-label={translations.back_to_top || "Volver arriba"}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <ArrowUp className={`
-              ${isMobile ? 'w-5 h-5' : 'w-4 h-4'} 
-              group-hover/scroll-top:-translate-y-0.5 transition-transform duration-300
-            `} />
-          </motion.button>
-        )}
-      </AnimatePresence>
+      {/*
+        Back to top. Sin framer-motion: la entrada/salida son dos animaciones CSS
+        (footer-scrolltop-enter / -exit en globals.css) y el hover/tap un
+        transform. Footer se renderiza en todas las rutas, asi que la libreria
+        pesaba en cada pagina del sitio.
+      */}
+      {showScrollTop && (
+        <button
+          onClick={scrollToTop}
+          className={`
+            footer-scrolltop-enter
+            fixed bottom-6 right-6 ${isMobile ? 'p-4' : 'p-3'}
+            rounded-lg
+            bg-gradient-to-r from-purple-600/30 to-blue-600/30
+            border border-purple-500/50
+            text-white
+            shadow-[0_0_15px_rgba(139,92,246,0.2)]
+            transition-[transform,box-shadow,background-color,border-color] duration-300
+            hover:scale-105 active:scale-95
+            z-50
+            group/scroll-top
+            hover:shadow-[0_0_25px_rgba(139,92,246,0.4)]
+            hover:from-purple-600/40 hover:to-blue-600/40
+            hover:border-purple-500/70
+          `}
+          aria-label={translations.back_to_top || "Volver arriba"}
+        >
+          <ArrowUp className={`
+            ${isMobile ? 'w-5 h-5' : 'w-4 h-4'}
+            group-hover/scroll-top:-translate-y-0.5 transition-transform duration-300
+          `} />
+        </button>
+      )}
     </footer>
   );
 }
