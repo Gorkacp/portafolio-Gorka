@@ -30,6 +30,11 @@ related: ["closures-y-memoria"]       # opcional. Slugs de artículos relacionad
 debajo del título en los resultados. Escribilo pensando en el buscador, no
 resumiendo el artículo.
 
+`updated` no es decorativo: es el `lastmod` que el sitemap declara para este
+artículo, y Google lo usa como señal de frescura para decidir cuánto re-crawlear.
+Tocá el artículo sin tocar la fecha y la señal queda mintiendo. Si tocás una
+corrección de fondo, subí `updated`.
+
 ## Qué podés escribir
 
 Markdown normal, con extras:

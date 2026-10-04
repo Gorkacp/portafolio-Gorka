@@ -12,7 +12,7 @@ import { infra } from "./infra";
 import { arquitectura } from "./arquitectura";
 import { seguridad } from "./seguridad";
 import { proceso } from "./proceso";
-import { CATEGORY_CONFIG, DEFAULT_CATEGORY } from "../categories";
+import { CATEGORY_CONFIG, DEFAULT_CATEGORY, getTermLastReviewed } from "../categories";
 
 /**
  * La clave ES el id del grupo. No hace falta un segundo mapa que traduzca
@@ -56,6 +56,9 @@ export const ALL_TERMS = Object.entries(GROUPS).flatMap(([group, entries]) => {
     config,
     slug: entry.slug ?? slugify(entry.term),
     aliases: entry.aliases ?? [],
+    // Resolved once, here, for the same reason `config` is resolved here: the
+    // sitemap must not have to know the fallback rules.
+    lastReviewed: getTermLastReviewed(entry, group),
   }));
 });
 

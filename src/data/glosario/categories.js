@@ -7,6 +7,14 @@
 //
 // A glossary entry is a few lines of prose, not an article, so the groups are
 // broader than the estudios ones on purpose.
+//
+// `lastReviewed` is the date this group was last meaningfully edited, and it is
+// what the sitemap declares as `lastmod` for every term in the group. It has to
+// be a stored constant, NOT the build date: a term that has not been touched
+// must keep reporting the date it was actually touched, otherwise every deploy
+// tells Google that 174 pages changed today. Google uses `lastmod` to decide
+// what to re-crawl, and a signal that is wrong on every build is a signal worth
+// ignoring. Bump this when you edit an entry in the group.
 
 export const DEFAULT_CATEGORY = "arquitectura";
 
@@ -23,6 +31,7 @@ export const CATEGORY_ORDER = [
 
 export const CATEGORY_CONFIG = {
   frontend: {
+    lastReviewed: "2026-10-04",
     icon: "Layout",
     gradient: "from-cyan-500/20 to-blue-500/10",
     border: "border-cyan-500/20",
@@ -33,6 +42,7 @@ export const CATEGORY_CONFIG = {
     badge: "bg-cyan-500/10 text-cyan-300 border-cyan-500/30",
   },
   css: {
+    lastReviewed: "2026-10-04",
     icon: "Palette",
     gradient: "from-pink-500/20 to-fuchsia-500/10",
     border: "border-pink-500/20",
@@ -43,6 +53,7 @@ export const CATEGORY_CONFIG = {
     badge: "bg-pink-500/10 text-pink-300 border-pink-500/30",
   },
   backend: {
+    lastReviewed: "2026-10-04",
     icon: "Server",
     gradient: "from-purple-500/20 to-violet-500/10",
     border: "border-purple-500/20",
@@ -53,6 +64,7 @@ export const CATEGORY_CONFIG = {
     badge: "bg-purple-500/10 text-purple-300 border-purple-500/30",
   },
   datos: {
+    lastReviewed: "2026-10-04",
     icon: "Database",
     gradient: "from-emerald-500/20 to-teal-500/10",
     border: "border-emerald-500/20",
@@ -63,6 +75,7 @@ export const CATEGORY_CONFIG = {
     badge: "bg-emerald-500/10 text-emerald-300 border-emerald-500/30",
   },
   infra: {
+    lastReviewed: "2026-10-04",
     icon: "Container",
     gradient: "from-rose-500/20 to-orange-500/10",
     border: "border-rose-500/20",
@@ -73,6 +86,7 @@ export const CATEGORY_CONFIG = {
     badge: "bg-rose-500/10 text-rose-300 border-rose-500/30",
   },
   arquitectura: {
+    lastReviewed: "2026-10-04",
     icon: "Network",
     gradient: "from-violet-500/20 to-indigo-500/10",
     border: "border-violet-500/20",
@@ -83,6 +97,7 @@ export const CATEGORY_CONFIG = {
     badge: "bg-violet-500/10 text-violet-300 border-violet-500/30",
   },
   seguridad: {
+    lastReviewed: "2026-10-04",
     icon: "ShieldCheck",
     gradient: "from-red-500/20 to-rose-500/10",
     border: "border-red-500/20",
@@ -93,6 +108,7 @@ export const CATEGORY_CONFIG = {
     badge: "bg-red-500/10 text-red-300 border-red-500/30",
   },
   proceso: {
+    lastReviewed: "2026-10-04",
     icon: "ClipboardCheck",
     gradient: "from-amber-500/20 to-yellow-500/10",
     border: "border-amber-500/20",
@@ -106,4 +122,13 @@ export const CATEGORY_CONFIG = {
 
 export function getCategoryConfig(category) {
   return CATEGORY_CONFIG[category] ?? CATEGORY_CONFIG[DEFAULT_CATEGORY];
+}
+
+/**
+ * A term reports the date of ITS OWN `updated` if it has one, otherwise the
+ * date of the group it lives in. That way editing one entry does not force you
+ * to lie about the other thirty in the group.
+ */
+export function getTermLastReviewed(term, category) {
+  return term?.updated ?? CATEGORY_CONFIG[category]?.lastReviewed ?? null;
 }
